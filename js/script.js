@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentBookPage = null;
     let isFront = true;
     let pageNodes = [];
+	const isMobile = window.innerWidth <= 900; // 提到全局/父级作用域
 
     // Dynamically paginates data using CSS multi-columns to measure text flow perfectly
     blogData.forEach((chapter, index) => {
@@ -140,13 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (numCols <= 0) numCols = 1;
 
         for (let i = 0; i < numCols; i++) {
-            if (isFront) {
+            if (isMobile || isFront) {
                 currentBookPage = document.createElement('div');
                 currentBookPage.className = 'page';
                 pageNodes.push(currentBookPage);
             }
 
-            const sideClass = isFront ? 'front' : 'back';
+            const sideClass = (isMobile || isFront) ? 'front' : 'back';
             const offset = i * (exactWidth + gap);
             const contentDivHTML = `
                 <div class="${sideClass} parchment">
@@ -163,12 +164,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             currentBookPage.innerHTML += contentDivHTML;
             globalPageIndex++;
-            isFront = !isFront;
+            if (!isMobile) isFront = !isFront;
         }
     });
 
     // Close the very last page if it ended on a front
-    if (!isFront && currentBookPage) {
+    if (!isMobile && !isFront && currentBookPage) {
         currentBookPage.innerHTML += `
             <div class="back parchment">
                 <div class="page-content"></div>
@@ -180,6 +181,18 @@ document.addEventListener('DOMContentLoaded', () => {
         node.id = 'page-' + (idx + 1);
         book.insertBefore(node, backCover);
     });
+
+    if (isMobile) {
+        // Extract the backcover's back face into its own single mobile layout page
+        const backParchment = backCover.querySelector('.back');
+        if (backParchment) {
+            const extraPage = document.createElement('div');
+            extraPage.className = 'page';
+            backParchment.className = 'front parchment cover-back';
+            extraPage.appendChild(backParchment);
+            book.appendChild(extraPage);
+        }
+    }
 
     measurePage.remove();
 

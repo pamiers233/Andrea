@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Art History Blog - Da Vinci Manuscript</title>
+    <!-- CSS link as requested -->
+    <link rel="stylesheet" href="..\css\style.css">
+</head>
+
+<body>
+
+    <!-- 开篇动画容器 -->
+    <div id="intro-container">
+        <div class="parchment-bg"></div>
+        <div class="svg-wrapper">
+            <svg id="davinci-svg" viewBox="-500 -500 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                <!-- 华丽的JSTOR学术风/达芬奇手稿风格 SVG 动画结构 -->
+                <defs>
+                    <filter id="hand-drawn" x="-10%" y="-10%" width="120%" height="120%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R"
+                            yChannelSelector="G" />
+                    </filter>
+                    <pattern id="hatching" patternUnits="userSpaceOnUse" width="10" height="10"
+                        patternTransform="rotate(45)">
+                        <line x1="0" y1="0" x2="0" y2="10" stroke="#4a3b32" stroke-width="0.5" opacity="0.4" />
+                    </pattern>
+                    <!-- Text Paths for perfect circular text layout -->
+                    <path id="text-top-arc" d="M -410,0 A 410 410 0 0 1 410,0" fill="none" />
+                    <path id="text-bot-arc" d="M -410,0 A 410 410 0 0 0 410,0" fill="none" />
+                </defs>
+
+                <g filter="url(#hand-drawn)" class="draw-group">
+                    <!-- 外围比例尺与宇宙圈 -->
+                    <circle class="path-slow path-faint" cx="0" cy="0" r="480" />
+                    <circle class="path-slow path-faint" cx="0" cy="0" r="460" />
+
+                    <!-- 刻度线 -->
+                    <g id="ticks" class="path-fast path-faint"></g>
+
+                    <!-- 黄金分割对数螺旋预备线 -->
+                    <rect class="path-medium" x="-200" y="-123.6" width="400" height="247.2" />
+                    <line class="path-medium" x1="47.2" y1="-123.6" x2="47.2" y2="123.6" />
+                    <circle class="path-medium" cx="-76.4" cy="0" r="123.6" />
+                    <circle class="path-medium" cx="123.6" cy="47.2" r="76.4" />
+
+                    <!-- 大卫星/神圣几何 -->
+                    <polygon class="path-slow path-bold" points="0,-350 303,175 -303,175" />
+                    <polygon class="path-slow path-bold" points="0,350 303,-175 -303,-175" />
+
+                    <!-- 内层圆与正方形 (维特鲁威比例) -->
+                    <circle class="path-slow" cx="0" cy="-20" r="300" />
+                    <rect class="path-slow" x="-250" y="-250" width="500" height="500" />
+
+                    <!-- 达芬奇镜像文字 (伪拉丁文) 沿弧线排列 -->
+                    <text class="davinci-text" transform="scale(-1, 1)">
+                        <textPath href="#text-top-arc" startOffset="50%" text-anchor="middle">PROPORTIO DIVINA ET ARS
+                        </textPath>
+                    </text>
+                    <text class="davinci-text" transform="scale(-1, 1)">
+                        <textPath href="#text-bot-arc" startOffset="50%" text-anchor="middle">MENSURAE CORPORIS HUMANI
+                        </textPath>
+                    </text>
+
+                    <!-- 极其复杂的几何投影连线 (用来撑起“华丽”感) -->
+                    <path class="path-complex"
+                        d="M-250,-250 L250,250 M-250,250 L250,-250 M0,-350 L0,350 M-350,0 L350,0 M-303,-175 L303,175 M-303,175 L303,-175" />
+
+                    <!-- 动态绘制的墨水污渍 -->
+                    <circle class="ink-blot" cx="-120" cy="180" r="4" />
+                    <circle class="ink-blot" cx="210" cy="-90" r="2.5" />
+                    <circle class="ink-blot" cx="40" cy="300" r="5" />
+                </g>
+            </svg>
+        </div>
+        <div class="intro-title">
+            <h1 class="fade-in-text">HISTORIA ARTIS</h1>
+            <p class="fade-in-text delay">A Journey Through Canvas and Marble</p>
+            <button id="enter-blog" class="fade-in-text delay-2">Opus Aperire (Open the Book)</button>
+        </div>
+    </div>
+
+    <!-- 博客书籍容器 -->
+    <div id="blog-wrapper" class="hidden">
+        <div class="book-container">
+            <div id="book" class="book">
+
+                <!-- 封面 -->
+                <div class="page cover" id="page-0" style="z-index: 100;">
+                    <div class="front parchment">
+                        <div class="cover-content">
+                            <div class="ornament top-ornament"></div>
+                            <h1>Aesthetics &<br>Antiquity</h1>
+                            <div class="author-name">An Art History Blog</div>
+                            <div class="ornament bottom-ornament"></div>
+                            <div class="jstor-badge">
+                                <span>Vol. I</span>
+                                <hr>
+                                <span>MMXXVI</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="back parchment">
+                        <div class="book-spine-inside"></div>
+                    </div>
+                </div>
+
+                <!-- Dynamic pages injected by JS will appear here -->
+
+                <!-- 封底 -->
+                <div class="page" id="page-3" style="z-index: 97;">
+                    <div class="front parchment">
+                        <div class="page-content center-content">
+                            <h2>Bibliotheca</h2>
+                            <ul class="bibliography">
+                                <li>Alberti, L. B. (1991). <em>On Painting</em> (C. Grayson, Trans.). Penguin Classics.
+                                </li>
+                                <li>Vasari, G. (1998). <em>The Lives of the Artists</em> (J. C. Bondanella & P.
+                                    Bondanella, Trans.). Oxford University Press.</li>
+                                <li>Gombrich, E. H. (1995). <em>The Story of Art</em>. Phaidon Press.</li>
+                                <li>Baxandall, M. (1988). <em>Painting and Experience in Fifteenth Century Italy</em>.
+                                    Oxford University Press.</li>
+                            </ul>
+                            <p style="text-align:center; margin-top:40px;"><em>Finis</em></p>
+                        </div>
+                        <div class="page-number">5</div>
+                    </div>
+                    <div class="back parchment cover-back">
+                        <!-- 封底外部 -->
+                        <div class="cover-content">
+                            <div class="ornament single-ornament"></div>
+                            <p class="back-text">A digital manuscript dedicated to the rigorous exploration of visual
+                                history.<br><br>Crafted in the spirit of the Renaissance.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- /book -->
+
+            <!-- 翻页控制按钮 -->
+            <div class="book-controls">
+                <button id="prev-btn" class="nav-btn" disabled>&larr; Antea (Prev)</button>
+                <button id="next-btn" class="nav-btn">Postea (Next) &rarr;</button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JS link as requested -->
+    <script src="..\js\script.js"></script>
+</body>
+
+</html>

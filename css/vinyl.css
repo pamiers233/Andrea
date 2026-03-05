@@ -1,0 +1,319 @@
+/* Base Styling & Da Vinci Theme (Beige/Sepia) */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5dc;
+    /* Beige */
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(139, 69, 19, 0.05) 0%, rgba(139, 69, 19, 0.15) 100%),
+        repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.02) 0px, rgba(0, 0, 0, 0.02) 2px, transparent 2px, transparent 4px);
+    font-family: 'Times New Roman', Times, serif;
+    /* Classic Serif */
+    color: #4a3c31;
+    /* Sepia dark brown */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Outer frame representing an ancient manuscript page */
+.davinci-frame {
+    width: 90%;
+    max-width: 600px;
+    padding: 40px;
+    border: 2px solid #8b6d51;
+    border-radius: 10px;
+    position: relative;
+    background: rgba(245, 245, 220, 0.6);
+    box-shadow: inset 0 0 50px rgba(139, 69, 19, 0.1), 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.title-section {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #8b6d51;
+    padding-bottom: 15px;
+}
+
+.title-section h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: normal;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+
+.title-section .subtitle {
+    font-style: italic;
+    font-size: 1.1rem;
+    margin-top: 5px;
+    color: #6b523f;
+}
+
+/* Container for Tonearm and Record */
+.player-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Vinyl Record styling */
+.vinyl-record {
+    width: 300px;
+    height: 300px;
+    background: #111;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1);
+    transition: transform 0.5s ease;
+}
+
+/* The grooves on the record */
+.vinyl-groove {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.groove-1 {
+    width: 280px;
+    height: 280px;
+}
+
+.groove-2 {
+    width: 250px;
+    height: 250px;
+}
+
+.groove-3 {
+    width: 220px;
+    height: 220px;
+}
+
+.groove-4 {
+    width: 190px;
+    height: 190px;
+}
+
+/* The center label area (Da Vinci art container) */
+.vinyl-center {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #ebdcc2;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 3px solid #2a2a2a;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.vinyl-center img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Optional: sepia filter to give it a Da Vinci look */
+    filter: sepia(0.6) contrast(1.1);
+}
+
+.vinyl-hole {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: #f5f5dc;
+    border-radius: 50%;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8);
+    z-index: 10;
+}
+
+/* Rotation Animation */
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.vinyl-record.playing {
+    animation: spin 4s linear infinite;
+    animation-play-state: running;
+}
+
+.vinyl-record.paused {
+    animation: spin 4s linear infinite;
+    animation-play-state: paused;
+}
+
+/* Tonearm Styling */
+.tonearm {
+    position: absolute;
+    top: -50px;
+    right: 0px;
+    width: 160px;
+    height: 200px;
+    transform-origin: top right;
+    transition: transform 0.5s ease;
+    z-index: 5;
+    transform: rotate(0deg);
+}
+
+.tonearm.active {
+    transform: rotate(30deg);
+}
+
+.tonearm-pivot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 45px;
+    height: 45px;
+    background: #7a6a57;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.2);
+    border: 3px solid #4a3c31;
+}
+
+.tonearm-rod {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 12px;
+    height: 180px;
+    background: linear-gradient(to right, #9e8e79, #6b5c49, #9e8e79);
+    transform-origin: top center;
+    transform: rotate(25deg);
+    border-radius: 6px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.tonearm-head {
+    position: absolute;
+    bottom: -15px;
+    left: 45px;
+    width: 35px;
+    height: 60px;
+    background: #4a3c31;
+    border-radius: 4px;
+    transform: rotate(25deg);
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Controls & Progress */
+.progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 40px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: #4a3c31;
+}
+
+.progress-container input[type="range"] {
+    flex: 1;
+    margin: 0 15px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #cbbba6;
+    height: 4px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.progress-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #4a3c31;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.progress-container input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #4a3c31;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.controls {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.davinci-btn {
+    background: transparent;
+    border: 2px solid #8b6d51;
+    color: #4a3c31;
+    padding: 10px 30px;
+    font-family: inherit;
+    font-size: 1.2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.small-btn {
+    padding: 8px 15px;
+    font-size: 1rem;
+}
+
+.davinci-btn:hover {
+    background: #8b6d51;
+    color: #f5f5dc;
+    box-shadow: 0 0 15px rgba(139, 69, 19, 0.4);
+}
+
+/* Decorative abstract sketches representing Da Vinci notes */
+.sketches {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.15;
+}
+
+.sketch {
+    position: absolute;
+    border: 1px dashed #4a3c31;
+    border-radius: 50%;
+}
+
+.sketch-1 {
+    width: 400px;
+    height: 400px;
+    top: -100px;
+    left: -150px;
+}
+
+.sketch-2 {
+    width: 300px;
+    height: 300px;
+    bottom: -50px;
+    right: -100px;
+    border-style: dotted;
+}

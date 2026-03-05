@@ -1,0 +1,1099 @@
+/* 
+   Art History Blog - Da Vinci & JSTOR Style 
+   Author: AI
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+    --bg-dark: #12100d;
+    --parchment-base: #ebdcb2;
+    --parchment-light: #f5eedc;
+    --parchment-dark: #d2bc86;
+    --ink-color: #3b2c24;
+    --ink-faint: rgba(59, 44, 36, 0.3);
+    --gold: #aa8844;
+    --text-primary: #2a221b;
+    --text-muted: #5e4c3b;
+    --book-width: 45vw;
+    /* 调整宽度以适应两页并排 */
+    --book-height: 80vh;
+    --book-max-width: 600px;
+    --book-max-height: 850px;
+    --perspective: 2500px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-dark);
+    font-family: 'EB Garamond', serif;
+    color: var(--text-primary);
+    overflow: hidden;
+    /* 防止翻页时的视差滚动条 */
+    height: 100vh;
+    width: 100vw;
+}
+
+/* =========================================
+   1. INTRO ANIMATION (Da Vinci SVG + JSTOR vibe)
+   ========================================= */
+#intro-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1), opacity 1.5s ease;
+    background-color: var(--parchment-base);
+}
+
+.parchment-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background-image:
+        radial-gradient(circle at center, transparent 0%, rgba(50, 30, 10, 0.4) 150%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    z-index: 0;
+}
+
+.svg-wrapper {
+    position: relative;
+    width: 55vmin;
+    height: 55vmin;
+    z-index: 1;
+}
+
+/* SVG Path Drawing Animations */
+#davinci-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.davinci-text {
+    font-family: 'Cinzel', serif;
+    fill: var(--ink-color);
+    font-size: 24px;
+    letter-spacing: 5px;
+    opacity: 0;
+    animation: fadeInText 2s 4s forwards;
+}
+
+.draw-group path,
+.draw-group line,
+.draw-group circle,
+.draw-group rect,
+.draw-group polygon {
+    fill: none;
+    stroke: var(--ink-color);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.path-slow {
+    stroke-width: 1.5;
+    stroke-dasharray: 4000;
+    stroke-dashoffset: 4000;
+    animation: drawLine 6s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+.path-medium {
+    stroke-width: 1.2;
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: drawLine 4s 1s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+.path-fast {
+    stroke-width: 1;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: drawLine 2s 2s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+}
+
+.path-complex {
+    stroke-width: 0.8;
+    stroke-dasharray: 5000;
+    stroke-dashoffset: 5000;
+    animation: drawLine 7s 0.5s cubic-bezier(0.6, 0.0, 0.2, 1) forwards;
+    opacity: 0.6;
+}
+
+.path-bold {
+    stroke-width: 2.5;
+}
+
+.path-faint {
+    stroke: var(--ink-faint);
+}
+
+.ink-blot {
+    fill: var(--ink-color);
+    stroke: none !important;
+    opacity: 0;
+    animation: blotFade 1s 5s forwards;
+}
+
+@keyframes drawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeInText {
+    to {
+        opacity: 0.8;
+    }
+}
+
+@keyframes blotFade {
+    to {
+        opacity: 0.7;
+        transform: scale(1.2);
+    }
+}
+
+/* ==================== ASTROLABE LINE CLASSES ==================== */
+.astro-line-bold {
+    stroke: var(--ink-color);
+    stroke-width: 2.5;
+    fill: none;
+    stroke-dasharray: 6000;
+    stroke-dashoffset: 6000;
+}
+
+.astro-line-medium {
+    stroke: var(--ink-color);
+    stroke-width: 1.5;
+    fill: none;
+    stroke-dasharray: 4000;
+    stroke-dashoffset: 4000;
+}
+
+.astro-line-thin {
+    stroke: var(--ink-color);
+    stroke-width: 1;
+    fill: none;
+    stroke-dasharray: 4000;
+    stroke-dashoffset: 4000;
+}
+
+.astro-line-hair {
+    stroke: var(--ink-color);
+    stroke-width: 0.6;
+    fill: none;
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
+}
+
+.astro-faint {
+    stroke: var(--ink-faint) !important;
+}
+
+/* Phase 1: Mater & Limb (0-3s) */
+.astro-phase-1 .astro-line-bold,
+.astro-phase-1 .astro-line-medium,
+.astro-phase-1 .astro-line-thin,
+.astro-phase-1 .astro-line-hair,
+.astro-phase-1 circle,
+.astro-phase-1 line {
+    animation: drawLine 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Phase 2: Tympan (2-5s) */
+.astro-phase-2 .astro-line-bold,
+.astro-phase-2 .astro-line-medium,
+.astro-phase-2 .astro-line-thin,
+.astro-phase-2 .astro-line-hair,
+.astro-phase-2 circle,
+.astro-phase-2 line {
+    animation: drawLine 3s 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Phase 3: Rete & Calendar (4-7s) */
+.astro-phase-3 .astro-line-bold,
+.astro-phase-3 .astro-line-medium,
+.astro-phase-3 .astro-line-thin,
+.astro-phase-3 .astro-line-hair,
+.astro-phase-3 circle,
+.astro-phase-3 line {
+    animation: drawLine 3s 4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Phase 4: Clock hands (7-8.5s) */
+.astro-phase-4 {
+    opacity: 0;
+    animation: clockHandsAppear 1.5s 7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes clockHandsAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.clock-hand {
+    transform-origin: 0 0;
+    transition: transform 0.15s linear;
+}
+
+/* Astrolabe Text Styles */
+.astro-text-hour {
+    font-family: 'Cinzel', serif;
+    fill: var(--ink-color);
+    font-size: 22px;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeInText 1s 2.5s forwards;
+}
+
+.astro-text-zodiac-label {
+    font-family: 'EB Garamond', serif;
+    fill: var(--ink-color);
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeInText 1s 5s forwards;
+}
+
+.astro-text-star {
+    font-family: 'EB Garamond', serif;
+    fill: var(--text-muted);
+    font-size: 10px;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeInText 1.5s 5.5s forwards;
+}
+
+.astro-text-date {
+    font-family: 'Cinzel', serif;
+    fill: var(--ink-color);
+    font-size: 16px;
+    letter-spacing: 3px;
+    opacity: 0;
+    animation: fadeInText 1s 7.5s forwards;
+}
+
+.astro-text-zodiac {
+    font-family: 'EB Garamond', serif;
+    fill: var(--text-muted);
+    font-size: 13px;
+    font-style: italic;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeInText 1s 7.8s forwards;
+}
+
+.astro-text-tiny {
+    font-family: 'Cinzel', serif;
+    fill: var(--ink-color);
+    font-size: 10px;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeInText 1s 6s forwards;
+}
+
+.zodiac-line {
+    stroke: var(--ink-color);
+    stroke-width: 1;
+    fill: none;
+    opacity: 0;
+    animation: fadeInStroke 1s 5s forwards;
+}
+
+@keyframes fadeInStroke {
+    to {
+        opacity: 0.7;
+    }
+}
+
+.star-pointer {
+    fill: var(--ink-color);
+    opacity: 0;
+    animation: starAppear 0.8s 6s forwards;
+}
+
+@keyframes starAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    100% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+}
+
+.astrolabe-wrapper {
+    width: 65vmin !important;
+    height: 65vmin !important;
+}
+
+
+
+/* ==================== ORBIT ANIMATIONS ==================== */
+@keyframes orbitSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.orbit-group {
+    transform-origin: 0 0;
+    opacity: 0;
+    animation: orbitFadeIn 1.5s 5s forwards;
+}
+
+@keyframes orbitFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.orbit-mercury {
+    animation: orbitFadeIn 1.5s 5s forwards, orbitSpin 8s 6s linear infinite;
+}
+
+.orbit-venus {
+    animation: orbitFadeIn 1.5s 5s forwards, orbitSpin 13s 6s linear infinite;
+}
+
+.orbit-earth {
+    animation: orbitFadeIn 1.5s 5s forwards, orbitSpin 20s 6s linear infinite;
+}
+
+.orbit-mars {
+    animation: orbitFadeIn 1.5s 5s forwards, orbitSpin 30s 6s linear infinite;
+}
+
+.orbit-jupiter {
+    animation: orbitFadeIn 1.5s 5s forwards, orbitSpin 50s 6s linear infinite;
+}
+
+.moon-orbit {
+    transform-origin: 190px 0;
+    animation: orbitSpin 3s 6s linear infinite;
+}
+
+.planet-clickable {
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.planet-clickable:hover circle {
+    stroke-width: 3;
+    stroke: #2a221b;
+}
+
+/* ==================== 5 INFO CIRCLES ==================== */
+.info-circles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.info-circle {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(59, 44, 36, 0.5);
+    background: rgba(235, 220, 178, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    pointer-events: auto;
+    opacity: 0;
+    animation: infoCircleAppear 1s 8s forwards;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1), inset 0 0 15px rgba(59, 44, 36, 0.05);
+}
+
+@keyframes infoCircleAppear {
+    to {
+        opacity: 1;
+    }
+}
+
+.info-circle-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.55rem;
+    letter-spacing: 2px;
+    color: rgba(59, 44, 36, 0.6);
+    margin-bottom: 4px;
+}
+
+.info-circle-value {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.8rem;
+    color: #3b2c24;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.moon-svg {
+    width: 40px;
+    height: 40px;
+    margin: 2px 0;
+}
+
+/* Info circle positions */
+.info-circle-tl {
+    top: 5%;
+    left: 3%;
+}
+
+.info-circle-tr {
+    top: 5%;
+    right: 3%;
+}
+
+.info-circle-bl {
+    bottom: 18%;
+    left: 3%;
+}
+
+.info-circle-br {
+    bottom: 18%;
+    right: 3%;
+}
+
+.info-circle-cb {
+    bottom: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* ==================== PLANET DETAIL OVERLAY ==================== */
+.planet-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1001;
+    display: flex;
+    background-color: var(--parchment-base);
+    background-image:
+        radial-gradient(circle at center, transparent 0%, rgba(50, 30, 10, 0.3) 150%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.planet-overlay.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.planet-overlay.hidden {
+    display: none !important;
+}
+
+.planet-info-panel {
+    width: 35%;
+    min-width: 280px;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    border-right: 1px solid rgba(59, 44, 36, 0.2);
+}
+
+.back-btn {
+    background: transparent;
+    border: 1px solid var(--ink-color);
+    padding: 8px 16px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    color: var(--ink-color);
+    cursor: pointer;
+    transition: all 0.3s;
+    align-self: flex-start;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+.back-btn:hover {
+    background: var(--ink-color);
+    color: var(--parchment-base);
+}
+
+.planet-info-panel h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 2.2rem;
+    color: var(--ink-color);
+    margin-bottom: 5px;
+    letter-spacing: 3px;
+}
+
+.planet-info-panel h3 {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 25px;
+    font-weight: normal;
+}
+
+.planet-stats {
+    border-top: 1px solid rgba(59, 44, 36, 0.3);
+    border-bottom: 1px solid rgba(59, 44, 36, 0.3);
+    padding: 15px 0;
+    margin-bottom: 25px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.stat-value {
+    color: var(--ink-color);
+    font-weight: 600;
+}
+
+.planet-desc {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text-primary);
+    text-align: justify;
+}
+
+.planet-sketch-area {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+#planet-detail-svg {
+    width: 100%;
+    max-width: 550px;
+    height: auto;
+}
+
+@keyframes detailOrbit {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.detail-moon-orbit {
+    animation: detailOrbit var(--orbit-speed, 4s) linear infinite;
+}
+
+
+.intro-title {
+    margin-top: 2rem;
+    text-align: center;
+    z-index: 2;
+    font-family: 'Cinzel',
+        serif;
+}
+
+.intro-title h1 {
+    font-size: 3rem;
+    color: var(--ink-color);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.5rem;
+}
+
+.intro-title p {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+}
+
+.fade-in-text {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 2s forwards;
+}
+
+.delay {
+    animation-delay: 5.5s;
+}
+
+.delay-2 {
+    animation-delay: 6.5s;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#enter-blog {
+    background: transparent;
+    border: 1px solid var(--ink-color);
+    padding: 12px 30px;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--ink-color);
+    cursor: pointer;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#enter-blog::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--ink-color);
+    transition: left 0.4s ease;
+    z-index: -1;
+}
+
+#enter-blog:hover {
+    color: var(--parchment-base);
+}
+
+#enter-blog:hover::before {
+    left: 0;
+}
+
+/* Intro Leave Animation */
+.intro-leave {
+    transform: scale(1.1) translateY(-100vh);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* =========================================
+   2. BOOK & PAGE TURN LAYOUT (The Core)
+   ========================================= */
+#blog-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--parchment-base);
+    background-image:
+        radial-gradient(circle at center, transparent 0%, rgba(50, 30, 10, 0.2) 150%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+}
+
+#blog-wrapper.hidden {
+    display: none;
+}
+
+.book-container {
+    perspective: var(--perspective);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.book {
+    position: relative;
+    width: calc(var(--book-width) * 2);
+    height: var(--book-height);
+    max-width: calc(var(--book-max-width) * 2);
+    max-height: var(--book-max-height);
+    transform-style: preserve-3d;
+    transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+    /* Initial state, cover centered */
+    transform: translateX(25%);
+}
+
+/* Transition class for when book is open (moves to center) */
+.book.open {
+    transform: translateX(0);
+}
+
+.page {
+    position: absolute;
+    width: 50%;
+    /* Each page is half the book width */
+    height: 100%;
+    top: 0;
+    right: 0;
+    /* Align pages to the right side initially */
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    transition: transform 1.5s cubic-bezier(0.645, 0.045, 0.355, 1);
+    cursor: pointer;
+}
+
+/* Page states */
+.page.flipped {
+    transform: rotateY(-180deg);
+}
+
+/* Front and Back of each page */
+.front,
+.back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    overflow: hidden;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.front {
+    transform: rotateY(0deg);
+    border-radius: 2px 8px 8px 2px;
+}
+
+.back {
+    transform: rotateY(180deg);
+    border-radius: 8px 2px 2px 8px;
+}
+
+/* Parchment texture inside the book */
+.parchment {
+    background-color: var(--parchment-base);
+    background-image:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.05) 100%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+/* Specific shading for pages depending on position */
+.front::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, transparent 100%);
+    z-index: 10;
+}
+
+.back::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10%;
+    height: 100%;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.2) 0%, transparent 100%);
+    z-index: 10;
+}
+
+/* 页面边缘（模仿老书） */
+.page::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 100%;
+    width: 4px;
+    height: calc(100% - 4px);
+    background: linear-gradient(to right, #cfbd93, #a28f64);
+    transform: rotateY(90deg);
+    transform-origin: left;
+    backface-visibility: hidden;
+}
+
+/* =========================================
+   3. TYPOGRAPHY & INNER CONTENT (JSTOR / Academic)
+   ========================================= */
+.page-content {
+    padding: 10% 12%;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.page-content::-webkit-scrollbar {
+    display: none;
+}
+
+/* Chrome */
+
+.chapter-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.8rem;
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--text-muted);
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.page-content p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    text-align: justify;
+    text-indent: 2em;
+}
+
+.drop-cap {
+    float: left;
+    font-family: 'Playfair Display', serif;
+    font-size: 4.5rem;
+    line-height: 0.8;
+    padding-top: 4px;
+    padding-right: 8px;
+    padding-left: 3px;
+    color: var(--ink-color);
+    text-indent: 0 !important;
+}
+
+.sketch-figure {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.sketch-box {
+    width: 80%;
+    height: 180px;
+    margin: 0 auto 10px;
+    border: 1px dashed var(--text-muted);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M10,90 L50,10 L90,90 M20,60 L80,60 M50,10 L50,90' stroke='%233b2c24' stroke-width='1' fill='none' stroke-dasharray='4' opacity='0.5'/%3E%3C/svg%3E") no-repeat center center / contain;
+}
+
+figcaption {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--text-muted);
+}
+
+.quote-block {
+    margin: 30px 10%;
+    padding: 20px;
+    border-left: 3px solid var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.page-number {
+    position: absolute;
+    bottom: 5%;
+    width: 100%;
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* =========================================
+   4. COVER & STYLING
+   ========================================= */
+.cover .front {
+    background-color: #dcb880;
+    /* Mottled parchment cover */
+    background-image:
+        radial-gradient(circle at center, rgba(235, 220, 178, 0.5) 0%, rgba(150, 110, 60, 0.8) 100%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+    background-blend-mode: multiply;
+    color: var(--ink-color);
+    border: 2px solid #8b6b4a;
+    box-shadow: inset 0 0 80px rgba(90, 60, 30, 0.6), 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.cover .front::before {
+    /* Different spine shading for cover */
+    background: linear-gradient(to right, rgba(60, 40, 20, 0.6) 0%, rgba(60, 40, 20, 0.1) 12%, transparent 100%);
+}
+
+.cover-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 15%;
+    text-align: center;
+}
+
+.cover-content h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 3.5rem;
+    line-height: 1.2;
+    margin: 20px 0;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4), -1px -1px 2px rgba(0, 0, 0, 0.2);
+    color: var(--ink-color);
+}
+
+.author-name {
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+}
+
+.ornament {
+    width: 80%;
+    height: 30px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20'%3E%3Cpath d='M10,10 Q25,0 50,10 T90,10' fill='none' stroke='%233b2c24' stroke-width='1.5'/%3E%3Ccircle cx='50' cy='10' r='3' fill='%233b2c24'/%3E%3C/svg%3E") no-repeat center center / contain;
+}
+
+.jstor-badge {
+    margin-top: 50px;
+    border: 1px solid var(--ink-color);
+    padding: 10px 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    color: var(--ink-color);
+}
+
+.jstor-badge hr {
+    border: none;
+    border-top: 1px solid var(--ink-color);
+    margin: 5px 0;
+}
+
+.cover-back {
+    background-color: #dcb880;
+    background-image:
+        radial-gradient(circle at center, rgba(235, 220, 178, 0.5) 0%, rgba(150, 110, 60, 0.8) 100%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.04' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+    background-blend-mode: multiply;
+    color: var(--ink-color);
+    border: 2px solid #8b6b4a;
+    box-shadow: inset 0 0 80px rgba(90, 60, 30, 0.6), 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.back-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 2;
+    color: var(--ink-color);
+}
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.bibliography {
+    list-style: none;
+    margin-top: 30px;
+    width: 90%;
+}
+
+.bibliography li {
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    padding-left: 2em;
+    text-indent: -2em;
+}
+
+/* =========================================
+   5. CONTROLS
+   ========================================= */
+.book-controls {
+    margin-top: 40px;
+    display: flex;
+    gap: 20px;
+    z-index: 100;
+}
+
+.nav-btn {
+    background: transparent;
+    color: var(--ink-color);
+    border: 1px solid var(--ink-color);
+    padding: 10px 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.nav-btn:hover:not([disabled]) {
+    background: var(--ink-color);
+    color: var(--parchment-base);
+}
+
+.nav-btn[disabled] {
+    opacity: 0.3;
+    cursor: default;
+}
+
+/* 响应式调整 */
+@media (max-width: 900px) {
+    .book {
+        width: 90vw;
+        height: 70vh;
+        /* 在手机上可能只想显示单页阅读，这里做个简化适配，保持3D但不偏移中心 */
+        transform: translateX(0);
+    }
+
+    .page {
+        width: 100%;
+        transform-origin: left center;
+    }
+
+    .front,
+    .back {
+        border-radius: 4px;
+    }
+
+    .cover-content h1 {
+        font-size: 2.5rem;
+    }
+}

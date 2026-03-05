@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>北京天文钟 — Horologium Astronomicum Pekingense</title>
+    <link rel="stylesheet" href="../css/prague.css">
+</head>
+
+<body>
+
+    <!-- Entrance -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <div class="entrance-gears">
+            <div class="gear gear-1"></div>
+            <div class="gear gear-2"></div>
+            <div class="gear gear-3"></div>
+        </div>
+        <h1 class="entrance-title">北京天文钟<br><small style="font-size:0.5em;letter-spacing:6px;opacity:0.6;">HOROLOGIVM
+                ASTRONOMICVM PEKINGENSE</small></h1>
+        <p class="entrance-sub">北纬 39°54′ · 东经 116°23′</p>
+    </div>
+
+    <!-- Main -->
+    <div id="main-container" class="main-container">
+        <a href="index.html" class="back-link">&larr; 返回首页</a>
+
+        <div class="clock-layout">
+            <!-- LEFT -->
+            <div class="label-column label-column-left" id="leftLabels"></div>
+
+            <!-- CENTER -->
+            <div class="clock-center">
+                <div class="clock-wrapper" id="clockWrapper">
+                    <svg id="orloj-svg" viewBox="-500 -500 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="orloj-sketch" x="-5%" y="-5%" width="110%" height="110%">
+                                <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" result="noise" />
+                                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R"
+                                    yChannelSelector="G" />
+                            </filter>
+                            <filter id="highlight-glow">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feFlood flood-color="#b8860b" flood-opacity="0.6" result="color" />
+                                <feComposite in="color" in2="blur" operator="in" result="glow" />
+                                <feMerge>
+                                    <feMergeNode in="glow" />
+                                    <feMergeNode in="glow" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <!-- L1: Outer frame + Old Chinese hour ring -->
+                        <g id="hl-frame" class="orloj-draw phase-1 highlightable" filter="url(#orloj-sketch)">
+                            <circle cx="0" cy="0" r="490" fill="none" stroke="#3b2c24" stroke-width="3" />
+                            <circle cx="0" cy="0" r="485" fill="none" stroke="#3b2c24" stroke-width="1" />
+                            <circle cx="0" cy="0" r="460" fill="none" stroke="#3b2c24" stroke-width="1.5" />
+                            <circle cx="0" cy="0" r="440" fill="none" stroke="#3b2c24" stroke-width="1" />
+                            <g id="chinese-hours"></g>
+                            <g id="chinese-ticks"></g>
+                        </g>
+
+                        <!-- L2: 24h Roman ring -->
+                        <g id="hl-roman" class="orloj-draw phase-2 highlightable" filter="url(#orloj-sketch)">
+                            <circle cx="0" cy="0" r="420" fill="none" stroke="#3b2c24" stroke-width="2" />
+                            <circle cx="0" cy="0" r="395" fill="none" stroke="#3b2c24" stroke-width="2" />
+                            <g id="roman-24h"></g>
+                            <g id="roman-ticks"></g>
+                        </g>
+
+                        <!-- L3: Sky zones -->
+                        <g id="hl-sky" class="orloj-draw phase-2 highlightable">
+                            <clipPath id="dialClip">
+                                <circle cx="0" cy="0" r="393" />
+                            </clipPath>
+                            <g clip-path="url(#dialClip)">
+                                <rect id="hl-night" x="-400" y="50" width="800" height="350" fill="rgba(10,15,40,0.12)"
+                                    class="highlightable" />
+                                <rect id="hl-twilight" x="-400" y="-15" width="800" height="65"
+                                    fill="rgba(200,120,50,0.08)" class="highlightable" />
+                                <rect id="hl-day" x="-400" y="-400" width="800" height="385"
+                                    fill="rgba(70,130,180,0.08)" class="highlightable" />
+                                <text x="0" y="-220" text-anchor="middle" class="zone-label">白昼 DIES</text>
+                                <text x="0" y="260" text-anchor="middle" class="zone-label">黑夜 NOX</text>
+                                <text x="-280" y="22" text-anchor="middle" class="zone-label-small">黎明 AURORA</text>
+                                <text x="280" y="22" text-anchor="middle" class="zone-label-small">黄昏 CREPVSC.</text>
+                            </g>
+                        </g>
+
+                        <!-- L4: Tympan (Beijing 39.9°N) -->
+                        <g class="orloj-draw phase-3 highlightable" filter="url(#orloj-sketch)">
+                            <line id="hl-horizon" x1="-393" y1="0" x2="393" y2="0" stroke="#3b2c24" stroke-width="1.8"
+                                class="highlightable" />
+                            <circle id="hl-tropic-cancer" cx="0" cy="-85" r="170" fill="none"
+                                stroke="rgba(59,44,36,0.4)" stroke-width="0.8" stroke-dasharray="4 3"
+                                class="highlightable" />
+                            <circle id="hl-equator" cx="0" cy="0" r="260" fill="none" stroke="rgba(59,44,36,0.4)"
+                                stroke-width="0.8" stroke-dasharray="6 3" class="highlightable" />
+                            <circle id="hl-tropic-capricorn" cx="0" cy="85" r="365" fill="none"
+                                stroke="rgba(59,44,36,0.4)" stroke-width="0.8" stroke-dasharray="4 3"
+                                class="highlightable" />
+                            <g id="hl-planetary" class="highlightable">
+                                <g id="planetary-hours"></g>
+                            </g>
+                            <circle id="hl-observer" cx="0" cy="-85" r="5" fill="#3b2c24" class="highlightable" />
+                            <text x="14" y="-80" fill="rgba(59,44,36,0.5)" font-size="9"
+                                font-family="'EB Garamond',serif" font-style="italic">北京 39.9°N</text>
+                        </g>
+
+                        <!-- L5: Zodiac ring -->
+                        <g id="hl-zodiac" class="orloj-draw phase-4 highlightable" filter="url(#orloj-sketch)">
+                            <circle cx="0" cy="50" r="195" fill="none" stroke="#3b2c24" stroke-width="2" />
+                            <circle cx="0" cy="50" r="160" fill="none" stroke="#3b2c24" stroke-width="1.2" />
+                            <g id="zodiac-divisions"></g>
+                            <g id="zodiac-symbols"></g>
+                        </g>
+
+                        <!-- L6: Hands -->
+                        <g id="clock-hands" class="phase-5">
+                            <g id="hl-sidereal" class="clock-hand-anim highlightable">
+                                <line x1="0" y1="0" x2="0" y2="-390" stroke="rgba(59,44,36,0.25)" stroke-width="1"
+                                    stroke-dasharray="8 4" />
+                            </g>
+                            <g id="hl-sun-hand" class="clock-hand-anim highlightable">
+                                <line x1="0" y1="40" x2="0" y2="-330" stroke="#b8860b" stroke-width="2.5"
+                                    stroke-linecap="round" />
+                                <g transform="translate(0,-330)">
+                                    <circle r="14" fill="none" stroke="#b8860b" stroke-width="2" />
+                                    <circle r="5" fill="#b8860b" />
+                                    <line x1="0" y1="-18" x2="0" y2="-22" stroke="#b8860b" stroke-width="1.5" />
+                                    <line x1="0" y1="18" x2="0" y2="22" stroke="#b8860b" stroke-width="1.5" />
+                                    <line x1="-18" y1="0" x2="-22" y2="0" stroke="#b8860b" stroke-width="1.5" />
+                                    <line x1="18" y1="0" x2="22" y2="0" stroke="#b8860b" stroke-width="1.5" />
+                                </g>
+                            </g>
+                            <g id="hl-moon-hand" class="clock-hand-anim highlightable">
+                                <line x1="0" y1="30" x2="0" y2="-360" stroke="#607080" stroke-width="1.8"
+                                    stroke-linecap="round" />
+                                <g transform="translate(0,-360)">
+                                    <circle r="10" fill="none" stroke="#607080" stroke-width="1.5" />
+                                    <circle id="moon-phase-dial" r="10" fill="rgba(96,112,128,0.5)" />
+                                </g>
+                            </g>
+                            <g id="hl-hour-hand" class="clock-hand-anim highlightable">
+                                <line x1="0" y1="50" x2="0" y2="-200" stroke="#3b2c24" stroke-width="5"
+                                    stroke-linecap="round" />
+                                <path d="M-7,-185 L0,-210 L7,-185" fill="#3b2c24" />
+                            </g>
+                            <g id="hl-minute-hand" class="clock-hand-anim highlightable">
+                                <line x1="0" y1="35" x2="0" y2="-300" stroke="#3b2c24" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <path d="M-5,-288 L0,-310 L5,-288" fill="#3b2c24" />
+                            </g>
+                            <g id="hl-second-hand" class="clock-hand-anim highlightable">
+                                <line x1="0" y1="60" x2="0" y2="-340" stroke="#8b6b4a" stroke-width="1"
+                                    stroke-linecap="round" />
+                            </g>
+                            <circle cx="0" cy="0" r="10" fill="#3b2c24" />
+                            <circle cx="0" cy="0" r="14" fill="none" stroke="#3b2c24" stroke-width="2" />
+                        </g>
+
+                        <!-- Mirror text -->
+                        <g class="orloj-draw phase-1" filter="url(#orloj-sketch)">
+                            <defs>
+                                <path id="arc-top" d="M-460,0 A460 460 0 0 1 460,0" fill="none" />
+                                <path id="arc-bot" d="M-460,0 A460 460 0 0 0 460,0" fill="none" />
+                            </defs>
+                            <text class="davinci-mirror" transform="scale(-1,1)">
+                                <textPath href="#arc-top" startOffset="50%" text-anchor="middle">北京天文钟 HOROLOGIVM
+                                    PEKINGENSE</textPath>
+                            </text>
+                            <text class="davinci-mirror" transform="scale(-1,1)">
+                                <textPath href="#arc-bot" startOffset="50%" text-anchor="middle">北纬三十九度 东经百十六度
+                                </textPath>
+                            </text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="label-column label-column-right" id="rightLabels"></div>
+        </div>
+
+        <!-- Feature panel overlay -->
+        <div id="feature-panel" class="feature-panel">
+            <button id="closePanel" class="close-panel-btn">&times;</button>
+            <div class="feature-panel-inner">
+                <h2 id="featureTitle" class="fp-title"></h2>
+                <p id="featureDesc" class="fp-desc"></p>
+                <div class="fp-demo-section">
+                    <h3 class="fp-demo-title">🎬 动画演示</h3>
+                    <div id="featureDemo" class="fp-demo"></div>
+                    <p id="featureDemoNote" class="fp-demo-note"></p>
+                </div>
+                <div id="featureDetails" class="fp-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/prague.js"></script>
+</body>
+
+</html>

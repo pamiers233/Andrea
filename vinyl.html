@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Da Vinci Vinyl Record - Last Rebel</title>
+    <link rel="stylesheet" href="../css/vinyl.css">
+</head>
+
+<body>
+    <div class="davinci-frame">
+        <div class="title-section">
+            <h1 id="trackTitle">Last Rebel</h1>
+            <p class="subtitle" id="trackArtist">A Masterpiece in Motion</p>
+        </div>
+
+        <div class="player-container">
+            <!-- Tonearm styling -->
+            <div class="tonearm" id="tonearm">
+                <div class="tonearm-pivot"></div>
+                <div class="tonearm-rod"></div>
+                <div class="tonearm-head"></div>
+            </div>
+
+            <!-- Vinyl Record -->
+            <div class="vinyl-record" id="vinylRecord">
+                <div class="vinyl-groove groove-1"></div>
+                <div class="vinyl-groove groove-2"></div>
+                <div class="vinyl-groove groove-3"></div>
+                <div class="vinyl-groove groove-4"></div>
+                <!-- Center Image -->
+                <div class="vinyl-center">
+                    <img id="trackCover" src="../img/record-cover.jpg" alt="Record Cover">
+                    <div class="vinyl-hole"></div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <span id="currentTime">00:00</span>
+                <input type="range" id="progressBar" value="0" min="0" max="100" step="0.1">
+                <span id="totalTime">00:00</span>
+            </div>
+
+            <!-- Play/Pause Button Area -->
+            <div class="controls">
+                <button id="prevBtn" class="davinci-btn small-btn">&#9664;&#9664;</button>
+                <button id="playBtn" class="davinci-btn">PLAY</button>
+                <button id="nextBtn" class="davinci-btn small-btn">&#9654;&#9654;</button>
+            </div>
+        </div>
+
+        <!-- Audio Element -->
+        <audio id="audioPlayer" src=""></audio>
+
+        <div class="sketches">
+            <div class="sketch sketch-1"></div>
+            <div class="sketch sketch-2"></div>
+        </div>
+    </div>
+
+    <script src="../js/vinyl.js"></script>
+</body>
+
+</html>

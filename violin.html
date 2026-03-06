@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - VIOLINA</title>
+    <link rel="stylesheet" href="../css/violin.css">
+    <!-- Include Tone.js for Karplus-Strong string synthesis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+</head>
+
+<body>
+    <!-- SVG Filters for Sketch/Glow Effects -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="sketch" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"
+                    result="displaced" />
+            </filter>
+            <filter id="hl-glow-violin" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3" result="blur" />
+                <feComponentTransfer in="blur" result="glow">
+                    <feFuncR type="linear" slope="1.5" />
+                    <feFuncG type="linear" slope="1.1" />
+                    <feFuncB type="linear" slope="0.3" />
+                </feComponentTransfer>
+                <feMerge>
+                    <feMergeNode in="glow" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <pattern id="crosshatch" patternUnits="userSpaceOnUse" width="8" height="8">
+                <path d="M-2,2 l4,-4 M0,8 l8,-8 M6,10 l4,-4" stroke="rgba(58, 42, 26, 0.4)" stroke-width="0.5" />
+                <path d="M-2,6 l4,4 M0,0 l8,8 M6,-2 l4,4" stroke="rgba(58, 42, 26, 0.4)" stroke-width="0.5" />
+            </pattern>
+        </defs>
+    </svg>
+
+    <!-- Entrance Animation -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <svg class="entrance-svg" viewBox="0 0 500 500">
+            <g class="entrance-draw" fill="none" stroke="#daa520" stroke-width="2" style="stroke-linecap:round;">
+                <!-- Abstract Violin Silhouette -->
+                <path
+                    d="M 230 150 Q 250 100 270 150 Q 280 200 240 250 Q 300 300 250 400 Q 200 300 260 250 Q 220 200 230 150 Z" />
+                <!-- Neck / Fingerboard -->
+                <rect x="245" y="50" width="10" height="100" />
+            </g>
+        </svg>
+        <h1 class="entrance-title">VIOLINA MAJOR</h1>
+        <div class="entrance-sub">Regina Instrumentorum</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container" id="main-container">
+        <a href="index.html" class="back-link">⟵ REVERSVS</a>
+        <button class="violin-toggle-btn" id="openViolinBtn">Violina Interactiva</button>
+
+        <!-- Interactive Violin Modal -->
+        <div class="violin-modal" id="violinModal">
+            <div class="violin-header">
+                <span class="violin-header-title">Violina - 4 Cordae (Hover to play)</span>
+                <button class="violin-close" id="closeViolinBtn">&times;</button>
+            </div>
+            <div class="violin-container" id="playableViolinInner">
+                <div class="modal-fingerboard" id="fingerboardBox">
+                    <!-- Strings built by JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="parchment">
+            <!-- Left Pane: Latin Text -->
+            <div class="parchment-left" id="parchmentLeft">
+                <svg id="quill-svg" viewBox="0 0 280 780">
+                    <text x="50" y="40" class="quill-title">VIOLINA</text>
+
+                    <path d="M0,50 Q100,50 150,55 T280,50" class="quill-ornament" fill="none" />
+
+                    <text x="0" y="80" class="quill-line">"Lignum et aere,</text>
+                    <text x="0" y="105" class="quill-line">spiritus hominis</text>
+                    <text x="0" y="130" class="quill-line">voxque caelestis."</text>
+                    <text x="150" y="155" class="quill-date">— Andrea Amati</text>
+
+                    <text x="0" y="200" class="quill-line">Quattuor cordae super</text>
+                    <text x="0" y="225" class="quill-line">lignum curvatum positae.</text>
+                    <text x="0" y="250" class="quill-line">G, D, A, E - perfectae</text>
+                    <text x="0" y="275" class="quill-line">quinta resonantes.</text>
+
+                    <path d="M40,305 Q140,295 240,305" class="quill-ornament" fill="none" />
+
+                    <text x="0" y="340" class="quill-line">Cremona est cunabulum</text>
+                    <text x="0" y="365" class="quill-line">magistrorum Stradivari</text>
+                    <text x="0" y="390" class="quill-line">et Guarneri del Gesù.</text>
+
+                    <text x="0" y="440" class="quill-line">Arcus ex setis equinis</text>
+                    <text x="0" y="465" class="quill-line">tractus vitam inmittit.</text>
+
+                    <path d="M0,500 L280,500" class="quill-ornament" fill="none" stroke-dasharray="2 4" />
+
+                    <text x="0" y="535" class="quill-line">Anima abscondita,</text>
+                    <text x="0" y="560" class="quill-line">sonum ad infinitum</text>
+                    <text x="0" y="585" class="quill-line">per aerem diffundit.</text>
+                </svg>
+
+                <svg id="quill-pen" viewBox="0 0 50 150">
+                    <path d="M25,140 Q30,80 40,20 Q45,0 35,5 Q15,40 25,140Z" fill="url(#featherGradient)"
+                        stroke="#3a2a1a" stroke-width="0.5" />
+                    <path d="M25,140 Q25,145 23,148 L25,150 L27,148 Q25,145 25,140Z" fill="#111" />
+                    <line x1="25" y1="148" x2="25" y2="142" stroke="#fff" stroke-width="0.3" />
+                    <path d="M25,140 Q28,100 35,25" fill="none" stroke="#fff" stroke-width="1.5" />
+                    <defs>
+                        <linearGradient id="featherGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#ffffff" />
+                            <stop offset="50%" stop-color="#e8e0d5" />
+                            <stop offset="100%" stop-color="#d3c2a8" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Right Pane: Violin Mechanics -->
+            <div class="parchment-right">
+                <div class="violin-layout">
+                    <div class="label-column label-column-left" id="leftLabels"></div>
+                    <div class="violin-center">
+                        <div class="violin-wrapper" id="violinWrapper">
+                            <svg id="violin-svg" viewBox="0 0 500 750"></svg>
+                        </div>
+                        <div class="violin-controls">
+                            <div class="violin-hint" id="violin-hint">Gemini Ictus ad Dissolvendum (Double Click to
+                                Explode)</div>
+                            <button id="reassembleBtn" class="control-btn" style="display:none;">Restaurare
+                                (Reassemble)</button>
+                        </div>
+                    </div>
+                    <div class="label-column label-column-right" id="rightLabels"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Demo Slide-in Panel -->
+    <div class="feature-panel" id="feature-panel">
+        <button class="close-panel-btn" id="closePanel">&times;</button>
+        <div class="feature-panel-inner">
+            <div class="fp-title" id="featureTitle">Feature Title</div>
+            <div class="fp-desc" id="featureDesc">Feature description text goes here.</div>
+
+            <div class="fp-demo-section">
+                <div class="fp-demo-title">Demonstratio Mechanica</div>
+                <div class="fp-demo" id="featureDemo">
+                    <!-- Dynamic SVG Demo injected by JS -->
+                </div>
+                <div class="fp-demo-note" id="featureDemoNote">Notes about the demo.</div>
+            </div>
+
+            <div class="fp-details" id="featureDetails">
+                <!-- Detailed historical/technical context injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/violin.js"></script>
+</body>
+
+</html>

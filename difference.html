@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>差分机 — Babbage Difference Engine No.2</title>
+    <link rel="stylesheet" href="../css/difference.css">
+</head>
+
+<body>
+
+    <!-- Entrance: Blueprint schematic drawing -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <svg id="entrance-svg" class="entrance-svg" viewBox="0 0 800 500">
+            <defs>
+                <filter id="bp-glow">
+                    <feGaussianBlur stdDeviation="2" result="b" />
+                    <feFlood flood-color="#4fc3f7" flood-opacity="0.6" result="c" />
+                    <feComposite in="c" in2="b" operator="in" result="g" />
+                    <feMerge>
+                        <feMergeNode in="g" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <!-- Blueprint grid -->
+            <g class="bp-grid" opacity="0.15">
+                <line x1="0" y1="50" x2="800" y2="50" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="0" y1="100" x2="800" y2="100" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="0" y1="150" x2="800" y2="150" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="0" y1="200" x2="800" y2="200" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="0" y1="250" x2="800" y2="250" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="0" y1="300" x2="800" y2="300" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="0" y1="350" x2="800" y2="350" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="0" y1="400" x2="800" y2="400" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="0" y1="450" x2="800" y2="450" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="100" y1="0" x2="100" y2="500" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="200" y1="0" x2="200" y2="500" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="300" y1="0" x2="300" y2="500" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="400" y1="0" x2="400" y2="500" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="500" y1="0" x2="500" y2="500" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="600" y1="0" x2="600" y2="500" stroke="#4fc3f7" stroke-width="0.3" />
+                <line x1="700" y1="0" x2="700" y2="500" stroke="#4fc3f7" stroke-width="0.3" />
+            </g>
+            <!-- Blueprint machine outline (drawn on) -->
+            <g class="bp-draw" filter="url(#bp-glow)">
+                <!-- Frame -->
+                <rect x="150" y="60" width="500" height="380" fill="none" stroke="#4fc3f7" stroke-width="1.5" rx="3" />
+                <!-- Columns (7 columns) -->
+                <line x1="220" y1="100" x2="220" y2="400" stroke="#4fc3f7" stroke-width="1" />
+                <line x1="290" y1="100" x2="290" y2="400" stroke="#4fc3f7" stroke-width="1" />
+                <line x1="360" y1="100" x2="360" y2="400" stroke="#4fc3f7" stroke-width="1" />
+                <line x1="430" y1="100" x2="430" y2="400" stroke="#4fc3f7" stroke-width="1" />
+                <line x1="500" y1="100" x2="500" y2="400" stroke="#4fc3f7" stroke-width="1" />
+                <line x1="570" y1="100" x2="570" y2="400" stroke="#4fc3f7" stroke-width="1" />
+                <!-- Wheels on columns -->
+                <circle cx="220" cy="150" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="220" cy="200" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="220" cy="250" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="290" cy="150" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="290" cy="250" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="360" cy="200" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="430" cy="150" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="430" cy="250" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="500" cy="200" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <circle cx="570" cy="150" r="18" fill="none" stroke="#4fc3f7" stroke-width="0.8" />
+                <!-- Crank -->
+                <circle cx="650" cy="250" r="30" fill="none" stroke="#4fc3f7" stroke-width="1.2" />
+                <line x1="650" y1="250" x2="680" y2="250" stroke="#4fc3f7" stroke-width="1" />
+            </g>
+        </svg>
+        <h1 class="entrance-title">DIFFERENCE ENGINE</h1>
+        <p class="entrance-sub">Charles Babbage · 1847 · No. 2</p>
+    </div>
+
+    <!-- Main container -->
+    <div id="main-container" class="main-container">
+        <a href="index.html" class="back-link">&larr; 返回首页</a>
+
+        <div class="engine-layout">
+            <!-- LEFT LABELS -->
+            <div class="label-column label-column-left" id="leftLabels"></div>
+
+            <!-- CENTER: Engine SVG -->
+            <div class="engine-center">
+                <div class="engine-wrapper" id="engineWrapper">
+                    <svg id="engine-svg" viewBox="0 0 700 520" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="eng-sketch" x="-3%" y="-3%" width="106%" height="106%">
+                                <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" result="n" />
+                                <feDisplacementMap in="SourceGraphic" in2="n" scale="1" xChannelSelector="R"
+                                    yChannelSelector="G" />
+                            </filter>
+                            <filter id="hl-glow-eng">
+                                <feGaussianBlur stdDeviation="5" result="b" />
+                                <feFlood flood-color="#ffd700" flood-opacity="0.6" result="c" />
+                                <feComposite in="c" in2="b" operator="in" result="g" />
+                                <feMerge>
+                                    <feMergeNode in="g" />
+                                    <feMergeNode in="g" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <linearGradient id="brass" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#d4a54a" />
+                                <stop offset="50%" stop-color="#b8860b" />
+                                <stop offset="100%" stop-color="#8b6914" />
+                            </linearGradient>
+                            <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#a0a0a0" />
+                                <stop offset="100%" stop-color="#606060" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Machine frame -->
+                        <g id="hl-frame" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="20" y="15" width="660" height="490" fill="none" stroke="#5a4a3a" stroke-width="3"
+                                rx="5" />
+                            <rect x="25" y="20" width="650" height="480" fill="none" stroke="#5a4a3a" stroke-width="1"
+                                rx="3" />
+                            <!-- Base plate -->
+                            <rect x="30" y="460" width="640" height="30" fill="url(#steel)" stroke="#5a4a3a"
+                                stroke-width="1" rx="2" />
+                            <!-- Top bar -->
+                            <rect x="30" y="25" width="640" height="20" fill="url(#steel)" stroke="#5a4a3a"
+                                stroke-width="1" rx="2" />
+                        </g>
+
+                        <!-- Main shaft (horizontal) -->
+                        <g id="hl-shaft" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="40" y="440" width="580" height="12" fill="url(#steel)" stroke="#5a4a3a"
+                                stroke-width="1" rx="2" />
+                            <text x="330" y="435" text-anchor="middle" class="eng-label">AXIS PRINCIPALES</text>
+                        </g>
+
+                        <!-- Column groups (7 columns: Result, Δ1, Δ2, Δ3, Δ4, Δ5, Δ6) -->
+                        <g id="hl-result-col" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="55" y="55" width="70" height="395" fill="rgba(180,134,11,0.05)" stroke="#5a4a3a"
+                                stroke-width="1.5" rx="3" />
+                            <text x="90" y="48" text-anchor="middle" class="eng-col-label">结果 R</text>
+                            <g id="result-wheels"></g>
+                        </g>
+                        <g id="hl-d1-col" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="135" y="55" width="70" height="395" fill="rgba(180,134,11,0.03)" stroke="#5a4a3a"
+                                stroke-width="1" rx="3" />
+                            <text x="170" y="48" text-anchor="middle" class="eng-col-label">Δ¹</text>
+                            <g id="d1-wheels"></g>
+                        </g>
+                        <g id="hl-d2-col" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="215" y="55" width="70" height="395" fill="rgba(180,134,11,0.03)" stroke="#5a4a3a"
+                                stroke-width="1" rx="3" />
+                            <text x="250" y="48" text-anchor="middle" class="eng-col-label">Δ²</text>
+                            <g id="d2-wheels"></g>
+                        </g>
+                        <g id="hl-d3-col" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="295" y="55" width="70" height="395" fill="rgba(180,134,11,0.03)" stroke="#5a4a3a"
+                                stroke-width="1" rx="3" />
+                            <text x="330" y="48" text-anchor="middle" class="eng-col-label">Δ³</text>
+                            <g id="d3-wheels"></g>
+                        </g>
+                        <g id="hl-d4-col" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="375" y="55" width="70" height="395" fill="rgba(180,134,11,0.03)" stroke="#5a4a3a"
+                                stroke-width="1" rx="3" />
+                            <text x="410" y="48" text-anchor="middle" class="eng-col-label">Δ⁴</text>
+                            <g id="d4-wheels"></g>
+                        </g>
+                        <g id="hl-d5-col" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="455" y="55" width="70" height="395" fill="rgba(180,134,11,0.03)" stroke="#5a4a3a"
+                                stroke-width="1" rx="3" />
+                            <text x="490" y="48" text-anchor="middle" class="eng-col-label">Δ⁵</text>
+                            <g id="d5-wheels"></g>
+                        </g>
+                        <g id="hl-d6-col" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="535" y="55" width="70" height="395" fill="rgba(180,134,11,0.03)" stroke="#5a4a3a"
+                                stroke-width="1" rx="3" />
+                            <text x="570" y="48" text-anchor="middle" class="eng-col-label">Δ⁶</text>
+                            <g id="d6-wheels"></g>
+                        </g>
+
+                        <!-- Carry mechanism arrows -->
+                        <g id="hl-carry" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <g id="carry-indicators"></g>
+                        </g>
+
+                        <!-- Crank handle -->
+                        <g id="hl-crank" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <circle cx="640" cy="260" r="35" fill="none" stroke="#5a4a3a" stroke-width="2.5" />
+                            <circle cx="640" cy="260" r="8" fill="url(#brass)" stroke="#5a4a3a" stroke-width="1" />
+                            <line id="crank-arm" x1="640" y1="260" x2="675" y2="260" stroke="#5a4a3a" stroke-width="3"
+                                stroke-linecap="round" />
+                            <circle id="crank-handle" cx="675" cy="260" r="6" fill="url(#brass)" stroke="#5a4a3a"
+                                stroke-width="1" />
+                            <text x="640" y="310" text-anchor="middle" class="eng-label">MANVBRIVM</text>
+                        </g>
+
+                        <!-- Print mechanism -->
+                        <g id="hl-print" class="eng-draw highlightable" filter="url(#eng-sketch)">
+                            <rect x="30" y="55" width="18" height="100" fill="url(#steel)" stroke="#5a4a3a"
+                                stroke-width="1" rx="2" />
+                            <rect x="22" y="160" width="34" height="10" fill="url(#brass)" stroke="#5a4a3a"
+                                stroke-width="0.5" rx="1" />
+                            <text x="38" y="180" text-anchor="middle" class="eng-label" font-size="7">PRINT</text>
+                        </g>
+
+                        <!-- Computation step indicator -->
+                        <g id="hl-cycle" class="highlightable">
+                            <rect x="615" y="350" width="65" height="80" fill="rgba(180,134,11,0.08)" stroke="#5a4a3a"
+                                stroke-width="1" rx="3" />
+                            <text x="647" y="370" text-anchor="middle" class="eng-label">步骤</text>
+                            <text id="step-display" x="647" y="405" text-anchor="middle" fill="#5a4a3a"
+                                font-family="'Cinzel',serif" font-size="28">0</text>
+                        </g>
+                    </svg>
+
+                    <!-- Run button overlay -->
+                    <button id="runBtn" class="run-btn">▶ 运行一步</button>
+                    <button id="resetBtn" class="reset-btn">↺ 重置</button>
+                    <select id="polySelect" class="poly-select">
+                        <option value="0">x² (平方)</option>
+                        <option value="1">x³ (立方)</option>
+                        <option value="2">x²+x+41 (欧拉素数)</option>
+                        <option value="3">2x³-3x²+x+5</option>
+                        <option value="4">三角数 n(n+1)/2</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- RIGHT LABELS -->
+            <div class="label-column label-column-right" id="rightLabels"></div>
+        </div>
+
+        <!-- Feature panel -->
+        <div id="feature-panel" class="feature-panel">
+            <button id="closePanel" class="close-panel-btn">&times;</button>
+            <div class="feature-panel-inner">
+                <h2 id="featureTitle" class="fp-title"></h2>
+                <p id="featureDesc" class="fp-desc"></p>
+                <div class="fp-demo-section">
+                    <h3 class="fp-demo-title">🎬 动画演示</h3>
+                    <div id="featureDemo" class="fp-demo"></div>
+                    <p id="featureDemoNote" class="fp-demo-note"></p>
+                </div>
+                <div id="featureDetails" class="fp-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/difference.js"></script>
+</body>
+
+</html>

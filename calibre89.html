@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calibre 89 — Patek Philippe Grand Complication</title>
+    <link rel="stylesheet" href="../css/calibre89.css">
+</head>
+
+<body>
+
+    <!-- Entrance: Luxury iris reveal -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <div class="iris-ring ring-1"></div>
+        <div class="iris-ring ring-2"></div>
+        <div class="iris-ring ring-3"></div>
+        <div class="entrance-logo">
+            <span class="logo-line">PATEK PHILIPPE</span>
+            <span class="logo-sub">CALIBRE 89</span>
+            <span class="logo-detail">33 Complications · Genève · 1989</span>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div id="main-container" class="main-container">
+        <a href="index.html" class="back-link">&larr; 返回首页</a>
+
+        <div class="watch-layout">
+            <!-- LEFT LABELS -->
+            <div class="label-column label-column-left" id="leftLabels"></div>
+
+            <!-- CENTER: Watch face SVG -->
+            <div class="watch-center">
+                <div class="watch-wrapper" id="watchWrapper">
+                    <svg id="watch-svg" viewBox="-500 -500 1000 1000" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="w-sketch" x="-3%" y="-3%" width="106%" height="106%">
+                                <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" result="n" />
+                                <feDisplacementMap in="SourceGraphic" in2="n" scale="0.8" xChannelSelector="R"
+                                    yChannelSelector="G" />
+                            </filter>
+                            <filter id="hl-glow-w">
+                                <feGaussianBlur stdDeviation="6" result="b" />
+                                <feFlood flood-color="#ffd700" flood-opacity="0.6" result="c" />
+                                <feComposite in="c" in2="b" operator="in" result="g" />
+                                <feMerge>
+                                    <feMergeNode in="g" />
+                                    <feMergeNode in="g" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <radialGradient id="sky-grad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#0a1a3a" />
+                                <stop offset="70%" stop-color="#071230" />
+                                <stop offset="100%" stop-color="#040a1e" />
+                            </radialGradient>
+                            <radialGradient id="case-grad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#d4aa50" />
+                                <stop offset="100%" stop-color="#8b6914" />
+                            </radialGradient>
+                        </defs>
+
+                        <!-- Case bezel -->
+                        <g id="hl-case" class="highlightable">
+                            <circle cx="0" cy="0" r="495" fill="none" stroke="#8b6914" stroke-width="8" />
+                            <circle cx="0" cy="0" r="490" fill="none" stroke="#c9a84c" stroke-width="2" />
+                            <circle cx="0" cy="0" r="488" fill="none" stroke="#8b6914" stroke-width="1" />
+                        </g>
+
+                        <!-- Season ring (outermost) -->
+                        <g id="hl-seasons" class="highlightable">
+                            <circle cx="0" cy="0" r="480" fill="none" stroke="#c9a84c" stroke-width="0.5" />
+                            <circle cx="0" cy="0" r="455" fill="none" stroke="#c9a84c" stroke-width="0.5" />
+                            <g id="season-arcs"></g>
+                            <g id="season-labels"></g>
+                        </g>
+
+                        <!-- Month + Zodiac ring -->
+                        <g id="hl-zodiac" class="highlightable">
+                            <circle cx="0" cy="0" r="453" fill="none" stroke="#c9a84c" stroke-width="1" />
+                            <circle cx="0" cy="0" r="415" fill="none" stroke="#c9a84c" stroke-width="0.5" />
+                            <circle cx="0" cy="0" r="395" fill="none" stroke="#c9a84c" stroke-width="1" />
+                            <g id="zodiac-signs"></g>
+                            <g id="month-labels"></g>
+                        </g>
+
+                        <!-- 24h sidereal scale -->
+                        <g id="hl-24h" class="highlightable">
+                            <circle cx="0" cy="0" r="393" fill="none" stroke="#c9a84c" stroke-width="0.8" />
+                            <circle cx="0" cy="0" r="365" fill="none" stroke="#c9a84c" stroke-width="0.8" />
+                            <g id="sidereal-scale"></g>
+                        </g>
+
+                        <!-- Star chart (planisphere) — rotates -->
+                        <g id="hl-planisphere" class="highlightable">
+                            <circle cx="0" cy="0" r="363" fill="url(#sky-grad)" />
+                            <g id="star-field"></g>
+                            <!-- Cardinal directions -->
+                            <text x="0" y="-340" text-anchor="middle" class="cardinal-label">NORD</text>
+                            <text x="0" y="350" text-anchor="middle" class="cardinal-label">SUD</text>
+                            <text x="345" y="5" text-anchor="middle" class="cardinal-label">EST</text>
+                            <text x="-345" y="5" text-anchor="middle" class="cardinal-label">OUEST</text>
+                            <!-- Horizon line -->
+                            <line id="hl-horizon-line" x1="-360" y1="0" x2="360" y2="0" stroke="rgba(201,168,76,0.2)"
+                                stroke-width="0.5" stroke-dasharray="4 3" class="highlightable" />
+                            <!-- Ecliptic -->
+                            <ellipse id="hl-ecliptic" cx="0" cy="0" rx="300" ry="250" fill="none"
+                                stroke="rgba(201,168,76,0.15)" stroke-width="0.8" stroke-dasharray="6 4"
+                                transform="rotate(-23.44)" class="highlightable" />
+                        </g>
+
+                        <!-- Sub-dial: Easter (top) -->
+                        <g id="hl-easter" class="highlightable" transform="translate(0,-220)">
+                            <circle r="65" fill="rgba(4,10,30,0.8)" stroke="#c9a84c" stroke-width="1" />
+                            <text x="0" y="-50" text-anchor="middle" class="subdial-title">DATES DE PÂQUES</text>
+                            <text id="easter-date" x="0" y="8" text-anchor="middle" class="subdial-value">—</text>
+                            <text id="easter-next" x="0" y="28" text-anchor="middle" class="subdial-small">—</text>
+                        </g>
+
+                        <!-- Sub-dial: Sunrise (left) -->
+                        <g id="hl-sunrise" class="highlightable" transform="translate(-200,80)">
+                            <circle r="70" fill="rgba(4,10,30,0.8)" stroke="#c9a84c" stroke-width="1" />
+                            <text x="0" y="-54" text-anchor="middle" class="subdial-title">LEVER DU SOLEIL</text>
+                            <circle r="55" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.5" />
+                            <g id="sunrise-ticks"></g>
+                            <line id="sunrise-hand" x1="0" y1="0" x2="0" y2="-48" stroke="#c9a84c" stroke-width="1.5"
+                                stroke-linecap="round" />
+                            <circle r="4" fill="#c9a84c" />
+                            <text id="sunrise-val" x="0" y="30" text-anchor="middle" class="subdial-small">—</text>
+                        </g>
+
+                        <!-- Sub-dial: Sunset (right) -->
+                        <g id="hl-sunset" class="highlightable" transform="translate(200,80)">
+                            <circle r="70" fill="rgba(4,10,30,0.8)" stroke="#c9a84c" stroke-width="1" />
+                            <text x="0" y="-54" text-anchor="middle" class="subdial-title">COUCHER DU SOLEIL</text>
+                            <circle r="55" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.5" />
+                            <g id="sunset-ticks"></g>
+                            <line id="sunset-hand" x1="0" y1="0" x2="0" y2="-48" stroke="#c9a84c" stroke-width="1.5"
+                                stroke-linecap="round" />
+                            <circle r="4" fill="#c9a84c" />
+                            <text id="sunset-val" x="0" y="30" text-anchor="middle" class="subdial-small">—</text>
+                        </g>
+
+                        <!-- Sub-dial: Equation of Time (bottom-left) -->
+                        <g id="hl-equation" class="highlightable" transform="translate(-140,260)">
+                            <circle r="58" fill="rgba(4,10,30,0.8)" stroke="#c9a84c" stroke-width="1" />
+                            <text x="0" y="-44" text-anchor="middle" class="subdial-title">ÉQUATION</text>
+                            <circle r="45" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.5" />
+                            <g id="eot-ticks"></g>
+                            <line id="eot-hand" x1="0" y1="0" x2="0" y2="-40" stroke="#c9a84c" stroke-width="1.5"
+                                stroke-linecap="round" />
+                            <circle r="3" fill="#c9a84c" />
+                            <text id="eot-val" x="0" y="25" text-anchor="middle" class="subdial-small">—</text>
+                        </g>
+
+                        <!-- Sub-dial: Sidereal Time (bottom-right) -->
+                        <g id="hl-sidereal-dial" class="highlightable" transform="translate(140,260)">
+                            <circle r="58" fill="rgba(4,10,30,0.8)" stroke="#c9a84c" stroke-width="1" />
+                            <text x="0" y="-44" text-anchor="middle" class="subdial-title">TEMPS SIDÉRAL</text>
+                            <circle r="45" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="0.5" />
+                            <g id="sid-ticks"></g>
+                            <line id="sid-hour-hand" x1="0" y1="0" x2="0" y2="-32" stroke="#c9a84c" stroke-width="2"
+                                stroke-linecap="round" />
+                            <line id="sid-min-hand" x1="0" y1="0" x2="0" y2="-40" stroke="#c9a84c" stroke-width="1"
+                                stroke-linecap="round" />
+                            <circle r="3" fill="#c9a84c" />
+                            <text id="sid-val" x="0" y="25" text-anchor="middle" class="subdial-small">—</text>
+                        </g>
+
+                        <!-- Main hands -->
+                        <g id="hl-hands" class="highlightable">
+                            <!-- Sidereal hand (thin, slightly faster) -->
+                            <line id="main-sid-hand" x1="0" y1="30" x2="0" y2="-355" stroke="rgba(201,168,76,0.35)"
+                                stroke-width="0.8" stroke-dasharray="6 3" />
+                            <!-- Hour hand -->
+                            <g id="hl-hour-hand" class="highlightable">
+                                <line x1="0" y1="40" x2="0" y2="-200" stroke="#c9a84c" stroke-width="4"
+                                    stroke-linecap="round" />
+                                <path d="M-6,-185 L0,-210 L6,-185" fill="#c9a84c" />
+                            </g>
+                            <!-- Minute hand -->
+                            <g id="hl-minute-hand" class="highlightable">
+                                <line x1="0" y1="30" x2="0" y2="-310" stroke="#c9a84c" stroke-width="2.5"
+                                    stroke-linecap="round" />
+                                <path d="M-4,-298 L0,-318 L4,-298" fill="#c9a84c" />
+                            </g>
+                            <!-- Second hand -->
+                            <g id="hl-second-hand" class="highlightable">
+                                <line x1="0" y1="55" x2="0" y2="-340" stroke="#e0c060" stroke-width="0.8" />
+                            </g>
+                            <!-- Center jewel -->
+                            <circle cx="0" cy="0" r="8" fill="#c9a84c" />
+                            <circle cx="0" cy="0" r="12" fill="none" stroke="#c9a84c" stroke-width="1.5" />
+                        </g>
+
+                        <!-- Moon phase indicator (small) -->
+                        <g id="hl-moon" class="highlightable" transform="translate(0,140)">
+                            <circle r="22" fill="rgba(4,10,30,0.9)" stroke="#c9a84c" stroke-width="0.8" />
+                            <circle id="moon-display" r="16" fill="#e8d88c" />
+                            <clipPath id="moon-clip">
+                                <rect id="moon-shadow" x="-16" y="-16" width="16" height="32" />
+                            </clipPath>
+                            <circle r="16" fill="rgba(4,10,30,0.95)" clip-path="url(#moon-clip)" />
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- RIGHT LABELS -->
+            <div class="label-column label-column-right" id="rightLabels"></div>
+        </div>
+
+        <!-- Feature panel -->
+        <div id="feature-panel" class="feature-panel">
+            <button id="closePanel" class="close-panel-btn">&times;</button>
+            <div class="feature-panel-inner">
+                <h2 id="featureTitle" class="fp-title"></h2>
+                <p id="featureDesc" class="fp-desc"></p>
+                <div class="fp-demo-section">
+                    <h3 class="fp-demo-title">🎬 动画演示</h3>
+                    <div id="featureDemo" class="fp-demo"></div>
+                    <p id="featureDemoNote" class="fp-demo-note"></p>
+                </div>
+                <div id="featureDetails" class="fp-details"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/calibre89.js"></script>
+</body>
+
+</html>

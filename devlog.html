@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - δ-log.exe // 开发日志</title>
+    <link rel="stylesheet" href="../css/devlog.css">
+</head>
+
+<body>
+    <!-- Boot Sequence -->
+    <div id="boot-overlay" class="boot-overlay">
+        <div class="boot-terminal">
+            <div class="boot-lines" id="boot-lines"></div>
+            <div class="boot-cursor">█</div>
+        </div>
+    </div>
+
+    <!-- Scanline overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Main -->
+    <div class="main-wrap" id="main-wrap">
+        <!-- Top bar -->
+        <div class="top-bar">
+            <div class="top-left">
+                <span class="top-icon">⟐</span>
+                <span class="top-label">如我所书</span>
+                <span class="top-exe">δ-log.exe</span>
+            </div>
+            <a href="index.html" class="top-back">⟵ 返回</a>
+        </div>
+
+        <!-- Header -->
+        <div class="log-header">
+            <div class="glitch-title" data-text="AMDREA // DEV_LOG">AMDREA // DEV_LOG</div>
+            <div class="log-subtitle">PROJECT BUILD PROGRESS — <span id="progress-pct">9</span>% COMPLETE</div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-wrap">
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill" style="width: 9%;"></div>
+                <div class="progress-hatches"></div>
+            </div>
+            <div class="progress-marker" id="progress-marker" style="left:9%;">▼</div>
+            <div class="progress-label"><span class="cyan">9</span> / 100</div>
+        </div>
+
+        <!-- Cards + Detail -->
+        <div class="cards-section">
+            <div class="cards-grid" id="cards-grid"></div>
+            <div class="detail-panel" id="detail-panel">
+                <div class="detail-header">
+                    <span class="detail-tag" id="detail-tag">CARD-001</span>
+                    <span class="detail-title" id="detail-title">选择一张卡牌查看</span>
+                </div>
+                <div class="detail-body" id="detail-body">
+                    <p class="detail-hint">← 点击左侧已解锁的卡牌查看开发日志</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/devlog.js"></script>
+</body>
+
+</html>

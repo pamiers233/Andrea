@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - 桥牌 (Bridge)</title>
+    <link rel="stylesheet" href="../css/bridge.css">
+</head>
+
+<body>
+    <!-- SVG Filters -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="sketch" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"
+                    result="displaced" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- 华丽开场动画 -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <svg class="entrance-svg rotate-clock" viewBox="-250 -250 500 500" style="position: absolute;">
+            <g class="anim-draw-slow" fill="none" stroke="#b8860b" stroke-width="1.5" stroke-dasharray="10 5"
+                stroke-linecap="round">
+                <circle cx="0" cy="0" r="230" />
+                <circle cx="0" cy="0" r="220" stroke-width="0.5" />
+            </g>
+            <g class="anim-draw" fill="none" stroke="#8c3a3a" stroke-width="2">
+                <circle cx="0" cy="-150" r="40" />
+                <circle cx="150" cy="0" r="40" />
+                <circle cx="0" cy="150" r="40" />
+                <circle cx="-150" cy="0" r="40" />
+                <line x1="0" y1="-190" x2="190" y2="0" />
+                <line x1="190" y1="0" x2="0" y2="190" />
+                <line x1="0" y1="190" x2="-190" y2="0" />
+                <line x1="-190" y1="0" x2="0" y2="-190" />
+            </g>
+        </svg>
+        <svg class="entrance-svg rotate-counter" viewBox="-250 -250 500 500"
+            style="position: absolute; width: 40vw; max-width: 400px;">
+            <g class="anim-draw-fast" fill="none" stroke="#daa520" stroke-width="1.5">
+                <polygon points="0,-160 160,0 0,160 -160,0" stroke-dasharray="8 4" />
+                <polygon points="-113,-113 113,-113 113,113 -113,113" stroke-dasharray="5 5" />
+                <circle cx="0" cy="0" r="100" stroke-width="3" />
+                <path d="M0,-20 Q 20,0 0,40 Q -20,0 0,-20" fill="none" stroke="#daa520" stroke-width="2" />
+            </g>
+        </svg>
+        <h1 class="entrance-title">桥 牌</h1>
+        <div class="entrance-sub">正在洗牌...</div>
+    </div>
+
+    <!-- 主界面 -->
+    <div class="main-container" id="main-container">
+        <a href="index.html" class="back-link">⟵ 返回</a>
+
+        <div class="game-controls">
+            <button class="game-btn" id="btn-ai-demo">🤖 AI教学对局</button>
+            <button class="game-btn" id="btn-deal">重新发牌</button>
+        </div>
+
+        <div class="parchment">
+            <!-- 左侧：教学指南 -->
+            <div class="parchment-left" id="parchmentLeft">
+                <div class="quill-text-area">
+                    <svg class="quill-svg" viewBox="0 0 280 400" id="quill-svg">
+                        <text x="30" y="30" class="quill-title">桥 牌 入 门</text>
+                        <text x="0" y="70" class="quill-line">四位玩家围坐在桌旁。</text>
+                        <text x="0" y="95" class="quill-line">对面的两人组成搭档。</text>
+                        <text x="0" y="120" class="quill-line">52张扑克牌每人分13张。</text>
+                        <text x="0" y="155" class="quill-line">智慧与运气并存的博弈。</text>
+                        <text x="0" y="180" class="quill-line">出牌需要跟随首出的花色。</text>
+                        <text x="0" y="215" class="quill-line">庄家(南)控制两手牌。</text>
+                        <text x="0" y="240" class="quill-line">明手(北)的牌面朝上摊开。</text>
+                    </svg>
+                </div>
+
+                <div class="guide-panel-container">
+                    <div class="guide-title">📖 教学指南</div>
+                    <button class="feature-btn" data-target="guide-deal">
+                        <span class="btn-dot"></span> <span class="btn-label-wrap">1. 发牌与手牌 <span
+                                class="btn-status">每人13张</span></span>
+                    </button>
+                    <button class="feature-btn" data-target="guide-teams">
+                        <span class="btn-dot"></span> <span class="btn-label-wrap">2. 搭档与阵营 <span class="btn-status">南北
+                                vs 东西</span></span>
+                    </button>
+                    <button class="feature-btn" data-target="guide-bidding">
+                        <span class="btn-dot"></span> <span class="btn-label-wrap">3. 叫牌与定约 <span
+                                class="btn-status">竞价过程</span></span>
+                    </button>
+                    <button class="feature-btn" data-target="guide-play">
+                        <span class="btn-dot"></span> <span class="btn-label-wrap">4. 出牌与明手 <span
+                                class="btn-status">庄家操控</span></span>
+                    </button>
+                    <button class="feature-btn" data-target="guide-tricks">
+                        <span class="btn-dot"></span> <span class="btn-label-wrap">5. 赢墩规则 <span
+                                class="btn-status">比大小</span></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧：桥牌桌面 -->
+            <div class="parchment-right">
+                <!-- 游戏状态 -->
+                <div class="status-box" id="game-status-box">
+                    <h4>定约 (Contract)</h4>
+                    <div id="contract-text">1 无将 (南家庄)</div>
+                    <div
+                        style="margin-top:5px; padding-top:5px; border-top:1px dashed #704214; display:flex; justify-content:space-between; width:130px;">
+                        <span>南北: <b id="score-ns">0</b></span>
+                        <span>东西: <b id="score-ew">0</b></span>
+                    </div>
+                </div>
+
+                <!-- AI决策提示 -->
+                <div class="ai-reason-box" id="ai-reason-box" style="display:none;">
+                    <div class="ai-reason-title">🤖 AI 出牌分析</div>
+                    <div class="ai-reason-text" id="ai-reason-text">等待出牌...</div>
+                </div>
+
+                <div class="table-wrapper">
+                    <!-- 桌面背景圆 -->
+                    <svg class="table-sketch-bg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+                        <circle cx="250" cy="250" r="230" fill="rgba(180, 150, 100, 0.05)" stroke="#3a2a1a"
+                            stroke-width="1.5" stroke-dasharray="10 5" filter="url(#sketch)" />
+                        <circle cx="250" cy="250" r="150" fill="none" stroke="#704214" stroke-width="1"
+                            stroke-dasharray="4 4" filter="url(#sketch)" />
+                        <text x="250" y="35" text-anchor="middle" font-family="'Cinzel'" font-size="16"
+                            fill="#704214">北</text>
+                        <text x="250" y="480" text-anchor="middle" font-family="'Cinzel'" font-size="16"
+                            fill="#704214">南</text>
+                        <text x="475" y="255" text-anchor="middle" font-family="'Cinzel'" font-size="16"
+                            fill="#704214">东</text>
+                        <text x="25" y="255" text-anchor="middle" font-family="'Cinzel'" font-size="16"
+                            fill="#704214">西</text>
+                    </svg>
+
+                    <div class="player-area player-n" id="area-n">
+                        <div class="player-label">北 (明手)</div>
+                        <div class="hand" id="hand-n"></div>
+                    </div>
+                    <div class="player-area player-w" id="area-w">
+                        <div class="player-label">西</div>
+                        <div class="hand" id="hand-w"></div>
+                    </div>
+                    <div class="trick-area" id="trick-area"></div>
+                    <div class="player-area player-e" id="area-e">
+                        <div class="player-label">东</div>
+                        <div class="hand" id="hand-e"></div>
+                    </div>
+                    <div class="player-area player-s" id="area-s">
+                        <div class="player-label">南 (你)</div>
+                        <div class="hand" id="hand-s"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 教学侧边面板 -->
+    <div class="feature-panel" id="feature-panel">
+        <button class="close-panel-btn" id="closePanel">&times;</button>
+        <div class="feature-panel-inner">
+            <h2 class="fp-title" id="fp-title">标题</h2>
+            <div class="fp-desc" id="fp-desc">描述</div>
+            <div class="fp-demo" id="fp-demo"></div>
+            <div class="fp-details" id="fp-details"></div>
+        </div>
+    </div>
+
+    <script src="../js/bridge.js"></script>
+</body>
+
+</html>

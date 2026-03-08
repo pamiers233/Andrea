@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - 翁法罗斯天文钟 (Omphalos Clock)</title>
+    <link rel="stylesheet" href="../css/omphalos.css">
+</head>
+
+<body>
+    <!-- SVG Filters -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="b1" />
+                <feGaussianBlur stdDeviation="8" result="b2" />
+                <feMerge>
+                    <feMergeNode in="b2" />
+                    <feMergeNode in="b1" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="glow-strong" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="6" result="b1" />
+                <feFlood flood-color="#e5b93d" flood-opacity="0.5" result="c" />
+                <feComposite in="c" in2="b1" operator="in" result="g" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b2" />
+                <feMerge>
+                    <feMergeNode in="g" />
+                    <feMergeNode in="g" />
+                    <feMergeNode in="b2" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="glow-purple" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="5" result="b1" />
+                <feFlood flood-color="#ce93d8" flood-opacity="0.6" result="c" />
+                <feComposite in="c" in2="b1" operator="in" result="g" />
+                <feMerge>
+                    <feMergeNode in="g" />
+                    <feMergeNode in="g" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="glow-blue" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="4" result="b1" />
+                <feFlood flood-color="#80d0ff" flood-opacity="0.5" result="c" />
+                <feComposite in="c" in2="b1" operator="in" result="g" />
+                <feMerge>
+                    <feMergeNode in="g" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+            <filter id="glow-white" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="3" result="b1" />
+                <feFlood flood-color="#ffffff" flood-opacity="0.7" result="c" />
+                <feComposite in="c" in2="b1" operator="in" result="g" />
+                <feMerge>
+                    <feMergeNode in="g" />
+                    <feMergeNode in="g" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- Entrance Animation -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <svg class="entrance-svg rot-slow" viewBox="-200 -200 400 400">
+            <g class="anim-draw" fill="none" stroke="#e5b93d" stroke-width="1.5">
+                <circle cx="0" cy="0" r="180" stroke-dasharray="10 6" />
+                <circle cx="0" cy="0" r="160" stroke-width="0.5" />
+                <polygon points="0,-140 121,70 -121,70" stroke-dasharray="6 4" />
+                <polygon points="0,140 121,-70 -121,-70" stroke-dasharray="6 4" />
+                <circle cx="0" cy="0" r="50" stroke-width="2" />
+                <path d="M-25,0 Q 0,-30 25,0 Q 0,30 -25,0" stroke-width="2" />
+            </g>
+        </svg>
+        <h1 class="entrance-title">翁 法 罗 斯</h1>
+        <div class="entrance-sub">十二泰坦刻度 · 星间时规计 (Chronometer of Omphalos)</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container" id="main-container">
+        <div id="starfield" style="position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;"></div>
+        <a href="index.html" class="back-link">⟵ 返回首页</a>
+
+        <div class="clock-layout">
+            <!-- Clock Face -->
+            <div class="clock-center">
+                <div class="clock-wrapper">
+                    <svg class="clock-svg" id="omphalos-svg" viewBox="-500 -500 1000 1000">
+                        <circle cx="0" cy="0" r="480" fill="#1b202c" stroke="#4a5260" stroke-width="4" />
+                        <circle cx="0" cy="0" r="465" fill="#12151b" stroke="#e5b93d" stroke-width="2" />
+                        <circle cx="0" cy="0" r="320" fill="none" stroke="#4a5260" stroke-width="1.5" />
+                        <circle cx="0" cy="0" r="150" fill="none" stroke="#e5b93d" stroke-width="1.5"
+                            stroke-dasharray="12 4" />
+
+                        <g id="titan-wedges"></g>
+
+                        <!-- Rotating Inner Dial: 12 Titan Card Medallions + Center -->
+                        <g id="inner-dial" class="inner-dial-rotate">
+                            <!-- 装饰性螺旋弧线 (仿游戏截图) -->
+                            <circle cx="0" cy="0" r="155" fill="none" stroke="rgba(100,181,246,0.15)"
+                                stroke-width="1" />
+                            <circle cx="0" cy="0" r="130" fill="none" stroke="rgba(100,181,246,0.1)" stroke-width="0.8"
+                                stroke-dasharray="8 6" />
+                            <circle cx="0" cy="0" r="80" fill="none" stroke="rgba(229,185,61,0.2)" stroke-width="1.5" />
+                            <!-- 螺旋辐射线 -->
+                            <g opacity="0.15" stroke="#64b5f6" stroke-width="0.8" fill="none">
+                                <path d="M0,-155 Q40,-120 20,-80" />
+                                <path d="M134,-78 Q100,-70 60,-40" />
+                                <path d="M134,78 Q100,50 60,30" />
+                                <path d="M0,155 Q-40,120 -20,80" />
+                                <path d="M-134,78 Q-100,50 -60,30" />
+                                <path d="M-134,-78 Q-100,-70 -60,-40" />
+                                <path d="M78,-134 Q65,-95 40,-60" />
+                                <path d="M78,134 Q60,100 35,65" />
+                                <path d="M-78,-134 Q-65,-95 -40,-60" />
+                                <path d="M-78,134 Q-60,100 -35,65" />
+                                <path d="M155,0 Q120,-30 80,-15" />
+                                <path d="M-155,0 Q-120,30 -80,15" />
+                            </g>
+                            <!-- 12 泰坦卡牌圆形徽章 (JS动态填充) -->
+                            <g id="medallion-ring"></g>
+                            <!-- 中心德缪歌 -->
+                            <circle cx="0" cy="0" r="42" fill="#0e1220" stroke="#e5b93d" stroke-width="2.5" />
+                            <circle cx="0" cy="0" r="38" fill="#111828" stroke="rgba(229,185,61,0.4)"
+                                stroke-width="1" />
+                            <foreignObject x="-32" y="-32" width="64" height="64"
+                                style="overflow:visible;pointer-events:none;">
+                                <img xmlns="http://www.w3.org/1999/xhtml" src="../img/德缪歌卡牌.png"
+                                    style="width:64px;height:64px;object-fit:cover;border-radius:50%;display:block;" />
+                            </foreignObject>
+                        </g>
+                        <!-- 旋转方向相反的装饰环 -->
+                        <g class="inner-dial-rotate-reverse" opacity="0.12">
+                            <circle cx="0" cy="0" r="145" fill="none" stroke="#e5b93d" stroke-width="0.6"
+                                stroke-dasharray="3 8" />
+                            <circle cx="0" cy="0" r="100" fill="none" stroke="#ce93d8" stroke-width="0.5"
+                                stroke-dasharray="5 12" />
+                        </g>
+
+                        <!-- Hands -->
+                        <g id="clock-hands">
+                            <!-- 月份指针 (金色粗针+强发光) -->
+                            <g id="hand-month" class="clock-hand-anim" filter="url(#glow-strong)">
+                                <line x1="0" y1="45" x2="0" y2="-310" stroke="#ffd54f" stroke-width="9"
+                                    stroke-linecap="round" />
+                                <line x1="0" y1="45" x2="0" y2="-310" stroke="#e5b93d" stroke-width="5"
+                                    stroke-linecap="round" />
+                                <path d="M-16,-275 L0,-340 L16,-275 L0,-258 Z" fill="#ffd54f" />
+                                <path d="M-12,-278 L0,-335 L12,-278 L0,-264 Z" fill="#e5b93d" />
+                                <circle cx="0" cy="32" r="14" fill="none" stroke="#ffd54f" stroke-width="2.5" />
+                            </g>
+                            <!-- 时段指针 (紫色+强发光) -->
+                            <g id="hand-period" class="clock-hand-anim" filter="url(#glow-purple)">
+                                <line x1="0" y1="22" x2="0" y2="-158" stroke="#e1bee7" stroke-width="5"
+                                    stroke-linecap="round" />
+                                <line x1="0" y1="22" x2="0" y2="-158" stroke="#ce93d8" stroke-width="3"
+                                    stroke-linecap="round" />
+                                <circle cx="0" cy="-158" r="7" fill="#e1bee7" />
+                                <circle cx="0" cy="-158" r="4" fill="#ce93d8" />
+                                <circle cx="0" cy="22" r="9" fill="none" stroke="#e1bee7" stroke-width="2" />
+                            </g>
+                            <!-- 分针 (冰蓝+发光) -->
+                            <g id="hand-min" class="clock-hand-anim" filter="url(#glow-blue)">
+                                <line x1="0" y1="28" x2="0" y2="-435" stroke="#b3e5fc" stroke-width="4"
+                                    stroke-linecap="round" />
+                                <line x1="0" y1="28" x2="0" y2="-435" stroke="#4fc3f7" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <circle cx="0" cy="-395" r="6" fill="#b3e5fc" />
+                                <circle cx="0" cy="-395" r="3" fill="#4fc3f7" />
+                            </g>
+                            <!-- 秒针 (白色+强发光) -->
+                            <g id="hand-sec" class="clock-hand-anim" filter="url(#glow-white)">
+                                <line x1="0" y1="50" x2="0" y2="-460" stroke="#ffffff" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <circle cx="0" cy="-460" r="5" fill="#ffffff" />
+                            </g>
+                        </g>
+
+                        <!-- Central Pivot -->
+                        <circle cx="0" cy="0" r="10" fill="#1b202c" stroke="#ffd54f" stroke-width="2.5"
+                            filter="url(#glow-strong)" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- RIGHT: Omphalos Calendar -->
+            <div class="panel-right" id="calendar-panel">
+                <!-- 当月泰坦图标 -->
+                <div id="p-icon"
+                    style="width:70px;height:70px;margin:0 auto 10px auto;filter:drop-shadow(0 0 15px rgba(229,185,61,0.5));">
+                </div>
+
+                <!-- 季节 + 月份 头 -->
+                <div class="cal-header" id="cal-header">
+                    <div class="cal-season" id="cal-season">命运季</div>
+                    <div class="cal-month-name" id="cal-month-name">长夜月</div>
+                    <div class="cal-titan" id="cal-titan">欧洛尼斯 · 永夜之帷</div>
+                </div>
+
+                <!-- 翁法罗斯时制 -->
+                <div class="cal-time-row" id="cal-time-row">
+                    <span class="cal-time-label">翁时</span>
+                    <span class="cal-time-val" id="cal-time-val">幕匿时·三刻</span>
+                    <span class="cal-real-time" id="real-time-display">--:--:--</span>
+                </div>
+
+                <!-- 星期标题 -->
+                <div class="cal-grid">
+                    <div class="cal-weekdays" id="cal-weekdays"></div>
+                    <!-- 28日格子 -->
+                    <div class="cal-days" id="cal-days"></div>
+                </div>
+
+                <!-- 泰坦卡牌 (使用现成卡牌图片) -->
+                <div class="titan-card-wrapper">
+                    <img class="titan-card-img" id="titan-card-img" src="" alt="" />
+                </div>
+
+                <!-- 月份描述 -->
+                <div class="cal-desc" id="cal-desc"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/omphalos.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - VTuber 直播间模拟</title>
+    <link rel="stylesheet" href="../css/vtuber.css">
+</head>
+
+<body>
+    <!-- SVG Filters -->
+    <svg style="display:none;">
+        <defs>
+            <filter id="sketch" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="n" />
+                <feDisplacementMap in="SourceGraphic" in2="n" scale="2" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- ========== ENTRANCE ========== -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <svg class="entrance-svg rot-cw" viewBox="-300 -300 600 600" style="opacity:.6;">
+            <g fill="none" stroke="#b8860b" stroke-width="1">
+                <circle cx="0" cy="0" r="280" class="entr-draw entr-draw-d1" stroke-dasharray="1760" />
+                <circle cx="0" cy="0" r="260" class="entr-draw entr-draw-d2" stroke-dasharray="1635"
+                    stroke-width=".5" />
+            </g>
+        </svg>
+        <svg class="entrance-svg rot-ccw" viewBox="-300 -300 600 600" style="opacity:.5;">
+            <g fill="none" stroke="#daa520" stroke-width="1.5">
+                <circle cx="0" cy="0" r="200" class="entr-draw entr-draw-d2" stroke-dasharray="1260" />
+                <polygon points="0,-180 180,0 0,180 -180,0" class="entr-draw entr-draw-d3" stroke-dasharray="1020" />
+            </g>
+        </svg>
+        <svg class="entrance-svg" viewBox="-300 -300 600 600" style="opacity:.7;">
+            <g fill="none" filter="url(#sketch)">
+                <!-- Theater arch -->
+                <path d="M-200,200 L-200,-100 A200,200 0 0,1 200,-100 L200,200" stroke="#8c3a3a" stroke-width="2"
+                    class="entr-draw entr-draw-d1" stroke-dasharray="1200" />
+                <!-- Curtain drapes -->
+                <path d="M-200,-100 Q-150,0 -200,100" stroke="#704214" stroke-width="1" class="entr-draw entr-draw-d2"
+                    stroke-dasharray="400" />
+                <path d="M200,-100 Q150,0 200,100" stroke="#704214" stroke-width="1" class="entr-draw entr-draw-d2"
+                    stroke-dasharray="400" />
+                <!-- Inner stage circle -->
+                <circle cx="0" cy="20" r="100" stroke="#daa520" stroke-width="1.5" class="entr-draw entr-draw-d3"
+                    stroke-dasharray="630" />
+                <!-- Mask faces -->
+                <circle cx="-100" cy="-60" r="25" stroke="#3a2a1a" stroke-width="1" class="entr-draw entr-draw-d3"
+                    stroke-dasharray="160" />
+                <path d="M-112,-55 Q-100,-45 -88,-55" stroke="#3a2a1a" stroke-width="1" fill="none"
+                    class="entr-draw entr-draw-d3" stroke-dasharray="50" />
+                <circle cx="100" cy="-60" r="25" stroke="#3a2a1a" stroke-width="1" class="entr-draw entr-draw-d3"
+                    stroke-dasharray="160" />
+                <path d="M88,-55 Q100,-65 112,-55" stroke="#3a2a1a" stroke-width="1" fill="none"
+                    class="entr-draw entr-draw-d3" stroke-dasharray="50" />
+            </g>
+        </svg>
+        <h1 class="entr-title">直 播 间</h1>
+        <div class="entr-sub">Theatrum Digitale · 人心如幕...</div>
+    </div>
+
+    <!-- ========== MAIN GAME ========== -->
+    <div class="main-container" id="main-container">
+        <a href="index.html" class="back-link">⟵ 返回</a>
+
+        <!-- LEFT: Status Panel -->
+        <div class="panel-left" id="panel-left">
+            <div class="stream-counter" id="stream-counter">第 1 / 15 场</div>
+
+            <div class="panel-section">
+                <h3>📊 数据面板</h3>
+                <div class="stat-row"><span>👥 观众人数</span><span class="stat-val" id="stat-viewers">0</span></div>
+                <div class="stat-row"><span>💰 总收入</span><span class="stat-val" id="stat-income">0</span></div>
+                <div class="stat-row"><span>💬 弹幕热度</span><span class="stat-val" id="stat-chat-heat">—</span></div>
+                <div class="stat-row"><span>📈 势头</span></div>
+                <div class="stat-bar">
+                    <div class="stat-bar-fill" id="stat-momentum" style="width:50%;"></div>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3>👤 活跃粉丝</h3>
+                <div class="fan-list" id="fan-list">
+                    <!-- dynamically populated -->
+                </div>
+            </div>
+
+            <div class="panel-section" style="flex:1;min-height:80px;">
+                <h3>📋 提示</h3>
+                <div id="hint-text" style="font-size:.72rem;color:var(--ink-light);line-height:1.5;">
+                    弹幕背后的真心，你看得见吗？
+                </div>
+            </div>
+        </div>
+
+        <!-- CENTER: Stage -->
+        <div class="stage-area" id="stage-area">
+            <div class="curtain-top"><span class="curtain-title" id="curtain-title">准备开播</span></div>
+            <div class="curtain-side-l"></div>
+            <div class="curtain-side-r"></div>
+            <div class="danmaku-area" id="danmaku-area"></div>
+            <div class="vtuber-display" id="vtuber-display">🎭</div>
+
+            <!-- Event Panel -->
+            <div class="event-panel" id="event-panel">
+                <div class="event-card active" id="event-card">
+                    <div class="event-icon" id="event-icon">📢</div>
+                    <div class="event-title" id="event-title">等待开播...</div>
+                    <div class="event-desc" id="event-desc">点击右侧"开始直播"按钮来开启你的VTuber生涯。每一个选择都将影响你看不见的人心。</div>
+                    <div class="choice-area" id="choice-area"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Controls -->
+        <div class="panel-right" id="panel-right">
+            <div class="phase-display">
+                <div id="phase-text">等待中</div>
+                <div class="phase-label" id="phase-label">点击开始</div>
+            </div>
+            <button class="ctrl-btn" id="btn-start-stream">▶ 开始直播</button>
+            <button class="ctrl-btn" id="btn-next-event" disabled>⏭ 下一事件</button>
+            <button class="ctrl-btn" id="btn-end-stream" disabled>⏹ 结束直播</button>
+            <button class="phone-btn" id="btn-phone">📱 查看手机<span class="phone-badge" id="phone-badge"
+                    style="display:none;">!</span></button>
+            <button class="ctrl-btn" id="btn-new-game">🔄 重新开始</button>
+            <div class="log-box" id="log-box">
+                <div class="log-entry">系统初始化完毕。</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/vtuber.js"></script>
+</body>
+
+</html>

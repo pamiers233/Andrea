@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - 麻将 (Mahjong)</title>
+    <link rel="stylesheet" href="../css/mahjong.css">
+</head>
+
+<body>
+    <!-- SVG Filters -->
+    <svg style="display: none;">
+        <defs>
+            <filter id="sketch" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- ============================================================
+         ELABORATE ENTRANCE ANIMATION
+         ============================================================ -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <!-- Layer 1: Outer rotating concentric rings -->
+        <svg class="entrance-svg rotate-cw-slow" viewBox="-300 -300 600 600" style="opacity: 0.7;">
+            <g fill="none" stroke="#b8860b" stroke-width="1">
+                <circle cx="0" cy="0" r="290" class="phase1-draw phase1-draw-d1" stroke-dasharray="1825" />
+                <circle cx="0" cy="0" r="275" class="phase1-draw phase1-draw-d2" stroke-dasharray="1730"
+                    stroke-width="0.5" />
+                <!-- Degree ticks -->
+                <g class="phase1-draw phase1-draw-d3" stroke-dasharray="500">
+                    <line x1="0" y1="-260" x2="0" y2="-275" />
+                    <line x1="260" y1="0" x2="275" y2="0" />
+                    <line x1="0" y1="260" x2="0" y2="275" />
+                    <line x1="-260" y1="0" x2="-275" y2="0" />
+                    <line x1="184" y1="-184" x2="194" y2="-194" />
+                    <line x1="184" y1="184" x2="194" y2="194" />
+                    <line x1="-184" y1="184" x2="-194" y2="194" />
+                    <line x1="-184" y1="-184" x2="-194" y2="-194" />
+                </g>
+            </g>
+        </svg>
+
+        <!-- Layer 2: Counter-rotating inner geometry -->
+        <svg class="entrance-svg rotate-ccw-slow" viewBox="-300 -300 600 600" style="opacity: 0.6;">
+            <g fill="none" stroke="#daa520" stroke-width="1.5">
+                <circle cx="0" cy="0" r="220" class="phase1-draw phase1-draw-d3" stroke-dasharray="1385" />
+                <circle cx="0" cy="0" r="200" class="phase1-draw phase1-draw-d4" stroke-dasharray="1260"
+                    stroke-width="0.8" />
+            </g>
+        </svg>
+
+        <!-- Layer 3: Vitruvian geometry — squares, octagon, inner circles -->
+        <svg class="entrance-svg" viewBox="-300 -300 600 600" style="opacity: 0.8;">
+            <g fill="none" filter="url(#sketch)">
+                <!-- Outer square -->
+                <rect x="-170" y="-170" width="340" height="340" stroke="#8c3a3a" stroke-width="2"
+                    class="phase2-draw phase2-draw-d1" stroke-dasharray="1360" />
+                <!-- Rotated 45-degree square -->
+                <polygon points="0,-200 200,0 0,200 -200,0" stroke="#704214" stroke-width="1.5"
+                    class="phase2-draw phase2-draw-d2" stroke-dasharray="1132" />
+                <!-- Central octagon (mahjong table) -->
+                <polygon points="80,-193 193,-80 193,80 80,193 -80,193 -193,80 -193,-80 -80,-193" stroke="#daa520"
+                    stroke-width="2" class="phase2-draw phase2-draw-d3" stroke-dasharray="1280" />
+                <!-- Inner circles -->
+                <circle cx="0" cy="0" r="110" stroke="#704214" stroke-width="1" class="phase2-draw phase2-draw-d2"
+                    stroke-dasharray="692" />
+                <circle cx="0" cy="0" r="60" stroke="#3a2a1a" stroke-width="1.5" class="phase2-draw phase2-draw-d3"
+                    stroke-dasharray="378" />
+                <!-- Compass cross lines -->
+                <line x1="0" y1="-250" x2="0" y2="250" stroke="#3a2a1a" stroke-width="0.5"
+                    class="phase2-draw phase2-draw-d1" stroke-dasharray="500" />
+                <line x1="-250" y1="0" x2="250" y2="0" stroke="#3a2a1a" stroke-width="0.5"
+                    class="phase2-draw phase2-draw-d1" stroke-dasharray="500" />
+            </g>
+            <!-- Wind direction labels -->
+            <text x="0" y="-225" text-anchor="middle" class="wind-label wind-n">北</text>
+            <text x="230" y="8" text-anchor="middle" class="wind-label wind-e">東</text>
+            <text x="0" y="240" text-anchor="middle" class="wind-label wind-s">南</text>
+            <text x="-230" y="8" text-anchor="middle" class="wind-label wind-w">西</text>
+
+            <!-- Tile silhouettes along edges -->
+            <g class="tile-sil" style="animation-delay: 4.5s;">
+                <rect x="-20" y="-155" width="16" height="22" rx="2" fill="none" stroke="#daa520" stroke-width="1"
+                    opacity="0.4" />
+                <text x="-12" y="-139" font-size="11" fill="#daa520" text-anchor="middle" opacity="0.4"
+                    font-family="'Noto Serif SC'">万</text>
+            </g>
+            <g class="tile-sil" style="animation-delay: 4.8s;">
+                <rect x="4" y="-155" width="16" height="22" rx="2" fill="none" stroke="#daa520" stroke-width="1"
+                    opacity="0.4" />
+                <text x="12" y="-139" font-size="11" fill="#daa520" text-anchor="middle" opacity="0.4"
+                    font-family="'Noto Serif SC'">筒</text>
+            </g>
+            <g class="tile-sil" style="animation-delay: 5.1s;">
+                <rect x="-8" y="133" width="16" height="22" rx="2" fill="none" stroke="#daa520" stroke-width="1"
+                    opacity="0.4" />
+                <text x="0" y="149" font-size="11" fill="#daa520" text-anchor="middle" opacity="0.4"
+                    font-family="'Noto Serif SC'">条</text>
+            </g>
+            <g class="tile-sil" style="animation-delay: 5.4s;">
+                <rect x="140" y="-11" width="16" height="22" rx="2" fill="none" stroke="#daa520" stroke-width="1"
+                    opacity="0.4" />
+                <text x="148" y="5" font-size="11" fill="#daa520" text-anchor="middle" opacity="0.4"
+                    font-family="'Noto Serif SC'">發</text>
+            </g>
+            <g class="tile-sil" style="animation-delay: 5.7s;">
+                <rect x="-156" y="-11" width="16" height="22" rx="2" fill="none" stroke="#daa520" stroke-width="1"
+                    opacity="0.4" />
+                <text x="-148" y="5" font-size="11" fill="#daa520" text-anchor="middle" opacity="0.4"
+                    font-family="'Noto Serif SC'">中</text>
+            </g>
+        </svg>
+
+        <!-- Title & Subtitle -->
+        <h1 class="entrance-title">麻 将</h1>
+        <div class="entrance-sub">洗牌中 · Mescolare le Tessere...</div>
+
+        <!-- Sparkle particles -->
+        <div class="sparkle" style="top: 20%; left: 15%; animation-delay: 0.5s;"></div>
+        <div class="sparkle" style="top: 35%; left: 80%; animation-delay: 1.2s;"></div>
+        <div class="sparkle" style="top: 70%; left: 25%; animation-delay: 2.1s;"></div>
+        <div class="sparkle" style="top: 55%; left: 72%; animation-delay: 0.8s;"></div>
+        <div class="sparkle" style="top: 80%; left: 60%; animation-delay: 1.8s;"></div>
+        <div class="sparkle" style="top: 15%; left: 50%; animation-delay: 2.5s;"></div>
+        <div class="sparkle" style="top: 45%; left: 40%; animation-delay: 3.0s;"></div>
+        <div class="sparkle" style="top: 65%; left: 88%; animation-delay: 0.3s;"></div>
+    </div>
+
+    <!-- ============================================================
+         MAIN GAME INTERFACE
+         ============================================================ -->
+    <div class="main-container" id="main-container">
+        <a href="index.html" class="back-link">⟵ 返回</a>
+
+        <div class="game-controls">
+            <button class="game-btn" id="btn-ai-demo">🤖 AI教学对局</button>
+            <button class="game-btn" id="btn-deal">重新发牌</button>
+        </div>
+
+        <div class="parchment">
+            <!-- Left Panel: Teaching Guide -->
+            <div class="parchment-left" id="parchmentLeft">
+                <div class="quill-text-area">
+                    <svg class="quill-svg" viewBox="0 0 280 400" id="quill-svg">
+                        <text x="30" y="30" class="quill-title">麻 将 入 门</text>
+                        <text x="0" y="70" class="quill-line">四风围坐，十三幺等牌型奇妙。</text>
+                        <text x="0" y="95" class="quill-line">摸牌打牌，循环往复至胡牌。</text>
+                        <text x="0" y="120" class="quill-line">碰、吃、杠、胡，四种行动各有章法。</text>
+                        <text x="0" y="155" class="quill-line">万、筒、条，三门序数各九张。</text>
+                        <text x="0" y="180" class="quill-line">东南西北风，中发白为箭牌。</text>
+                        <text x="0" y="215" class="quill-line">共136张牌，千变万化的组合。</text>
+                        <text x="0" y="240" class="quill-line">达成四面加一雀头即可胡牌。</text>
+                    </svg>
+                </div>
+
+                <div class="guide-panel-container">
+                    <div class="guide-title">📖 教学指南</div>
+                    <button class="feature-btn" data-target="guide-tiles">
+                        <span class="btn-dot"></span>
+                        <span class="btn-label-wrap">1. 麻将牌型 <span class="btn-status">万筒条风箭</span></span>
+                    </button>
+                    <button class="feature-btn" data-target="guide-rules">
+                        <span class="btn-dot"></span>
+                        <span class="btn-label-wrap">2. 基本规则 <span class="btn-status">摸牌打牌流程</span></span>
+                    </button>
+                    <button class="feature-btn" data-target="guide-win">
+                        <span class="btn-dot"></span>
+                        <span class="btn-label-wrap">3. 胡牌条件 <span class="btn-status">四面加雀头</span></span>
+                    </button>
+                    <button class="feature-btn" data-target="guide-tenpai">
+                        <span class="btn-dot"></span>
+                        <span class="btn-label-wrap">4. 听牌判断 <span class="btn-status">差一张即胡</span></span>
+                    </button>
+                    <button class="feature-btn" data-target="guide-strategy">
+                        <span class="btn-dot"></span>
+                        <span class="btn-label-wrap">5. 出牌策略 <span class="btn-status">AI教你打牌</span></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Mahjong Table -->
+            <div class="parchment-right">
+                <!-- Game Status -->
+                <div class="status-box" id="game-status-box">
+                    <h4>局况 (Status)</h4>
+                    <div id="round-text">东风局</div>
+                    <div style="margin-top:5px; font-size:0.8rem;">
+                        <span>牌墙: <b id="wall-count">0</b> 张</span>
+                    </div>
+                    <div style="margin-top:3px; font-size:0.75rem; color: var(--sepia);">
+                        轮到: <b id="turn-text">—</b>
+                    </div>
+                </div>
+
+                <!-- AI Decision Box -->
+                <div class="ai-reason-box" id="ai-reason-box" style="display:none;">
+                    <div class="ai-reason-title">🤖 AI 出牌分析</div>
+                    <div class="ai-reason-text" id="ai-reason-text">等待出牌...</div>
+                </div>
+
+                <div class="table-wrapper" id="table-wrapper">
+                    <!-- Sketch background -->
+                    <svg class="table-sketch-bg" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+                        <circle cx="250" cy="250" r="230" fill="rgba(180,150,100,0.04)" stroke="#3a2a1a"
+                            stroke-width="1.5" stroke-dasharray="10 5" filter="url(#sketch)" />
+                        <circle cx="250" cy="250" r="150" fill="none" stroke="#704214" stroke-width="0.8"
+                            stroke-dasharray="4 4" filter="url(#sketch)" />
+                        <text x="250" y="40" text-anchor="middle" font-family="'Noto Serif SC'" font-size="15"
+                            fill="#704214">北</text>
+                        <text x="250" y="475" text-anchor="middle" font-family="'Noto Serif SC'" font-size="15"
+                            fill="#704214">南</text>
+                        <text x="470" y="255" text-anchor="middle" font-family="'Noto Serif SC'" font-size="15"
+                            fill="#704214">東</text>
+                        <text x="30" y="255" text-anchor="middle" font-family="'Noto Serif SC'" font-size="15"
+                            fill="#704214">西</text>
+                    </svg>
+
+                    <!-- Player areas -->
+                    <div class="player-area player-n" id="area-n">
+                        <div class="player-label">北 (AI)</div>
+                        <div class="hand" id="hand-n"></div>
+                        <div class="meld-area" id="meld-n"></div>
+                    </div>
+                    <div class="player-area player-w" id="area-w">
+                        <div class="player-label">西 (AI)</div>
+                        <div class="hand" id="hand-w"></div>
+                        <div class="meld-area" id="meld-w"></div>
+                    </div>
+                    <!-- Discard area -->
+                    <div class="discard-area" id="discard-area">
+                        <div>
+                            <div class="discard-label">弃牌区</div>
+                            <div class="discard-zone" id="discard-zone"></div>
+                        </div>
+                    </div>
+                    <div class="player-area player-e" id="area-e">
+                        <div class="player-label">東 (AI)</div>
+                        <div class="hand" id="hand-e"></div>
+                        <div class="meld-area" id="meld-e"></div>
+                    </div>
+                    <div class="player-area player-s" id="area-s">
+                        <div class="hand" id="hand-s"></div>
+                        <div class="meld-area" id="meld-s"></div>
+                        <div class="player-label">南 (你)</div>
+                    </div>
+                </div>
+
+                <!-- Action buttons container -->
+                <div id="action-buttons"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Panel (slide-in) -->
+    <div class="feature-panel" id="feature-panel">
+        <button class="close-panel-btn" id="closePanel">&times;</button>
+        <div class="feature-panel-inner">
+            <h2 class="fp-title" id="fp-title">标题</h2>
+            <div class="fp-desc" id="fp-desc">描述</div>
+            <div class="fp-demo" id="fp-demo"></div>
+            <div class="fp-details" id="fp-details"></div>
+        </div>
+    </div>
+
+    <script src="../js/mahjong.js"></script>
+</body>
+
+</html>

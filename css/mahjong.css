@@ -1,0 +1,1115 @@
+/* 麻将 — Mahjong · Da Vinci Manuscript Style */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=MedievalSharp&family=Uncial+Antiqua&family=Noto+Serif+SC:wght@400;700&display=swap');
+
+:root {
+    --parchment: #f4e4c1;
+    --parchment-light: #faf0d7;
+    --parchment-dark: #d4b896;
+    --ink: #3a2a1a;
+    --ink-light: rgba(58, 42, 26, 0.6);
+    --ink-faint: rgba(58, 42, 26, 0.2);
+    --sepia: #704214;
+    --gold: #b8860b;
+    --gold-bright: #daa520;
+    --hl-color: #daa520;
+    --sanguine: #8c3a3a;
+    --jade: #2d6a4f;
+    --jade-light: rgba(45, 106, 79, 0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: #1a0e04;
+    font-family: 'EB Garamond', 'Noto Serif SC', serif;
+}
+
+/* ============================================================
+   ELABORATE MULTI-PHASE ENTRANCE ANIMATION
+   ============================================================ */
+.entrance-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, #2a1a0a 0%, #1a0e04 60%, #0d0702 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: entranceFadeOut 2.5s 9.5s forwards;
+}
+
+@keyframes entranceFadeOut {
+    to {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+/* --- Entrance SVG layers --- */
+.entrance-svg {
+    position: absolute;
+    width: 60vmin;
+    max-width: 600px;
+    height: 60vmin;
+    max-height: 600px;
+    filter: drop-shadow(0 0 20px rgba(218, 165, 32, 0.25));
+}
+
+/* Phase 1: concentric compass circles */
+.phase1-draw {
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
+    animation: drawStroke 4s ease-in-out forwards;
+}
+
+.phase1-draw-d1 {
+    animation-delay: 0s;
+}
+
+.phase1-draw-d2 {
+    animation-delay: 0.3s;
+}
+
+.phase1-draw-d3 {
+    animation-delay: 0.6s;
+}
+
+.phase1-draw-d4 {
+    animation-delay: 0.9s;
+}
+
+@keyframes drawStroke {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.rotate-cw-slow {
+    animation: rotCW 40s linear infinite;
+}
+
+.rotate-ccw-slow {
+    animation: rotCCW 35s linear infinite;
+}
+
+.rotate-cw-med {
+    animation: rotCW 20s linear infinite;
+}
+
+.rotate-ccw-med {
+    animation: rotCCW 25s linear infinite;
+}
+
+@keyframes rotCW {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes rotCCW {
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+/* Phase 2: geometric Vitruvian pattern */
+.phase2-draw {
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: drawStroke 3.5s 1.8s ease-in-out forwards;
+}
+
+.phase2-draw-d1 {
+    animation-delay: 1.8s;
+}
+
+.phase2-draw-d2 {
+    animation-delay: 2.2s;
+}
+
+.phase2-draw-d3 {
+    animation-delay: 2.6s;
+}
+
+/* Phase 3: direction labels */
+.wind-label {
+    font-family: 'Noto Serif SC', 'Cinzel', serif;
+    font-size: 28px;
+    font-weight: 700;
+    fill: var(--gold-bright);
+    opacity: 0;
+    filter: drop-shadow(0 0 8px rgba(218, 165, 32, 0.6));
+}
+
+.wind-n {
+    animation: fadeUpGold 1.2s 3.5s forwards;
+}
+
+.wind-e {
+    animation: fadeUpGold 1.2s 3.8s forwards;
+}
+
+.wind-s {
+    animation: fadeUpGold 1.2s 4.1s forwards;
+}
+
+.wind-w {
+    animation: fadeUpGold 1.2s 4.4s forwards;
+}
+
+/* Phase 3b: tile silhouettes cascade */
+.tile-sil {
+    opacity: 0;
+    animation: tileCascade 0.8s forwards;
+}
+
+@keyframes tileCascade {
+    0% {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.6) rotate(-15deg);
+    }
+
+    60% {
+        opacity: 0.8;
+        transform: translateY(5px) scale(1.05) rotate(2deg);
+    }
+
+    100% {
+        opacity: 0.5;
+        transform: translateY(0) scale(1) rotate(0);
+    }
+}
+
+/* Phase 4: title & subtitle */
+.entrance-title {
+    font-family: 'Noto Serif SC', 'Cinzel', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--gold-bright);
+    letter-spacing: 20px;
+    opacity: 0;
+    animation: titleReveal 2.5s 5.5s forwards;
+    text-shadow: 0 0 30px rgba(218, 165, 32, 0.5), 0 0 60px rgba(218, 165, 32, 0.2);
+    z-index: 10;
+}
+
+@keyframes titleReveal {
+    0% {
+        opacity: 0;
+        letter-spacing: 40px;
+        filter: blur(8px);
+    }
+
+    50% {
+        opacity: 1;
+        letter-spacing: 22px;
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 1;
+        letter-spacing: 20px;
+        filter: blur(0);
+    }
+}
+
+.entrance-sub {
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--parchment-dark);
+    letter-spacing: 8px;
+    opacity: 0;
+    animation: fadeUpGold 1.5s 7s forwards;
+    z-index: 10;
+}
+
+@keyframes fadeUpGold {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Particle sparkles */
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--gold-bright);
+    border-radius: 50%;
+    opacity: 0;
+    animation: sparkleAnim 3s ease-in-out infinite;
+}
+
+@keyframes sparkleAnim {
+
+    0%,
+    100% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+}
+
+/* ============================================================
+   MAIN CONTAINER
+   ============================================================ */
+.main-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0;
+    animation: mainFadeIn 1.5s 10.5s forwards;
+}
+
+@keyframes mainFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.back-link {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+    z-index: 100;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--ink);
+    text-decoration: none;
+    border: 1px solid var(--ink-faint);
+    padding: 5px 12px;
+    border-radius: 2px;
+    background: rgba(244, 228, 193, 0.8);
+    transition: all 0.3s;
+}
+
+.back-link:hover {
+    background: var(--parchment);
+    border-color: var(--ink);
+}
+
+.game-controls {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    gap: 10px;
+}
+
+.game-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    background: rgba(58, 42, 26, 0.9);
+    padding: 6px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+}
+
+.game-btn:hover {
+    background: var(--gold);
+    color: #1a0e04;
+    box-shadow: 0 0 10px rgba(218, 165, 32, 0.5);
+}
+
+/* ============================================================
+   PARCHMENT LAYOUT
+   ============================================================ */
+.parchment {
+    position: relative;
+    width: 97vw;
+    height: 94vh;
+    margin: 1.5vh auto;
+    background:
+        radial-gradient(ellipse at 15% 25%, rgba(180, 150, 100, 0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 75%, rgba(160, 130, 80, 0.15) 0%, transparent 40%),
+        radial-gradient(ellipse at center, var(--parchment-light) 30%, var(--parchment) 65%, var(--parchment-dark) 100%);
+    border-radius: 3px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.6), inset 0 0 80px rgba(0, 0, 0, 0.08);
+    display: flex;
+    overflow: hidden;
+}
+
+/* --- Left Panel: Teaching Guide --- */
+.parchment-left {
+    width: 28%;
+    height: 100%;
+    padding: 25px 15px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.02) 98%, rgba(0, 0, 0, 0.05));
+}
+
+.quill-text-area {
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.quill-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.quill-title {
+    font-family: 'Uncial Antiqua', cursive;
+    font-size: 20px;
+    fill: var(--ink);
+    opacity: 0;
+    clip-path: inset(0 100% -20% -10%);
+}
+
+.quill-line {
+    font-family: 'Noto Serif SC', 'EB Garamond', serif;
+    font-size: 13px;
+    font-style: italic;
+    fill: var(--ink);
+    opacity: 0;
+    clip-path: inset(0 100% -20% -10%);
+}
+
+.writing-active {
+    opacity: 1 !important;
+    animation: writeSmooth 1.2s linear forwards;
+}
+
+@keyframes writeSmooth {
+    from {
+        clip-path: inset(0 100% -20% -10%);
+    }
+
+    to {
+        clip-path: inset(0 -10% -20% -10%);
+    }
+}
+
+.guide-panel-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.guide-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink-faint);
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.feature-btn {
+    background: rgba(180, 150, 100, 0.08);
+    border: 1px solid var(--ink-faint);
+    padding: 6px 10px;
+    font-family: 'Noto Serif SC', 'EB Garamond', serif;
+    font-size: 0.8rem;
+    color: var(--ink);
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.25s;
+    text-align: left;
+    position: relative;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.feature-btn:hover,
+.feature-btn.active {
+    background: rgba(184, 134, 11, 0.15);
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateX(4px);
+}
+
+.btn-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    transition: background 0.3s;
+    flex-shrink: 0;
+}
+
+.feature-btn:hover .btn-dot,
+.feature-btn.active .btn-dot {
+    background: var(--gold);
+    box-shadow: 0 0 5px var(--gold);
+}
+
+.btn-label-wrap {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-status {
+    display: block;
+    font-size: 0.6rem;
+    color: var(--ink-light);
+    font-style: italic;
+    margin-top: 2px;
+}
+
+/* ============================================================
+   RIGHT PANE: MAHJONG TABLE
+   ============================================================ */
+.parchment-right {
+    width: 72%;
+    height: 100%;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.table-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 900px;
+    max-height: 750px;
+}
+
+/* Da Vinci sketch background */
+.table-sketch-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 88%;
+    height: 88%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+}
+
+/* --- Player areas --- */
+.player-area {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+}
+
+.player-n {
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.player-s {
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.player-w {
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.player-e {
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.player-label {
+    font-family: 'Noto Serif SC', 'Cinzel', serif;
+    font-size: 0.75rem;
+    color: var(--sepia);
+    background: rgba(244, 228, 193, 0.85);
+    padding: 2px 8px;
+    border: 1px solid var(--ink-faint);
+    border-radius: 2px;
+    text-align: center;
+    pointer-events: none;
+    margin-bottom: 4px;
+    white-space: nowrap;
+}
+
+.player-s .player-label {
+    margin-bottom: 0;
+    margin-top: 4px;
+    order: 1;
+}
+
+/* --- Tile hand row --- */
+.hand {
+    display: flex;
+    gap: 1px;
+    position: relative;
+    width: max-content;
+}
+
+.player-w .hand,
+.player-e .hand {
+    flex-direction: column;
+}
+
+/* --- Individual mahjong tile --- */
+.mj-tile {
+    width: 38px;
+    height: 52px;
+    background: linear-gradient(135deg, #fefcf3 0%, #f0e6cc 100%);
+    border: 1.5px solid var(--ink-light);
+    border-radius: 3px;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.18), inset 0 -2px 0 rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Noto Serif SC', serif;
+    user-select: none;
+}
+
+.mj-tile:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    z-index: 100 !important;
+}
+
+.mj-tile.unplayable {
+    filter: grayscale(0.6) brightness(0.92);
+    cursor: not-allowed;
+}
+
+.mj-tile.unplayable:hover {
+    transform: none;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.18);
+}
+
+.tile-char {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.tile-sub {
+    font-size: 8px;
+    color: var(--ink-light);
+    margin-top: 1px;
+}
+
+.tile-wan .tile-char {
+    color: var(--sanguine);
+}
+
+.tile-tong .tile-char {
+    color: var(--jade);
+}
+
+.tile-tiao .tile-char {
+    color: #1a5276;
+}
+
+.tile-feng .tile-char {
+    color: var(--ink);
+}
+
+.tile-jian .tile-char {
+    color: var(--sanguine);
+}
+
+.tile-jian-fa .tile-char {
+    color: var(--jade);
+}
+
+.tile-jian-bai .tile-char {
+    color: var(--ink-light);
+}
+
+/* Tile back (opponents) */
+.mj-tile-back {
+    background:
+        repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(45, 106, 79, 0.08) 3px, rgba(45, 106, 79, 0.08) 6px),
+        linear-gradient(135deg, #e8dcc4 0%, #d4c4a0 100%);
+    border: 1.5px solid var(--ink);
+    cursor: default;
+}
+
+.mj-tile-back:hover {
+    transform: none;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.18);
+}
+
+.mj-tile-back::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid rgba(45, 106, 79, 0.25);
+    border-radius: 1px;
+}
+
+.player-w .mj-tile,
+.player-w .mj-tile-back,
+.player-e .mj-tile,
+.player-e .mj-tile-back {
+    width: 34px;
+    height: 24px;
+    font-size: 11px;
+}
+
+.player-w .mj-tile .tile-char,
+.player-e .mj-tile .tile-char {
+    font-size: 13px;
+}
+
+.player-w .mj-tile .tile-sub,
+.player-e .mj-tile .tile-sub {
+    display: none;
+}
+
+/* --- Discard area --- */
+.discard-area {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 260px;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.discard-zone {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    justify-content: center;
+    pointer-events: auto;
+}
+
+.discard-zone .mj-tile {
+    width: 26px;
+    height: 34px;
+    cursor: default;
+    font-size: 11px;
+}
+
+.discard-zone .mj-tile .tile-char {
+    font-size: 13px;
+}
+
+.discard-zone .mj-tile .tile-sub {
+    display: none;
+}
+
+.discard-zone .mj-tile:hover {
+    transform: none;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.18);
+}
+
+.discard-label {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.65rem;
+    color: var(--ink-light);
+    text-align: center;
+    margin-bottom: 2px;
+}
+
+/* --- Draw pile / wall indicator --- */
+.wall-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    color: var(--sepia);
+    background: rgba(244, 228, 193, 0.9);
+    border: 1px solid var(--ink-faint);
+    padding: 4px 10px;
+    border-radius: 2px;
+    z-index: 15;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* --- Meld display --- */
+.meld-area {
+    display: flex;
+    gap: 3px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.meld-group {
+    display: flex;
+    gap: 0px;
+    border: 1px solid var(--ink-faint);
+    border-radius: 2px;
+    padding: 1px;
+    background: rgba(244, 228, 193, 0.5);
+}
+
+.meld-group .mj-tile {
+    width: 24px;
+    height: 32px;
+    cursor: default;
+}
+
+.meld-group .mj-tile .tile-char {
+    font-size: 12px;
+}
+
+.meld-group .mj-tile .tile-sub {
+    display: none;
+}
+
+.meld-group .mj-tile:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* --- Status box --- */
+.status-box {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(244, 228, 193, 0.85);
+    border: 1px solid var(--ink);
+    padding: 8px 12px;
+    font-family: 'Noto Serif SC', 'EB Garamond', serif;
+    font-size: 0.85rem;
+    color: var(--ink);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 20;
+    transition: filter 0.3s;
+    max-width: 200px;
+}
+
+.status-box h4 {
+    font-family: 'Cinzel', serif;
+    margin-bottom: 5px;
+    border-bottom: 1px solid var(--ink-faint);
+    padding-bottom: 3px;
+    font-size: 0.8rem;
+}
+
+.highlighted {
+    filter: drop-shadow(0 0 8px var(--gold)) brightness(1.1) !important;
+}
+
+/* Turn indicator glow */
+.turn-active {
+    animation: turnGlow 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes turnGlow {
+    from {
+        box-shadow: 0 0 5px rgba(218, 165, 32, 0.3);
+    }
+
+    to {
+        box-shadow: 0 0 15px rgba(218, 165, 32, 0.7);
+    }
+}
+
+/* ============================================================
+   SLIDE-IN TUTORIAL PANEL
+   ============================================================ */
+.feature-panel {
+    position: fixed;
+    top: 0;
+    right: -50vw;
+    width: 40vw;
+    height: 100vh;
+    background: radial-gradient(ellipse at 50% 50%, var(--parchment-light) 0%, var(--parchment) 100%);
+    border-left: 2px solid var(--ink-faint);
+    z-index: 1000;
+    overflow-y: auto;
+    transition: right 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -8px 0 40px rgba(0, 0, 0, 0.3);
+}
+
+.feature-panel.open {
+    right: 0;
+}
+
+.close-panel-btn {
+    float: right;
+    margin: 15px;
+    background: transparent;
+    border: 1px solid var(--ink-faint);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+.close-panel-btn:hover {
+    background: var(--ink);
+    color: var(--parchment);
+}
+
+.feature-panel-inner {
+    padding: 40px 30px;
+    clear: both;
+}
+
+.fp-title {
+    font-family: 'Noto Serif SC', 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink-faint);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.fp-desc {
+    font-family: 'Noto Serif SC', 'EB Garamond', serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 20px;
+}
+
+.fp-demo {
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--ink-faint);
+    padding: 15px;
+    text-align: center;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.fp-demo svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.fp-details h3 {
+    font-family: 'Noto Serif SC', 'Cinzel', serif;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+    color: var(--ink);
+}
+
+.fp-details p {
+    font-family: 'Noto Serif SC', 'EB Garamond', serif;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--sepia);
+    margin-bottom: 15px;
+}
+
+/* ============================================================
+   AI REASON BOX
+   ============================================================ */
+.ai-reason-box {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background: rgba(58, 42, 26, 0.92);
+    border: 1px solid var(--gold);
+    padding: 10px 14px;
+    font-family: 'Noto Serif SC', 'EB Garamond', serif;
+    font-size: 0.82rem;
+    color: var(--parchment);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+    max-width: 340px;
+    border-radius: 4px;
+    transition: opacity 0.4s;
+}
+
+.ai-reason-title {
+    font-family: 'Cinzel', serif;
+    font-size: 0.78rem;
+    color: var(--gold);
+    margin-bottom: 5px;
+    border-bottom: 1px solid rgba(218, 165, 32, 0.3);
+    padding-bottom: 4px;
+}
+
+.ai-reason-text {
+    line-height: 1.5;
+}
+
+.ai-reason-text .reason-highlight {
+    color: var(--gold-bright);
+    font-weight: bold;
+}
+
+.ai-demo-active {
+    animation: aiPulse 1s ease-in-out infinite;
+}
+
+@keyframes aiPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px var(--gold);
+    }
+
+    50% {
+        box-shadow: 0 0 20px var(--gold);
+    }
+}
+
+/* ============================================================
+   ACTION BUTTONS (Chi / Pung / Kong / Win overlay)
+   ============================================================ */
+.action-overlay {
+    position: absolute;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 200;
+    animation: fadeUpGold 0.3s ease-out forwards;
+}
+
+.action-btn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 8px 18px;
+    border: 2px solid var(--gold);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 2px;
+}
+
+.action-btn-primary {
+    background: var(--gold);
+    color: #1a0e04;
+}
+
+.action-btn-primary:hover {
+    background: var(--gold-bright);
+    box-shadow: 0 0 15px rgba(218, 165, 32, 0.6);
+}
+
+.action-btn-skip {
+    background: rgba(58, 42, 26, 0.85);
+    color: var(--parchment);
+}
+
+.action-btn-skip:hover {
+    background: rgba(58, 42, 26, 1);
+    border-color: var(--parchment);
+}
+
+/* Win animation */
+.win-banner {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 14, 4, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.win-text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--gold-bright);
+    text-shadow: 0 0 40px rgba(218, 165, 32, 0.6);
+    animation: winPulse 2s ease-in-out infinite;
+    letter-spacing: 15px;
+}
+
+@keyframes winPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.win-sub {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.3rem;
+    color: var(--parchment-dark);
+    margin-top: 15px;
+    font-style: italic;
+}
+
+.win-close {
+    margin-top: 30px;
+    font-family: 'Cinzel', serif;
+    padding: 10px 30px;
+    border: 2px solid var(--gold);
+    background: transparent;
+    color: var(--gold);
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.win-close:hover {
+    background: var(--gold);
+    color: #1a0e04;
+}

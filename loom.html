@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - 传统花楼提花机 (Jacquard Drawloom)</title>
+    <link rel="stylesheet" href="../css/loom.css">
+</head>
+
+<body>
+    <!-- 华丽中国山水开场动画 -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <svg class="entrance-svg" viewBox="-300 -200 600 400" xmlns="http://www.w3.org/2000/svg">
+            <!-- 太阳 -->
+            <circle class="anim-draw sun" cx="-150" cy="-80" r="30" fill="none" stroke="#e5b93d" stroke-width="2" />
+            <!-- 远山 -->
+            <path class="anim-draw mountain-bg" d="M-300,50 Q-200,-100 -100,20 T100,-40 T300,50" fill="none"
+                stroke="#4a5260" stroke-width="1.5" />
+            <!-- 飞鸟 -->
+            <path class="anim-draw bird" d="M100,-80 Q110,-90 120,-80 Q130,-90 140,-80" fill="none" stroke="#7a8290"
+                stroke-width="1.5" />
+            <path class="anim-draw bird delay-1" d="M120,-100 Q125,-105 130,-100 Q135,-105 140,-100" fill="none"
+                stroke="#7a8290" stroke-width="1" />
+            <!-- 近山 -->
+            <path class="anim-draw mountain-fg" d="M-300,120 Q-150,0 0,80 T300,60" fill="none" stroke="#8a92a0"
+                stroke-width="2.5" />
+            <!-- 孤塔 -->
+            <g class="anim-draw pagoda" stroke="#a0a8b0" stroke-width="1.5" fill="none" transform="translate(180, 20)">
+                <line x1="0" y1="-50" x2="0" y2="40" />
+                <path d="M-15,-30 L15,-30 M-20,-10 L20,-10 M-25,10 L25,10 M-30,30 L30,30" />
+                <path d="M-15,-30 L-20,-25 M15,-30 L20,-25 M-20,-10 L-25,-5 M20,-10 L25,-5" />
+            </g>
+            <!-- 祥云 -->
+            <path class="anim-draw cloud"
+                d="M-50,-30 Q-30,-50 -10,-30 Q10,-60 40,-30 Q60,-40 70,-20 Q50,-10 30,-20 Q10,0 -10,-20 Q-30,-10 -50,-30 Z"
+                fill="none" stroke="#c4d2e0" stroke-width="1.5" />
+            <!-- 江水波纹 -->
+            <path class="anim-draw water" d="M-250,160 Q-200,150 -150,160 T-50,160 T50,160 T150,160 T250,160"
+                fill="none" stroke="#3a4250" stroke-width="1" />
+            <path class="anim-draw water delay-1" d="M-220,180 Q-170,170 -120,180 T-20,180 T80,180 T180,180 T280,180"
+                fill="none" stroke="#3a4250" stroke-width="1" />
+        </svg>
+        <h1 class="entrance-title">天 孙 机 杼</h1>
+        <div class="entrance-sub">传统花楼提花机 · 千丝万缕的数字初成 (The Drawloom Simulation)</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container" id="main-container">
+        <a href="index.html" class="back-link">⟵ 返回首页</a>
+
+        <div class="loom-layout">
+            <!-- Left: Loom Visualization -->
+            <div class="loom-center">
+                <div class="canvas-wrapper">
+                    <!-- SVG for loom mechanics -->
+                    <svg id="loom-svg" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <!-- 机架 -->
+                        <g id="loom-frame" stroke="#4a3b32" stroke-width="6" fill="none">
+                            <rect x="50" y="50" width="500" height="700" rx="10" />
+                            <line x1="50" y1="200" x2="550" y2="200" />
+                            <line x1="50" y1="550" x2="550" y2="550" />
+                        </g>
+
+                        <!-- 花楼与挽花工(简化意象) -->
+                        <g id="draw-tower">
+                            <text x="300" y="100" text-anchor="middle" fill="#8b7355"
+                                font-family="'Noto Serif SC', serif" font-size="16">【花楼机构 / Draw Tower】</text>
+                        </g>
+
+                        <!-- 花本 (Jacquard Cards) -->
+                        <g id="pattern-cards"></g>
+
+                        <!-- 经线 (Warps) -->
+                        <g id="warps-group"></g>
+
+                        <!-- 综丝与通丝 (Harness & Heddles) -->
+                        <g id="heddles-group"></g>
+
+                        <!-- 筘 (Reed) - 打纬装置 -->
+                        <g id="reed-group">
+                            <rect id="reed-bar" x="80" y="500" width="440" height="15" fill="#5c4a3d"
+                                stroke="#3b2c24" />
+                        </g>
+
+                        <!-- 梭子 (Shuttle) -->
+                        <g id="shuttle-group">
+                            <path id="shuttle" d="M 80,480 Q 90,470 110,480 Q 90,490 80,480 Z" fill="#d4af37" />
+                        </g>
+
+                        <!-- 织物 (Woven Cloth Canvas based for high performance) -->
+                        <foreignObject id="cloth-container" x="100" y="520" width="400" height="600"
+                            style="overflow:visible;">
+                            <!-- 用于真实绘制织物图案的高清画布 -->
+                            <canvas id="woven-cloth-canvas"
+                                style="width:100%; height:100%; transform-origin:top center; transition: transform linear; image-rendering: pixelated;"></canvas>
+                        </foreignObject>
+
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Right: Tutorial & Controls -->
+            <div class="control-panel">
+                <h2 class="panel-title">天衣无缝 · 花楼织机</h2>
+                <p class="panel-desc">这是中国古代的发明巅峰，通过「花本」记录提花程序（相当于二进制打孔卡的最早雏形），几千根通丝控制经线升降，织出极其复杂的图案。</p>
+
+                <div class="action-section">
+                    <h3>【画物成锦】 上传图像编织</h3>
+                    <p style="font-size:0.85rem; color:#8b7355; margin-bottom:10px;">
+                        选择一张图片，机器将解析其像素点，并将其作为「花本」程序，一针一线为您织成锦缎。</p>
+                    <input type="file" id="image-upload" accept="image/*" class="file-input">
+                    <label for="image-upload" class="upload-btn">选择织锦图样</label>
+                    <button id="btn-weave" class="action-btn">开始织造</button>
+                    <button id="btn-learn" class="action-btn" style="background: #5b7c99; color: white;">我想要学</button>
+                    <!-- 隐藏Canvas用于图片采样 -->
+                    <canvas id="img-canvas" width="40" height="40" style="display:none;"></canvas>
+                </div>
+
+                <div class="action-section">
+                    <h3>【庖丁解机】 拆解与教学</h3>
+                    <div class="part-buttons">
+                        <button class="part-btn" data-part="tower">花楼与挽花 <span>[Draw Tower]</span></button>
+                        <button class="part-btn" data-part="cards">花本结绳 <span>[Pattern Cards]</span></button>
+                        <button class="part-btn" data-part="heddles">通丝与综眼 <span>[Harness]</span></button>
+                        <button class="part-btn" data-part="shuttle">引纬与打筘 <span>[Weaving]</span></button>
+                    </div>
+                </div>
+
+                <!-- 教学面板 -->
+                <div class="tutorial-box" id="tutorial-box">
+                    <h4 id="tut-title">请选择左上方部件</h4>
+                    <p id="tut-content">花楼织机是中国古代提花技术的巅峰，分工明确：上端「挽花工」负责提拉花本程序，下方「织工」负责投梭引纬。</p>
+                </div>
+
+                <!-- Status Panel -->
+                <div class="status-panel">
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span id="loom-status">待机休眠中 (IDLE)</span>
+                    </div>
+                    <div style="font-size:0.8rem; margin-top:8px;">正在编织：第 <span id="current-row">0</span> 行 / 共 <span
+                            id="total-rows">0</span> 行</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 我想要学：缂丝配线与工艺指南 Modal -->
+        <div id="learn-modal" class="learn-modal hidden">
+            <div class="learn-content">
+                <span class="learn-close" id="learn-close">&times;</span>
+                <h2 style="text-align:center; color:#5b7c99; margin-bottom:20px; font-size:1.8rem;">【缂丝工艺谱】</h2>
+                <p style="text-align:justify; margin-bottom: 20px; line-height:1.8; color:#3b2c24;">
+                    <strong>工艺心法：</strong>“通经断纬”。这与普通织布（纬线一穿到底）不同。缂丝在织造时，每当遇到颜色分界线，纬纱必须剪断并换用另一种颜色的丝线。<br>
+                    <strong>配线与图纸：</strong>左侧为染坊备好的绝色丝线排（带色号）。右侧为放大后的<strong>「每一格丝线图纸」</strong>，将鼠标放至图纸上方，即可查看该经纬交织点（打孔格）应当穿入的准确丝线<strong>【色号】</strong>。
+                </p>
+
+                <div class="learn-layout">
+                    <!-- 左侧：线排表 -->
+                    <div class="color-palette-container" id="color-palette-container">
+                        <!-- 动态生成配色列表 -->
+                    </div>
+
+                    <!-- 右侧：图纸放大镜 -->
+                    <div class="blueprint-container">
+                        <div class="blueprint-header">显微图纸 (放大镜模式)</div>
+                        <div class="blueprint-search">
+                            <label>行 (Row): <input type="number" id="bp-search-row" min="1" placeholder="全景"></label>
+                            <label>列 (Col): <input type="number" id="bp-search-col" min="1" placeholder="坐标"></label>
+                            <button id="bp-search-btn" class="action-btn blueprint-search-btn">查验针法</button>
+                            <span id="bp-search-result" class="blueprint-result">等待标定...</span>
+                        </div>
+                        <div class="blueprint-wrapper" id="blueprint-wrapper">
+                            <canvas id="blueprint-canvas"
+                                style="image-rendering: pixelated; max-width: 100%; max-height: 100%; cursor: crosshair;"></canvas>
+                            <!-- Tooltip -->
+                            <div id="blueprint-tooltip" class="blueprint-tooltip hidden"></div>
+                            <!-- Search Crosshair -->
+                            <div id="blueprint-crosshair" class="blueprint-crosshair hidden"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../js/loom.js"></script>
+</body>
+
+</html>

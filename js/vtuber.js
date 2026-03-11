@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnNew: $('btn-new-game'),
         btnPhone: $('btn-phone'),
         phoneBadge: $('phone-badge'),
+        btnMod: $('btn-appoint-mod'),
         logBox: $('log-box'),
     };
 
@@ -231,10 +232,14 @@ document.addEventListener('DOMContentLoaded', () => {
             cocoonFilteredCount: 0,
             cocoonKickedNames: [],
             phoneNotify: false,
+            tiebaPosts: [],
+            crisisActive: false,
+            crisisTopic: '',
             phase: 'idle', // idle | streaming | event | between | ended
             log: [],
         };
         updateUI();
+        updateModBlur();
         setPhase('idle', '准备开播');
         clearDanmaku();
         showEvent('📢', '欢迎来到直播间', '你是一位新出道的VTuber。在这里，弹幕背后是真心还是假意，打赏是支持还是操控——你永远无法确定。\n\n点击"开始直播"来开启你的第一场直播。\n\n记住：你看到的一切，可能都不是真相。', []);
@@ -663,6 +668,9 @@ document.addEventListener('DOMContentLoaded', () => {
         G.eventIndex = 0;
         generateGroupChat();
         generateDMs();
+        generateTieba();
+        startCrisisDanmaku();
+        updateModBlur();
         setPhase('streaming', `第 ${G.stream} 场直播`);
         DOM.streamCounter.textContent = `第 ${G.stream} / ${MAX_STREAMS} 场`;
         DOM.curtainTitle.textContent = `🔴 LIVE — 第 ${G.stream} 场`;
@@ -712,6 +720,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function endStream() {
         stopDanmaku();
+        stopCrisisDanmaku();
         clearDanmaku();
         // Between-stream adjustments
         G.fans.forEach(f => {
@@ -1167,8 +1176,9 @@ document.addEventListener('DOMContentLoaded', () => {
         html += '<div class="phone-header"><span class="phone-header-title">📱 手机</span>';
         html += '<button class="phone-close" id="pclose">✕</button></div>';
         html += '<div class="phone-tab-bar">';
-        html += '<button class="phone-tab active" id="ptab-group">💬 粉丝群</button>';
-        html += '<button class="phone-tab" id="ptab-dm">✉️ 私信</button>';
+        html += '<button class="phone-tab active" id="ptab-group">粉丝群</button>';
+        html += '<button class="phone-tab" id="ptab-dm">私信</button>';
+        html += '<button class="phone-tab" id="ptab-tieba">贴吧</button>';
         html += '</div>';
         html += '<div class="phone-body" id="phone-body"></div>';
         html += '</div>';
@@ -1179,6 +1189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('pclose').addEventListener('click', () => overlay.remove());
         document.getElementById('ptab-group').addEventListener('click', () => renderGroupChat());
         document.getElementById('ptab-dm').addEventListener('click', () => renderDMList());
+        document.getElementById('ptab-tieba').addEventListener('click', () => renderTieba());
 
         renderGroupChat();
     }
@@ -1453,12 +1464,214 @@ document.addEventListener('DOMContentLoaded', () => {
         return events;
     }
 
+    // ===== TIEBA SYSTEM =====
+    const TIEBA_NORMAL = [
+        { title: '今天直播怎么样？', content: '感觉还行吧，中规中矩', replies: ['确实', '一般般', '我觉得不错'] },
+        { title: '新人问一下这个主播怎么样', content: '路人想了解一下', replies: ['还行吧', '可以看看', '挺有趣的'] },
+        { title: '有没有人觉得最近内容变了', content: '和之前的风格不太一样了', replies: ['是你变了', '确实有点', '无所谓看着开心就行'] },
+        { title: '整理了一下主播语录', content: '这些金句太好笑了', replies: ['哈哈哈前排', '收藏了', '经典'] },
+        { title: '主播什么时候出周边', content: '想买！', replies: ['同问', '+1', '还没出吗'] },
+    ];
+    const TIEBA_CRISIS = [
+        { title: '【爆料】关于主播的一些事情', content: '不知真假，大家自己判断。（以下内容来源不明）', lezi: ['前排吃瓜🍉', '搬好小板凳', '乐', '这瓜好大', '哈哈哈终于爆了', '坐等本人回应'] },
+        { title: '有人发现主播和XX主播的关系了吗', content: '看了几个直播切片，感觉有点不对劲', lezi: ['嗑到了嗑到了', '别瞎说啊', '塌房了？', '好刺激！', '吃瓜吃瓜', '我就说吧'] },
+        { title: '刚才直播间发生了什么？', content: '有人看到那条弹幕吗？主播表情变了', lezi: ['乐子来了', '事情越来越有趣了', '打起来打起来', '精彩精彩', '这比电视剧好看'] },
+        { title: '粉丝群内部撕逼了', content: '据说管理员在搞事情，有人被踢了', lezi: ['大的来了！', '精彩绝伦', '乐死我了', '还有这种操作', '群主呢出来!', '看戏看戏🍿'] },
+        { title: '主播疑似被大粉PUA', content: '每次那个粉丝说什么主播就做什么，正常吗？', lezi: ['这不就是操控吗', '细思极恐', '可怕', '主播快醒醒', '乐', '都被拿捏了'] },
+    ];
+    const CRISIS_DANMAKU = [
+        '贴吧怎么回事有人看了吗', '哈哈哈哈哈哈贴吧爆了',
+        '主播你看到贴吧了吗', '大家去贴吧看看',
+        '🍉🍉🍉', '乐', '哈哈哈', '吃瓜前排',
+        '主播你怎么看这个事', '快去贴吧',
+        '事情闹大了', '笑死我了', '精彩',
+        '有人能解释一下吗', '这下好玩了',
+    ];
+
+    function generateTieba() {
+        G.tiebaPosts = [];
+        // Normal posts
+        const normalCount = rand(3, 5);
+        for (let i = 0; i < normalCount; i++) {
+            const p = pick(TIEBA_NORMAL);
+            G.tiebaPosts.push({ ...p, crisis: false });
+        }
+        // Crisis chance increases with streams
+        const crisisChance = Math.min(0.7, 0.15 + G.stream * 0.04);
+        if (Math.random() < crisisChance) {
+            const crisis = pick(TIEBA_CRISIS);
+            G.tiebaPosts.splice(rand(0, 2), 0, { ...crisis, crisis: true, replies: crisis.lezi });
+            G.crisisActive = true;
+            G.crisisTopic = crisis.title;
+            // Phone notification
+            G.phoneNotify = true;
+            DOM.phoneBadge.style.display = 'flex';
+        } else {
+            G.crisisActive = false;
+            G.crisisTopic = '';
+        }
+    }
+
+    // Crisis danmaku surge
+    let crisisDanmakuTimer = null;
+    function startCrisisDanmaku() {
+        if (!G.crisisActive) return;
+        stopCrisisDanmaku();
+        crisisDanmakuTimer = setInterval(() => {
+            spawnDanmaku('路人', pick(CRISIS_DANMAKU), false);
+            if (Math.random() < 0.3) spawnDanmaku('乐子人', pick(CRISIS_DANMAKU), false);
+        }, rand(500, 1200));
+        // Also boost viewer count
+        G.viewers += rand(20, 50);
+    }
+    function stopCrisisDanmaku() {
+        if (crisisDanmakuTimer) { clearInterval(crisisDanmakuTimer); crisisDanmakuTimer = null; }
+    }
+
+    function renderTieba() {
+        const body = document.getElementById('phone-body');
+        if (!body) return;
+        body.innerHTML = '';
+
+        const tabs = document.querySelectorAll('.phone-tab');
+        tabs.forEach(t => t.classList.remove('active'));
+        document.getElementById('ptab-tieba').classList.add('active');
+
+        const header = document.createElement('div');
+        header.className = 'chat-msg-system';
+        header.textContent = '—— 主播贴吧 · 最新帖子 ——';
+        body.appendChild(header);
+
+        if (G.tiebaPosts.length === 0) {
+            const empty = document.createElement('div');
+            empty.className = 'chat-msg-system';
+            empty.textContent = '开始直播后贴吧会出现新帖子';
+            body.appendChild(empty);
+            return;
+        }
+
+        G.tiebaPosts.forEach(post => {
+            const el = document.createElement('div');
+            el.className = 'tieba-post' + (post.crisis ? ' tieba-post-crisis' : '');
+            let h = '<div class="tieba-post-title">' + post.title + '</div>';
+            h += '<div class="tieba-post-meta"><span>匿名用户</span><span>' + rand(1, 50) + '分钟前</span><span>' + rand(5, 200) + '回复</span></div>';
+            h += '<div class="tieba-post-content">' + post.content + '</div>';
+            if (post.replies) {
+                post.replies.forEach(r => {
+                    h += '<div class="tieba-reply' + (post.crisis ? ' tieba-reply-lezi' : '') + '">' + r + '</div>';
+                });
+            }
+            el.innerHTML = h;
+            body.appendChild(el);
+        });
+    }
+
+    // ===== NO-MOD BLUR =====
+    function updateModBlur() {
+        const hasMod = G.fans && G.fans.some(f => f.isMod && f.isActive);
+        if (hasMod) {
+            DOM.danmakuArea.classList.remove('no-mod');
+        } else {
+            DOM.danmakuArea.classList.add('no-mod');
+        }
+    }
+
+    // ===== MOD APPOINTMENT POPUP =====
+    const MOD_PITCHES = {
+        loyal: '我……我不太会管，但我会尽力的。',
+        manipulator: '交给我吧！我帮你把那些捣乱的人全禁了❤',
+        observer: '我可以帮忙看着，不太会说话就是。',
+        troll: '我对社区生态很了解，让我来管理一定很精彩！',
+        parasite: '我经验丰富！已经帮好几个主播管过了，放心！',
+    };
+
+    function showModAppointment() {
+        document.querySelectorAll('.mod-select-overlay').forEach(e => e.remove());
+
+        const candidates = G.fans.filter(f => f.isActive && !f.isMod);
+        if (candidates.length === 0) {
+            addLog('没有可以任命的候选人。');
+            return;
+        }
+
+        const overlay = document.createElement('div');
+        overlay.className = 'mod-select-overlay';
+        overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+
+        let html = '<div class="mod-select-panel">';
+        html += '<div class="mod-select-title">👑 任命房管</div>';
+        html += '<div style="font-size:.7rem;color:var(--ink-light);text-align:center;margin-bottom:10px;">选择一位粉丝作为你的房管。房管可以帮你管理弹幕——但你确定能看清他们的真面目吗？</div>';
+
+        // Show top 5 candidates sorted by surface level
+        const top = candidates.sort((a, b) => b.surfaceLevel - a.surfaceLevel).slice(0, 6);
+        top.forEach(f => {
+            const bi = BIAS_IMPRESSIONS[f.perceivedType];
+            html += '<div class="mod-candidate" data-fan-id="' + f.id + '">';
+            html += '<div class="mod-candidate-avatar">' + f.avatar + '</div>';
+            html += '<div class="mod-candidate-info">';
+            html += '<div class="mod-candidate-name">' + f.name + ' <span style="font-weight:400;color:' + bi.color + ';">[' + bi.label + ']</span></div>';
+            html += '<div class="mod-candidate-pitch">"' + MOD_PITCHES[f.type] + '"</div>';
+            html += '</div></div>';
+        });
+
+        html += '<button class="mod-skip" id="mod-skip-btn">暂时不任命（弹幕将保持模糊）</button>';
+        html += '</div>';
+
+        overlay.innerHTML = html;
+        document.body.appendChild(overlay);
+
+        // Click handlers
+        overlay.querySelectorAll('.mod-candidate').forEach(el => {
+            el.addEventListener('click', () => {
+                const fid = parseInt(el.getAttribute('data-fan-id'));
+                const fan = G.fans.find(f => f.id === fid);
+                if (fan) {
+                    fan.isMod = true;
+                    fan.influence += 25;
+                    if (fan.type === 'manipulator') {
+                        G.fans.filter(f => f.type === 'loyal').forEach(l => { l.loyalty -= 8; });
+                        G.communityHealth -= 10;
+                    }
+                    if (fan.type === 'parasite') {
+                        G.fans.filter(f => f.type === 'observer').forEach(o => { if (Math.random() < 0.3) o.isActive = false; });
+                    }
+                    addLog('👑 任命 ' + fan.name + ' 为房管。');
+                    updateModBlur();
+                    updateUI();
+                }
+                overlay.remove();
+            });
+        });
+
+        document.getElementById('mod-skip-btn').addEventListener('click', () => {
+            addLog('⚠ 没有任命房管。弹幕将保持模糊。');
+            overlay.remove();
+        });
+    }
+
     // ===== BUTTON EVENTS =====
-    DOM.btnStart.addEventListener('click', startStream);
+    DOM.btnStart.addEventListener('click', () => {
+        // Check if no mod before first stream
+        const hasMod = G.fans.some(f => f.isMod);
+        if (!hasMod && G.stream === 0) {
+            showModAppointment();
+            // After appointment, start stream via callback
+            const checkAndStart = setInterval(() => {
+                if (!document.querySelector('.mod-select-overlay')) {
+                    clearInterval(checkAndStart);
+                    updateModBlur();
+                    startStream();
+                }
+            }, 200);
+            return;
+        }
+        startStream();
+    });
     DOM.btnNext.addEventListener('click', showNextEvent);
     DOM.btnEnd.addEventListener('click', endStream);
     DOM.btnNew.addEventListener('click', newGame);
     DOM.btnPhone.addEventListener('click', showPhone);
+    DOM.btnMod.addEventListener('click', showModAppointment);
 
     // ===== INIT =====
     newGame();

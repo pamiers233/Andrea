@@ -49,12 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Hour Numerals (Roman, 12-hour) ---
+    // --- Hour Numerals (Roman, 12-hour) - REVERSE 1999 LAYOUT ---
     const hourNumerals = document.getElementById('hour-numerals');
     const romanNums = ['XII', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI'];
     if (hourNumerals) {
         for (let i = 0; i < 12; i++) {
-            const angle = i * 30;
+            // Place numbers counter-clockwise for backwards flowing time!
+            const angle = -i * 30;
             const rad = (angle - 90) * Math.PI / 180;
             const r = 440;
             const x = r * Math.cos(rad);
@@ -73,6 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 2. ASTRONOMICAL CALCULATION ENGINE
     // ==========================================
+
+    /**
+     * Calculates the Julian Day from a given Gregorian date.
+     * @param {number} y - Year
+     * @param {number} m - Month (1-12)
+     * @param {number} d - Day
+     * @returns {number} The Julian Day (used as a standard time reference in astronomy)
+     */
     function julianDay(y, m, d) {
         if (m <= 2) { y--; m += 12; }
         const A = Math.floor(y / 100);
@@ -80,28 +89,47 @@ document.addEventListener('DOMContentLoaded', () => {
         return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5;
     }
 
+    /**
+     * Calculates the apparent geocentric longitude of the Sun.
+     * @param {Date} date - Current Date object
+     * @returns {number} Solar longitude in degrees (0-360)
+     */
     function sunLongitude(date) {
         const jd = julianDay(date.getFullYear(), date.getMonth() + 1, date.getDate() + date.getHours() / 24);
+        // T is the Julian Century since J2000.0
         const T = (jd - 2451545.0) / 36525;
+        // L0 is the mean longitude of the Sun
         let L0 = 280.46646 + 36000.76983 * T;
+        // M is the mean anomaly of the Sun
         let M = (357.52911 + 35999.05029 * T) * Math.PI / 180;
+        // C is the Sun's equation of the center
         const C = (1.914602 - 0.004817 * T) * Math.sin(M) + 0.019993 * Math.sin(2 * M);
         return ((L0 + C) % 360 + 360) % 360;
     }
 
+    /**
+     * Calculates the Moon's phase accurately.
+     * @param {Date} date - Current Date object
+     * @returns {number} A float between 0.0 (New Moon) and 1.0 (Full Moon/next New Moon)
+     */
     function moonPhase(date) {
         const jd = julianDay(date.getFullYear(), date.getMonth() + 1, date.getDate());
+        // 29.53058886 is the synodic month (period of lunar phases)
         let phase = ((jd - 2451550.1) % 29.53058886) / 29.53058886;
         if (phase < 0) phase += 1;
         return phase;
     }
 
+    /**
+     * Calculates the Greenwich Mean Sidereal Time (GMST) in degrees.
+     * Sidereal time is based on the Earth's rotation relative to fixed stars, not the Sun.
+     */
     function siderealTimeDeg(date) {
         const jd = julianDay(date.getFullYear(), date.getMonth() + 1, date.getDate());
         const T = (jd - 2451545.0) / 36525;
         let GMST = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T;
         const hrs = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600;
-        GMST += hrs * 15;
+        GMST += hrs * 15; // 15 degrees per hour
         return ((GMST % 360) + 360) % 360;
     }
 
@@ -119,14 +147,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const secondHand = document.getElementById('second-hand');
     const CLOCK_START_DELAY = 8000;
 
+    /**
+     * Main rendering loop for the Clock and Info Circles.
+     * Requested via requestAnimationFrame for 60FPS fluid motion.
+     */
     function updateClock() {
         const now = new Date();
         const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds(), ms = now.getMilliseconds();
 
-        // Clock hands
-        const secAngle = (s + ms / 1000) * 6;
-        const minAngle = (m + s / 60) * 6;
-        const hourAngle = ((h % 12) + m / 60) * 30;
+        /**
+         * INTERVIEW HIGHLIGHT: "Reverse Time Parodox" Clock Hands
+         * To simulate the "Storm" from Reverse: 1999, the time flows backward.
+         * The standard formula for an analog clock rotation is negated (multiplied by -1).
+         * Because the hour numerals (XII, I, II) on the SVG dial were populated in a REVERSE 
+         * counter-clockwise geometric map during initialization (see step 1: angle = -i * 30),
+         * the clock physically spins backward into the past, yet STILL points to the exact, 
+         * mathematically correct real-world current hour!
+         */
+        const secAngle = -((s + ms / 1000) * 6);
+        const minAngle = -((m + s / 60) * 6);
+        const hourAngle = -(((h % 12) + m / 60) * 30);
+
         if (hourHand) hourHand.setAttribute('transform', `rotate(${hourAngle})`);
         if (minuteHand) minuteHand.setAttribute('transform', `rotate(${minAngle})`);
         if (secondHand) secondHand.setAttribute('transform', `rotate(${secAngle})`);
@@ -399,8 +440,259 @@ document.addEventListener('DOMContentLoaded', () => {
     if (backBtn) backBtn.addEventListener('click', hidePlanetDetail);
 
     // ==========================================
-    // 5. INTRO TRANSITION
+    // 5. INTRO TRANSITION & PRE-INTRO (THREE.JS DOOR)
     // ==========================================
+    const preIntro = document.getElementById('pre-intro-overlay');
+    const authBox = document.getElementById('pre-auth-box');
+    const transLayer = document.getElementById('pre-transition-layer');
+    const preHeader = document.getElementById('pre-header');
+    const preFooter = document.getElementById('pre-footer');
+
+    // THREE.js Particle Door Init
+    let particleScene, particleCamera, particleRenderer, particleSystem, pivotGroup, pGeo, pTarget;
+    let doorState = 'gathering'; // State Machine: gathering | holding | opening
+    let doorOpacity = 1;
+
+    /**
+     * Initializes the Three.js environment for the 3D Particle Door.
+     * INTERVIEW HIGHLIGHT: "Performant Particle Physics"
+     * We manipulate 20,000 vertices directly in a Float32Array using BufferGeometry.
+     * This avoids the overhead of creating 20,000 Object3D instances, utilizing WebGL correctly.
+     */
+    function initThreeDoor() {
+        if (!window.THREE) return;
+        const container = document.getElementById('particle-door-container');
+        if (!container) return;
+
+        // Force container's parent layer to be visible immediately so we see the gather
+        if (transLayer) transLayer.style.display = 'flex';
+
+        particleScene = new THREE.Scene();
+        particleCamera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        particleCamera.position.z = 150;
+
+        particleRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        particleRenderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(particleRenderer.domElement);
+
+        const particleCount = 20000;
+        pGeo = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        pTarget = new Float32Array(particleCount * 3);
+
+        const doorWidth = 140;
+        const doorHeight = 240;
+
+        for (let i = 0; i < particleCount; i++) {
+            // TARGET POSITION: The perfect rectangular door shape.
+            // X goes from -doorWidth/2 to +doorWidth/2
+            let tgtX = (Math.random() - 0.5) * doorWidth;
+            let tgtY = (Math.random() - 0.5) * doorHeight;
+            let tgtZ = (Math.random() - 0.5) * 15; // Give it slight 3D thickness
+
+            pTarget[i * 3] = tgtX;
+            pTarget[i * 3 + 1] = tgtY;
+            pTarget[i * 3 + 2] = tgtZ;
+
+            // START POSITION: Extensively scattered randomly all around the space
+            // This allows the particles to magically drift *into* the door target position.
+            positions[i * 3] = tgtX + (Math.random() - 0.5) * 1200;
+            positions[i * 3 + 1] = tgtY + (Math.random() - 0.5) * 1200;
+            positions[i * 3 + 2] = tgtZ + (Math.random() - 0.5) * 800 + 400; // Coming from the front
+        }
+
+        pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+        // Create a circular sprite texture for particles dynamically via Canvas2D.
+        // No need to load an external image asset, removing network latency.
+        const canvas = document.createElement('canvas');
+        canvas.width = 16;
+        canvas.height = 16;
+        const ctx = canvas.getContext('2d');
+        const grad = ctx.createRadialGradient(8, 8, 0, 8, 8, 8);
+        grad.addColorStop(0, 'rgba(255,255,255,1)');
+        grad.addColorStop(0.2, 'rgba(212,175,55,1)');    // Gold rim
+        grad.addColorStop(1, 'rgba(212,175,55,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 16, 16);
+        const texture = new THREE.CanvasTexture(canvas);
+
+        const pMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 2.0,
+            map: texture,
+            transparent: true,
+            opacity: 1,
+            blending: THREE.AdditiveBlending, // Bloom effect without post-processing
+            depthWrite: false
+        });
+
+        particleSystem = new THREE.Points(pGeo, pMaterial);
+
+        // INTERVIEW HIGHLIGHT: "The Virtual Hinge"
+        // To make the static door 'swing open' smoothly, we create a mathematical Pivot Group.
+        // The rotation origin is placed at the left edge of the door (Hinge), and the mesh is appended to it.
+        pivotGroup = new THREE.Group();
+        pivotGroup.position.x = -doorWidth / 2; // Hinge is at the left edge
+        particleSystem.position.x = doorWidth / 2; // Compensate mesh back to center
+
+        pivotGroup.add(particleSystem);
+        particleScene.add(pivotGroup);
+
+        renderThreeDoorLoop();
+    }
+
+    /**
+     * The animation loop managing the lifecycle of the particle door.
+     */
+    function renderThreeDoorLoop() {
+        if (!pGeo) return;
+        const pos = pGeo.attributes.position.array;
+
+        if (doorState === 'gathering') {
+            // Linear Interpolation (Lerp) towards the target rectangle
+            for (let i = 0; i < pos.length; i++) {
+                pos[i] += (pTarget[i] - pos[i]) * 0.04; // 4% closer per frame
+            }
+            pGeo.attributes.position.needsUpdate = true;
+        }
+        else if (doorState === 'opening') {
+            // Rotate the pivot hinge (swings open backwards into the screen like opening a crypt)
+            if (pivotGroup.rotation.y > -Math.PI / 1.5) {
+                pivotGroup.rotation.y -= 0.025;
+            }
+
+            // At the same time, camera moves forward to physically step through the door frame gap
+            particleCamera.position.z -= 1.0;
+
+            // Fade out the overlay
+            doorOpacity -= 0.009;
+            particleSystem.material.opacity = Math.max(doorOpacity, 0);
+        }
+
+        particleRenderer.render(particleScene, particleCamera);
+
+        // Keep animating until the door goes completely invisible
+        if (doorOpacity > 0) {
+            requestAnimationFrame(renderThreeDoorLoop);
+        } else {
+            // Destroy overlays once we have 'entered' the main page
+            if (preIntro) preIntro.style.display = 'none';
+        }
+    }
+
+    /**
+     * THE MASTER OVERTURE SEQUENCE (State Machine)
+     * Orchestrating DOM elements, animations, SVG lengths, and WebGL dynamically.
+     */
+    if (preIntro && authBox && transLayer) {
+        // Phase 1: Hold the Auth Box (ID CONFIRMED) for 2.2s, then trigger Glitch
+        setTimeout(() => {
+            authBox.classList.add('pre-intro-glitch-out');
+            if (preHeader) preHeader.classList.add('pre-intro-glitch-out');
+            if (preFooter) preFooter.classList.add('pre-intro-glitch-out');
+
+            // Phase 1.5: Clear Auth Box visually, trigger Storm Protocol text typing
+            setTimeout(() => {
+                authBox.style.display = 'none';
+                if (preHeader) preHeader.style.display = 'none';
+                if (preFooter) preFooter.style.display = 'none';
+
+                const sigLayer = document.getElementById('pre-signature-layer');
+                const sigText = document.getElementById('pre-protocol-text');
+                const sigWrapper = document.getElementById('pre-signature');
+
+                if (sigLayer && sigText && sigWrapper) {
+                    sigLayer.style.display = 'flex';
+
+                    // Latin contract simulating the narrative from Reverse: 1999
+                    const protocolString = "[ STORM CONTROL PROTOCOL - DIRECTIVE 1999-Δ ]\n\nEgo, in conspectu Procellæ, pactum aeternum facio. Tempestatem non timebo, sed per eam in praeteritum ambulabo. Ut chronicae veritatis custos, sigillum meum appono.\n\nDECLARATIO PROTOCOLLI:\nArticulus I: Silentium universi fremens oritur, et guttæ pluviae ad caelum ascendunt. Machinae temporis rursus incipiunt pulsationem suam. In hoc spatio ubi tempus et materia concurrunt, scientia fit religio, et fides nostra in numeris occultis consistit.\nArticulus II: Nos qui relicti sumus, testimonium perhibemus. Mundus quem novimus in pluvia aenea dissolvitur. Omnis memoria, omnis historia, in archivis digitalibus servanda est.\nArticulus III: Ne obliviscaris verborum eorum qui ante nos transierunt. Veritatem absolutam non petimus, sed fragmina praeteriti custodimus.\n\nPer hoc documentum, declaro me legibus Laplace Center pariturum esse. Nullus retrogradus gressus permittitur, nisi ad veritatem ultimam inveniendam. Sigillum hoc meum sit testimonium voluntatis meae inconcussae in saecula saeculorum.";
+                    let i = 0;
+
+                    // A recursive "terminal chunking" loop to simulate fast system data streams
+                    function typeWriter() {
+                        if (i < protocolString.length) {
+                            // Inject 6 characters at a time to fake rapid cybernetic speed
+                            let chunk = protocolString.substring(i, i + 6);
+                            sigText.textContent += chunk;
+                            i += 6;
+                            setTimeout(typeWriter, 12);
+                        } else {
+                            // Typing finished. Wait 500ms then trigger the Signature.
+                            setTimeout(() => {
+                                /**
+                                 * INTERVIEW HIGHLIGHT: "Dynamic SVG Path Tracing"
+                                 * We do not hardcode the stroke animation duration or length.
+                                 * Instead, we dynamically query the exact mathematical length of the
+                                 * SVG curve via `getTotalLength()`, and set it as the dash-array size.
+                                 * This guarantees the stroke unrolls exactly once, flawlessly mimicking ink.
+                                 */
+                                const sigPath = document.getElementById('sig-path');
+                                const sigTextNode = document.querySelector('.sig-svg-text');
+
+                                if (sigPath) {
+                                    const length = sigPath.getTotalLength();
+                                    sigPath.style.strokeDasharray = length;
+                                    sigPath.style.strokeDashoffset = length; // Hide it initially
+
+                                    // Trigger browser reflow to ensure the CSS respects the initial offset
+                                    sigPath.getBoundingClientRect();
+                                    // CSS class adds the animation that runs dashoffset back to 0
+                                    sigPath.classList.add('signed');
+                                }
+                                if (sigTextNode) {
+                                    sigTextNode.classList.add('signed'); // Fade in the actual Dancing Script text later
+                                }
+
+                                // Wait for 1.5s stroke animation + 0.5s text fade + 1s user read time
+                                setTimeout(() => {
+                                    sigLayer.style.display = 'none';
+                                    startPhase2();
+                                }, 3000);
+                            }, 500);
+                        }
+                    }
+                    typeWriter();
+                } else {
+                    startPhase2(); // Fallback defensive check
+                }
+
+                // Phase 2: Rapid Flash Transition Overlays & Door Opening
+                function startPhase2() {
+                    transLayer.style.display = 'flex';
+                    const line1 = transLayer.querySelector('.line-1');
+                    const line2 = transLayer.querySelector('.line-2');
+
+                    // Blast 1: ACCESS GRANTED (shows up fast and big via CSS anim)
+                    if (line1) line1.style.animation = "preFlashText 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards";
+
+                    // Blast 2: ESTABLISHING CONNECTION...
+                    setTimeout(() => {
+                        if (line2) line2.style.animation = "preFlashText 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) forwards";
+
+                        // Trigger the 3D WebGL engine to start pulling points into the door shape (Gathering)
+                        setTimeout(() => {
+                            initThreeDoor();
+
+                            // Wait 2.8s for particles to form a sturdy door, then execute Push-Open
+                            setTimeout(() => {
+                                doorState = 'opening'; // Changes the render loop logic
+
+                                // Fade out the black background slowly behind the opening door to reveal the clock
+                                preIntro.classList.add('pre-bg-fade');
+                                preIntro.style.backgroundColor = "transparent";
+                                const scanlines = preIntro.querySelector('.pre-bg-scanlines');
+                                if (scanlines) scanlines.style.opacity = 0;
+
+                            }, 2800);
+                        }, 400);
+                    }, 800);
+                }
+
+            }, 550); // Glitch split animation duration
+        }, 2200); // Initial auth box presentation time
+    }
+
     const enterBtn = document.getElementById('enter-blog');
     const introContainer = document.getElementById('intro-container');
     const blogWrapper = document.getElementById('blog-wrapper');
@@ -580,5 +872,59 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (e.key === 'ArrowLeft') goPrevPage();
         }
     });
+
     initBook();
+    // ==========================================
+    // 7. REVERSE RAIN EFFECT (1999 VIBE)
+    // ==========================================
+    const rainCanvas = document.getElementById('reverse-rain');
+    if (rainCanvas) {
+        const ctx = rainCanvas.getContext('2d');
+        let width = rainCanvas.width = window.innerWidth;
+        let height = rainCanvas.height = window.innerHeight;
+
+        const particles = [];
+        const numDrops = Math.floor((width * height) / 10000); // density
+
+        for (let i = 0; i < numDrops; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                length: Math.random() * 20 + 10,
+                speed: Math.random() * 8 + 4,
+                opacity: Math.random() * 0.4 + 0.1
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            width = rainCanvas.width = window.innerWidth;
+            height = rainCanvas.height = window.innerHeight;
+        });
+
+        function drawRain() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.lineWidth = 1;
+            ctx.lineCap = 'round';
+            const goldRbg = '212, 175, 55';
+
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                ctx.strokeStyle = `rgba(${goldRbg}, ${p.opacity})`;
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+                ctx.lineTo(p.x, p.y - p.length); // Drawing upward
+                ctx.stroke();
+
+                // Reverse gravity!
+                p.y -= p.speed;
+
+                if (p.y < -p.length) {
+                    p.y = height + p.length;
+                    p.x = Math.random() * width;
+                }
+            }
+            requestAnimationFrame(drawRain);
+        }
+        drawRain();
+    }
 });

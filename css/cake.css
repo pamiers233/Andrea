@@ -1,0 +1,628 @@
+/* 达芬奇糖霜建筑 / Da Vinci Cake CSS */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;400;700&display=swap');
+
+:root {
+    --ink: #3b2c24;
+    --paper: #f4ecce;
+    --gold: #c4a56e;
+    --cream: #f9f5e8;
+    --rouge: #b56a6a;
+    /* A soft cake-like red/rose color for accents */
+    --blueprint: #e0d8c3;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--paper);
+    font-family: 'Noto Serif SC', serif;
+    color: var(--ink);
+    background-image: radial-gradient(circle, rgba(139, 115, 85, 0.05) 0%, rgba(139, 115, 85, 0.2) 100%),
+        url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0z' fill='none'/%3E%3Cpath d='M20 0v40M0 20h40' stroke='%233b2c24' stroke-width='.1' stroke-opacity='.2'/%3E%3C/svg%3E");
+}
+
+/* ===== ENTRANCE ANIMATION ===== */
+.entrance-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--paper);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1.5s ease;
+}
+
+.entrance-svg {
+    width: 60%;
+    max-width: 600px;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.anim-draw-fast {
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: drawCircle 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.anim-draw-slow {
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
+    animation: drawCircle 5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.anim-text {
+    opacity: 0;
+    animation: fadeInSlide 2s 3s forwards;
+}
+
+@keyframes drawCircle {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 0.8;
+        transform: translateY(0);
+    }
+}
+
+.entrance-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    margin-top: 20px;
+    letter-spacing: 8px;
+    color: var(--ink);
+    opacity: 0;
+    animation: fadeIn 2s 4s forwards;
+}
+
+.entrance-sub {
+    font-size: 1rem;
+    color: #665544;
+    font-style: italic;
+    opacity: 0;
+    animation: fadeIn 2s 4.5s forwards;
+    letter-spacing: 3px;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===== MAIN LAYOUT ===== */
+.main-container {
+    width: 100vw;
+    height: 100vh;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.back-link {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 1.1rem;
+    align-self: flex-start;
+    margin-bottom: 20px;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: var(--rouge);
+}
+
+.cake-layout {
+    display: flex;
+    gap: 40px;
+    flex: 1;
+    min-height: 0;
+}
+
+/* Left Canvas & Materials */
+.blueprint-section {
+    flex: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.canvas-wrapper {
+    flex: 1;
+    border: 2px solid rgba(59, 44, 36, 0.2);
+    border-radius: 6px;
+    position: relative;
+    background: var(--blueprint);
+    background-image:
+        linear-gradient(to right, rgba(139, 115, 85, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(139, 115, 85, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#cake-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.materials-display {
+    border: 1px dashed rgba(59, 44, 36, 0.5);
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.materials-display h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: var(--ink);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 5px;
+}
+
+.materials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.material-card {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.5);
+    padding: 8px 12px;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+}
+
+.mat-label {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: bold;
+}
+
+.mat-val {
+    font-size: 1.2rem;
+    font-family: monospace;
+    color: var(--ink);
+    align-self: flex-end;
+}
+
+/* Right Panel */
+.control-panel {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    border: 1px solid rgba(59, 44, 36, 0.1);
+    background: rgba(244, 236, 206, 0.6);
+    border-radius: 8px;
+    font-size: 0.95rem;
+}
+
+.panel-title {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: #2a1e16;
+    font-family: 'Cormorant Garamond';
+    letter-spacing: 2px;
+}
+
+.panel-desc {
+    margin-bottom: 20px;
+    line-height: 1.6;
+    color: #4a3b32;
+}
+
+.action-section {
+    padding: 15px 0;
+    border-top: 1px dashed rgba(59, 44, 36, 0.3);
+    margin-bottom: 20px;
+}
+
+.action-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: var(--ink);
+}
+
+.input-grid {
+    display: flex;
+    gap: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.input-group label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.input-group input {
+    padding: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    background: #fff;
+    font-family: monospace;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.action-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    font-weight: bold;
+    font-family: 'Noto Serif SC';
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.action-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.file-input {
+    display: none;
+}
+
+.upload-btn {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1px dashed var(--rouge);
+    color: var(--rouge);
+    font-weight: bold;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.upload-btn:hover {
+    background: var(--rouge);
+    color: white;
+}
+
+.tutorial-box {
+    padding: 15px;
+    border-left: 3px solid var(--rouge);
+    background: rgba(181, 106, 106, 0.05);
+    line-height: 1.6;
+    margin-top: 20px;
+}
+
+.tutorial-box h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+    color: #2a1e16;
+}
+
+.tutorial-box p {
+    margin: 0;
+}
+
+
+/* ====== LEARN MODAL (REUSED / TWEAKED FROM LOOM) ====== */
+.learn-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.learn-modal.hidden {
+    display: none;
+}
+
+.learn-content {
+    background: var(--paper);
+    width: 1000px;
+    max-width: 95vw;
+    max-height: 90vh;
+    border: 2px solid var(--rouge);
+    border-radius: 8px;
+    padding: 30px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+}
+
+.learn-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--ink);
+    transition: color 0.3s;
+}
+
+.learn-close:hover {
+    color: var(--rouge);
+}
+
+.learn-layout {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+}
+
+.color-palette-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 15px;
+    border: 1px solid rgba(59, 44, 36, 0.2);
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    padding: 15px;
+}
+
+.color-palette-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.color-palette-container::-webkit-scrollbar-track {
+    background: rgba(59, 44, 36, 0.1);
+    border-radius: 4px;
+}
+
+.color-palette-container::-webkit-scrollbar-thumb {
+    background: var(--rouge);
+    border-radius: 4px;
+}
+
+.swatch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px dashed rgba(59, 44, 36, 0.2);
+}
+
+.swatch-row:last-child {
+    border-bottom: none;
+}
+
+.swatch-color-box {
+    width: 40px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.swatch-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.swatch-name {
+    font-weight: bold;
+    color: var(--ink);
+    font-size: 1rem;
+}
+
+.swatch-hex {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.swatch-count {
+    font-size: 0.85rem;
+    color: var(--rouge);
+    font-weight: bold;
+}
+
+.blueprint-container {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(59, 44, 36, 0.5);
+    background: #e2d8bd;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.blueprint-header {
+    background: var(--ink);
+    color: white;
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.blueprint-search {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.6);
+    border-bottom: 1px solid rgba(59, 44, 36, 0.2);
+    font-size: 0.85rem;
+}
+
+.blueprint-search label {
+    font-weight: bold;
+    color: var(--ink);
+}
+
+.blueprint-search input {
+    width: 50px;
+    padding: 2px 4px;
+    border: 1px solid rgba(59, 44, 36, 0.4);
+    text-align: center;
+}
+
+.blueprint-result {
+    margin-left: auto;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.blueprint-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#blueprint-canvas {
+    background-image:
+        linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+}
+
+.blueprint-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(42, 30, 22, 0.95);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 4px;
+    border: 1px solid var(--gold);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    transform: translate(15px, 15px);
+    white-space: nowrap;
+}
+
+.blueprint-tooltip.hidden {
+    display: none;
+}
+
+.blueprint-crosshair {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #ff3d3d;
+    box-shadow: 0 0 0 2000px rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    z-index: 5;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.blueprint-crosshair::before,
+.blueprint-crosshair::after {
+    content: '';
+    position: absolute;
+    background: #ff3d3d;
+}
+
+.blueprint-crosshair::before {
+    inset: 50% -10px auto -10px;
+    height: 1px;
+}
+
+.blueprint-crosshair::after {
+    inset: -10px 50% -10px auto;
+    width: 1px;
+}
+
+.blueprint-crosshair.hidden {
+    display: none;
+}
+
+/* ====== LAYER TUTORIAL MODAL ====== */
+.layer-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: rgba(42, 30, 22, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+    transition: opacity 0.4s ease;
+}
+
+.layer-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.layer-content {
+    background: var(--paper);
+    width: 650px;
+    max-width: 90vw;
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    transform: scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    background-image: radial-gradient(circle, rgba(139, 115, 85, 0.05) 0%, rgba(139, 115, 85, 0.1) 100%);
+}
+
+.layer-modal:not(.hidden) .layer-content {
+    transform: scale(1);
+}
+
+.layer-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--ink);
+    transition: color 0.3s;
+}
+
+.layer-close:hover {
+    color: var(--rouge);
+}
+
+.layer-clickable {
+    cursor: pointer;
+}
+
+.layer-clickable:hover polygon,
+.layer-clickable:hover path,
+.layer-clickable:hover ellipse {
+    filter: brightness(1.15);
+}

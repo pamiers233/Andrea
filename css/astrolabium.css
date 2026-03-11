@@ -1,0 +1,408 @@
+/* Astrolabium Galileo Galilei - Artistic Renaissance Style */
+
+:root {
+    --astro-gold: #c9a14a;
+    --astro-gold-light: #e5b93d;
+    --astro-gold-dark: #8a6d2b;
+    --astro-bg: #0d1117;
+    --astro-panel-bg: rgba(15, 20, 30, 0.92);
+    --astro-text: #d4c5a0;
+    --astro-text-dim: #7a8aaa;
+    --astro-border: rgba(201, 161, 74, 0.25);
+    --astro-accent: #b0c4de;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--astro-bg);
+    color: var(--astro-text);
+    font-family: 'Noto Serif SC', 'Cinzel', serif;
+    overflow-x: hidden;
+    background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(201, 161, 74, 0.03) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(100, 130, 180, 0.03) 0%, transparent 60%);
+}
+
+.mt-15 {
+    margin-top: 15px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+/* ─── Entrance ─── */
+.astro-entrance {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(ellipse, #1a1f2e 0%, #0d1117 100%);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1.5s ease;
+}
+
+.astro-entrance-content {
+    text-align: center;
+}
+
+.entrance-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2.2rem;
+    color: var(--astro-gold);
+    letter-spacing: 4px;
+    margin-top: 20px;
+    text-shadow: 0 0 20px rgba(229, 185, 61, 0.3);
+}
+
+.entrance-subtitle {
+    color: var(--astro-text-dim);
+    font-size: 1rem;
+    margin-top: 8px;
+    letter-spacing: 2px;
+}
+
+.entrance-gear {
+    animation: slowSpin 20s linear infinite;
+}
+
+@keyframes slowSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ─── Navigation ─── */
+.astro-nav {
+    padding: 12px 30px;
+    background: var(--astro-panel-bg);
+    border-bottom: 1px solid var(--astro-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.astro-nav-link {
+    color: var(--astro-gold);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s;
+}
+
+.astro-nav-link:hover {
+    color: var(--astro-gold-light);
+}
+
+.astro-nav-title {
+    color: var(--astro-text-dim);
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+}
+
+/* ─── Layout ─── */
+.astro-layout {
+    display: flex;
+    max-width: 1500px;
+    margin: 20px auto;
+    gap: 20px;
+    padding: 0 20px;
+    min-height: calc(100vh - 80px);
+}
+
+.astro-panel {
+    background: var(--astro-panel-bg);
+    border: 1px solid var(--astro-border);
+    border-radius: 8px;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.astro-panel-left {
+    flex: 1;
+    min-width: 260px;
+}
+
+.astro-panel-center {
+    flex: 2.2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.astro-panel-right {
+    flex: 0.9;
+    min-width: 220px;
+}
+
+.panel-title {
+    color: var(--astro-gold);
+    font-size: 1.15rem;
+    border-bottom: 1px solid var(--astro-border);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    font-family: 'Cinzel', 'Noto Serif SC', serif;
+    letter-spacing: 1px;
+}
+
+/* ─── Data Items ─── */
+.data-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.data-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px dotted rgba(201, 161, 74, 0.1);
+}
+
+.data-label {
+    color: var(--astro-text-dim);
+    font-size: 0.85rem;
+}
+
+.data-val {
+    color: var(--astro-gold-light);
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: 'Cinzel', monospace;
+}
+
+/* ─── Explain Box ─── */
+.explain-box {
+    background: rgba(201, 161, 74, 0.05);
+    border: 1px dashed var(--astro-border);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--astro-text);
+    min-height: 80px;
+    transition: all 0.3s;
+}
+
+/* ─── Watch Viewport ─── */
+.watch-viewport {
+    width: 100%;
+    max-width: 520px;
+    aspect-ratio: 1;
+    position: relative;
+    border-radius: 50%;
+    box-shadow:
+        0 0 40px rgba(201, 161, 74, 0.1),
+        0 0 80px rgba(201, 161, 74, 0.05),
+        inset 0 0 30px rgba(0, 0, 0, 0.5);
+    margin: 10px 0;
+}
+
+.watch-viewport svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ─── Hand transitions ─── */
+.astro-hand {
+    transition: transform 0.8s ease;
+    transform-origin: 0 0;
+}
+
+/* ─── Controls ─── */
+.watch-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.ctrl-btn {
+    padding: 8px 14px;
+    background: rgba(201, 161, 74, 0.1);
+    border: 1px solid var(--astro-border);
+    border-radius: 4px;
+    color: var(--astro-gold);
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+}
+
+.ctrl-btn:hover {
+    background: rgba(201, 161, 74, 0.2);
+    border-color: var(--astro-gold);
+    box-shadow: 0 0 10px rgba(229, 185, 61, 0.2);
+}
+
+.ctrl-btn.active {
+    background: rgba(201, 161, 74, 0.25);
+    border-color: var(--astro-gold-light);
+}
+
+/* ─── Legend ─── */
+.legend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--astro-text-dim);
+}
+
+.legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+/* ─── Info Button ─── */
+.info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--astro-gold);
+    background: rgba(201, 161, 74, 0.1);
+    color: var(--astro-gold);
+    font-size: 0.7rem;
+    cursor: pointer;
+    margin-left: 4px;
+    padding: 0;
+    line-height: 1;
+    vertical-align: middle;
+    transition: all 0.3s;
+}
+
+.info-btn:hover {
+    background: rgba(201, 161, 74, 0.3);
+    box-shadow: 0 0 8px rgba(229, 185, 61, 0.4);
+    transform: scale(1.15);
+}
+
+/* ─── Info Modal ─── */
+.info-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.info-modal-box {
+    background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
+    border: 1px solid var(--astro-gold);
+    border-radius: 12px;
+    padding: 28px 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow:
+        0 0 30px rgba(201, 161, 74, 0.15),
+        0 0 60px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(20px) scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.info-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--astro-text-dim);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.info-modal-close:hover {
+    color: var(--astro-gold);
+}
+
+.info-modal-title {
+    color: var(--astro-gold);
+    font-family: 'Cinzel', 'Noto Serif SC', serif;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--astro-border);
+}
+
+.info-modal-body {
+    color: var(--astro-text);
+    font-size: 0.92rem;
+    line-height: 1.8;
+}
+
+.info-modal-body strong {
+    color: var(--astro-gold-light);
+}
+
+.info-modal-body .info-formula {
+    display: block;
+    background: rgba(201, 161, 74, 0.08);
+    border: 1px dashed var(--astro-border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-family: 'Cinzel', monospace;
+    font-size: 0.85rem;
+    color: var(--astro-gold-light);
+    letter-spacing: 0.5px;
+}

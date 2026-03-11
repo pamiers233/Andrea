@@ -1,0 +1,564 @@
+/* Amdrea - L'Atelier des Macarons (CSS) */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Noto+Serif+SC:wght@300;400;700&display=swap');
+
+:root {
+    --m-ink: #3a2e28;
+    --m-bg: #fcf8fa;
+    --m-accent: #d47c9e;
+    --m-secondary: #b3769c;
+    --m-border: rgba(212, 124, 158, 0.4);
+    --m-gold: #c4a56e;
+    --m-panel: rgba(255, 255, 255, 0.75);
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Noto Serif SC', serif;
+    color: var(--m-ink);
+    background-color: var(--m-bg);
+}
+
+.m-bg-pattern {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(212, 124, 158, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(182, 137, 156, 0.1) 0%, transparent 40%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0 v60 M0 30 h60' stroke='%23d47c9e' stroke-width='0.15' stroke-dasharray='2 2' fill='none'/%3E%3C/svg%3E");
+}
+
+/* 开场 */
+.m-entrance-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--m-bg);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1.5s ease;
+}
+
+.m-entrance-svg {
+    width: 50vw;
+    max-width: 600px;
+}
+
+.anim-draw-fast {
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    animation: drawC 3s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.anim-draw-slow {
+    stroke-dasharray: 3000;
+    stroke-dashoffset: 3000;
+    animation: drawC 5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.anim-text {
+    opacity: 0;
+    animation: fadeInS 2s 3s forwards;
+}
+
+@keyframes drawC {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeInS {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 0.8;
+        transform: translateY(0);
+    }
+}
+
+.m-entrance-title {
+    font-family: 'Cormorant Garamond';
+    font-size: 3rem;
+    color: var(--m-accent);
+    letter-spacing: 5px;
+    opacity: 0;
+    animation: fade 2s 3.5s forwards;
+    margin-top: 20px;
+}
+
+.m-entrance-sub {
+    font-size: 1rem;
+    color: var(--m-secondary);
+    opacity: 0;
+    animation: fade 2s 4.5s forwards;
+    letter-spacing: 4px;
+    margin-top: 5px;
+}
+
+@keyframes fade {
+    to {
+        opacity: 1;
+    }
+}
+
+/* 布局 */
+.m-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 20px 40px;
+    box-sizing: border-box;
+}
+
+.m-header {
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    border-bottom: 1px solid var(--m-border);
+    padding-bottom: 15px;
+}
+
+.m-header h1 {
+    margin: 0;
+    font-family: 'Cormorant Garamond';
+    color: var(--m-accent);
+    font-size: 2.2rem;
+    letter-spacing: 3px;
+}
+
+.m-header p {
+    margin: 5px 0 0 0;
+    font-size: 0.95rem;
+    color: #7a666e;
+    letter-spacing: 2px;
+}
+
+.m-back {
+    position: absolute;
+    left: 0;
+    top: 15px;
+    color: var(--m-secondary);
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.m-back:hover {
+    color: var(--m-accent);
+}
+
+.m-layout {
+    display: flex;
+    gap: 30px;
+    flex: 1;
+    min-height: 0;
+}
+
+.m-panel {
+    background: var(--m-panel);
+    border: 1px solid var(--m-border);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    overflow-y: auto;
+}
+
+.m-panel-title {
+    margin-top: 0;
+    color: var(--m-secondary);
+    border-bottom: 1px dashed var(--m-border);
+    padding-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.m-desc {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #5a4b42;
+    margin-bottom: 15px;
+}
+
+.m-input-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.m-input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.m-input-group label {
+    font-size: 0.85rem;
+    color: var(--m-secondary);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.m-input-group input {
+    padding: 8px;
+    border: 1px solid var(--m-border);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.8);
+    font-family: monospace;
+    font-size: 1.1rem;
+    text-align: center;
+    color: var(--m-ink);
+}
+
+.m-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    transition: 0.3s;
+    font-family: 'Noto Serif SC';
+    border: 1px solid transparent;
+}
+
+.btn-primary {
+    background: var(--m-accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #c26588;
+}
+
+.btn-outline {
+    background: transparent;
+    border-color: var(--m-secondary);
+    color: var(--m-secondary);
+}
+
+.btn-outline:hover {
+    background: var(--m-secondary);
+    color: white;
+}
+
+.btn-accent {
+    background: #8e6a7c;
+    color: white;
+    border-color: #7a5868;
+}
+
+.btn-accent:hover {
+    background: #7a5868;
+    box-shadow: 0 0 10px rgba(142, 106, 124, 0.5);
+}
+
+/* 物料列表 */
+.mats-list-box {
+    border: 1px solid var(--m-border);
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    padding: 10px 15px;
+}
+
+.mat-category {
+    font-weight: bold;
+    color: var(--m-accent);
+    margin: 10px 0 5px 0;
+    border-bottom: 1px solid rgba(212, 124, 158, 0.2);
+    font-size: 0.95rem;
+}
+
+.mat-ul {
+    list-style: square;
+    padding-left: 20px;
+    margin: 0 0 15px 0;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: var(--m-ink);
+}
+
+.mat-ul li {
+    display: flex;
+    justify-content: space-between;
+}
+
+.fw-bold {
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 0.95rem;
+}
+
+/* 渲染中心 */
+.m-stage-wrapper {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    border: 3pxdouble var(--m-border);
+    border-radius: 50%;
+    overflow: visible;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.m-hint {
+    font-size: 0.8rem;
+    color: #8e6a7c;
+    opacity: 0.8;
+}
+
+.m-val-big {
+    font-size: 2rem;
+    color: var(--m-accent);
+    font-family: monospace;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.m-stats-box {
+    border: 1px dashed var(--m-secondary);
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 4px;
+}
+
+/* 交互 */
+.layer-clickable {
+    cursor: pointer;
+}
+
+.layer-clickable:hover path,
+.layer-clickable:hover ellipse,
+.layer-clickable:hover polygon {
+    filter: drop-shadow(0 0 15px rgba(212, 124, 158, 0.8)) brightness(1.1);
+    stroke: #fff !important;
+    stroke-width: 3 !important;
+}
+
+/* 模态框统一 */
+.m-modal,
+.layer-modal,
+.learn-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(42, 30, 22, 0.8);
+    backdrop-filter: blur(5px);
+    transition: 0.4s;
+}
+
+.m-modal.hidden,
+.layer-modal.hidden,
+.learn-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.layer-content {
+    background: var(--m-bg);
+    width: 700px;
+    max-width: 90vw;
+    padding: 40px;
+    border-radius: 8px;
+    border: 2px solid var(--m-accent);
+    position: relative;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    transform: translateY(20px);
+    transition: 0.4s;
+}
+
+.layer-modal:not(.hidden) .layer-content {
+    transform: translateY(0);
+}
+
+.layer-title {
+    text-align: center;
+    color: var(--m-accent);
+    font-family: 'Cormorant Garamond';
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+}
+
+.layer-close,
+.learn-close {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--m-secondary);
+    transition: 0.3s;
+}
+
+.layer-close:hover,
+.learn-close:hover {
+    color: var(--m-accent);
+}
+
+.layer-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--m-ink);
+}
+
+/* 色频雷达 */
+.learn-content {
+    background: var(--m-bg);
+    width: 1000px;
+    max-width: 95vw;
+    height: 85vh;
+    padding: 30px;
+    border-radius: 8px;
+    border: 2px solid var(--m-secondary);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.learn-layout {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+    min-height: 0;
+}
+
+.color-palette-container {
+    flex: 1;
+    border: 1px solid var(--m-border);
+    background: white;
+    overflow-y: auto;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.swatch-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--m-border);
+    padding: 8px 0;
+}
+
+.swatch-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.swatch-color-box {
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.swatch-name {
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--m-secondary);
+}
+
+.swatch-hex {
+    font-size: 0.75rem;
+    font-family: monospace;
+    color: #888;
+}
+
+.swatch-count {
+    font-size: 0.9rem;
+    color: var(--m-ink);
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.blueprint-container {
+    flex: 2;
+    border: 1px solid var(--m-border);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.blueprint-header {
+    background: var(--m-accent);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.blueprint-search {
+    padding: 12px;
+    background: rgba(212, 124, 158, 0.1);
+    border-bottom: 1px solid var(--m-border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bp-input {
+    width: 60px;
+    padding: 4px;
+    border: 1px solid var(--m-border);
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+.blueprint-result {
+    font-size: 0.9rem;
+    margin-left: auto;
+    color: var(--m-secondary);
+}
+
+.blueprint-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+#blueprint-canvas {
+    cursor: crosshair;
+}
+
+.blueprint-tooltip {
+    position: absolute;
+    background: rgba(58, 46, 40, 0.95);
+    color: white;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    border: 1px solid var(--m-accent);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+.blueprint-crosshair {
+    position: absolute;
+    border: 2px solid #ff3d3d;
+    pointer-events: none;
+    border-radius: 50%;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+}

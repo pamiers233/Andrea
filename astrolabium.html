@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrolabium Galileo Galilei | 伽利略星盘</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Cinzel:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/astrolabium.css">
+</head>
+
+<body>
+    <!-- Entrance Overlay -->
+    <div id="entrance-overlay" class="astro-entrance">
+        <div class="astro-entrance-content">
+            <svg viewBox="0 0 200 200" width="180" height="180" class="entrance-gear">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#c9a14a" stroke-width="3" stroke-dasharray="8 4">
+                    <animateTransform attributeName="transform" type="rotate" values="0 100 100;360 100 100" dur="20s"
+                        repeatCount="indefinite" />
+                </circle>
+                <circle cx="100" cy="100" r="60" fill="none" stroke="#c9a14a" stroke-width="2" stroke-dasharray="4 6">
+                    <animateTransform attributeName="transform" type="rotate" values="360 100 100;0 100 100" dur="15s"
+                        repeatCount="indefinite" />
+                </circle>
+                <circle cx="100" cy="100" r="40" fill="none" stroke="#e5b93d" stroke-width="1.5" />
+                <text x="100" y="105" text-anchor="middle" fill="#e5b93d" font-size="14"
+                    font-family="Cinzel">ASTROLABIUM</text>
+            </svg>
+            <h1 class="entrance-title">Astrolabium Galileo Galilei</h1>
+            <p class="entrance-subtitle">Ulysse Nardin · 伽利略天文星盘腕表复刻</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="astro-nav">
+        <a href="index.html" class="astro-nav-link">← 返回工坊</a>
+        <span class="astro-nav-title">⚙ Astrolabium Galileo Galilei</span>
+    </nav>
+
+    <div class="astro-layout">
+        <!-- Left Panel: Astronomical Data -->
+        <div class="astro-panel astro-panel-left">
+            <h2 class="panel-title">☀ 天文实时读数</h2>
+            <div class="data-group">
+                <div class="data-item"><span class="data-label">当地时间 <button class="info-btn"
+                            onclick="showInfo('local-time')">ⓘ</button></span><span id="val-time"
+                        class="data-val">--:--:--</span></div>
+                <div class="data-item"><span class="data-label">恒星时 <button class="info-btn"
+                            onclick="showInfo('sidereal')">ⓘ</button></span><span id="val-sidereal"
+                        class="data-val">--:--</span></div>
+                <div class="data-item"><span class="data-label">太阳方位 <button class="info-btn"
+                            onclick="showInfo('sun-az')">ⓘ</button></span><span id="val-sun-az"
+                        class="data-val">--°</span></div>
+                <div class="data-item"><span class="data-label">太阳高度角 <button class="info-btn"
+                            onclick="showInfo('sun-alt')">ⓘ</button></span><span id="val-sun-alt"
+                        class="data-val">--°</span></div>
+                <div class="data-item"><span class="data-label">日出 / 日落 <button class="info-btn"
+                            onclick="showInfo('sunrise')">ⓘ</button></span><span id="val-sunrise" class="data-val">-- /
+                        --</span></div>
+            </div>
+            <div class="data-group mt-15">
+                <div class="data-item"><span class="data-label">月相 <button class="info-btn"
+                            onclick="showInfo('moon-phase')">ⓘ</button></span><span id="val-moon-phase"
+                        class="data-val">--</span></div>
+                <div class="data-item"><span class="data-label">月龄 <button class="info-btn"
+                            onclick="showInfo('moon-age')">ⓘ</button></span><span id="val-moon-age" class="data-val">--
+                        天</span></div>
+                <div class="data-item"><span class="data-label">月出 / 月落 <button class="info-btn"
+                            onclick="showInfo('moonrise')">ⓘ</button></span><span id="val-moonrise" class="data-val">--
+                        / --</span></div>
+            </div>
+            <div class="data-group mt-15">
+                <div class="data-item"><span class="data-label">黄道星座 <button class="info-btn"
+                            onclick="showInfo('zodiac-sign')">ⓘ</button></span><span id="val-zodiac"
+                        class="data-val">--</span></div>
+                <div class="data-item"><span class="data-label">日食/月食风险 <button class="info-btn"
+                            onclick="showInfo('eclipse')">ⓘ</button></span><span id="val-eclipse"
+                        class="data-val">--</span></div>
+                <div class="data-item"><span class="data-label">均时差 <button class="info-btn"
+                            onclick="showInfo('eot')">ⓘ</button></span><span id="val-eot" class="data-val">-- 分</span>
+                </div>
+            </div>
+
+            <h2 class="panel-title mt-20">📖 傻瓜说明书</h2>
+            <div id="explain-box" class="explain-box">
+                <p>点击表盘上的元素或下方按钮，这里会告诉你它是什么，以及现在它到底在显示什么。</p>
+            </div>
+        </div>
+
+        <!-- Info Modal -->
+        <div id="info-modal" class="info-modal-overlay" style="display:none;"
+            onclick="if(event.target===this)closeInfo()">
+            <div class="info-modal-box">
+                <button class="info-modal-close" onclick="closeInfo()">✕</button>
+                <h3 id="info-modal-title" class="info-modal-title"></h3>
+                <div id="info-modal-body" class="info-modal-body"></div>
+            </div>
+        </div>
+
+        <!-- Center: Watch Face -->
+        <div class="astro-panel astro-panel-center">
+            <div class="watch-viewport" id="watch-viewport">
+                <svg id="astrolabe-svg" viewBox="-210 -210 420 420" width="100%" height="100%">
+                    <defs>
+                        <filter id="sketch-filter" x="-5%" y="-5%" width="110%" height="110%">
+                            <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="2" result="noise" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1" xChannelSelector="R"
+                                yChannelSelector="G" />
+                        </filter>
+                        <radialGradient id="gold-grad" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#f5e6a3" />
+                            <stop offset="60%" stop-color="#c9a14a" />
+                            <stop offset="100%" stop-color="#8a6d2b" />
+                        </radialGradient>
+                        <linearGradient id="bezel-gold" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#e8cf7a" />
+                            <stop offset="50%" stop-color="#c9a14a" />
+                            <stop offset="100%" stop-color="#a07e30" />
+                        </linearGradient>
+                        <linearGradient id="hand-gold" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#f0d97a" />
+                            <stop offset="100%" stop-color="#b8923a" />
+                        </linearGradient>
+                        <clipPath id="portrait-clip">
+                            <circle cx="0" cy="0" r="130" />
+                        </clipPath>
+                        <clipPath id="dial-clip">
+                            <circle cx="0" cy="0" r="155" />
+                        </clipPath>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="blur" />
+                            <feMerge>
+                                <feMergeNode in="blur" />
+                                <feMergeNode in="SourceGraphic" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <!-- ═══ LAYER 0: Watch Case (thick gold bezel) ═══ -->
+                    <circle cx="0" cy="0" r="200" fill="url(#bezel-gold)" />
+                    <circle cx="0" cy="0" r="200" fill="none" stroke="#a07e30" stroke-width="3" />
+                    <circle cx="0" cy="0" r="195" fill="none" stroke="#e8cf7a" stroke-width="1" opacity="0.6" />
+
+                    <!-- ═══ LAYER 1: 24-Hour Bezel Ring (Roman + Arabic) ═══ -->
+                    <g id="bezel-24h">
+                        <circle cx="0" cy="0" r="193" fill="none" stroke="#a07e30" stroke-width="1" />
+                        <circle cx="0" cy="0" r="172" fill="none" stroke="#a07e30" stroke-width="1.5" />
+                        <!-- JS generates Roman numerals & Arabic hour numbers -->
+                    </g>
+
+                    <!-- ═══ LAYER 2: Month Name Ring ═══ -->
+                    <g id="month-ring">
+                        <circle cx="0" cy="0" r="170" fill="url(#bezel-gold)" />
+                        <circle cx="0" cy="0" r="170" fill="none" stroke="#a07e30" stroke-width="1" />
+                        <circle cx="0" cy="0" r="155" fill="none" stroke="#a07e30" stroke-width="1" />
+                        <!-- JS generates month names -->
+                    </g>
+
+                    <!-- ═══ LAYER 3: Tympan (Horizon Plate) — the main dial ═══ -->
+                    <g id="tympan" clip-path="url(#dial-clip)">
+                        <!-- Upper half: light sky / Lower half: dark night -->
+                        <rect x="-155" y="-155" width="310" height="155" fill="rgba(200,210,220,0.25)" />
+                        <rect x="-155" y="0" width="310" height="155" fill="rgba(15,20,35,0.7)" />
+
+                        <!-- Planisphere Grid: Almucantar arcs -->
+                        <circle cx="0" cy="-20" r="150" fill="none" stroke="rgba(180,160,100,0.2)" stroke-width="0.7" />
+                        <circle cx="0" cy="10" r="130" fill="none" stroke="rgba(180,160,100,0.2)" stroke-width="0.7" />
+                        <circle cx="0" cy="35" r="105" fill="none" stroke="rgba(180,160,100,0.2)" stroke-width="0.7" />
+                        <circle cx="0" cy="55" r="80" fill="none" stroke="rgba(180,160,100,0.2)" stroke-width="0.7" />
+                        <circle cx="0" cy="75" r="55" fill="none" stroke="rgba(180,160,100,0.2)" stroke-width="0.7" />
+
+                        <!-- Meridian arcs -->
+                        <path d="M 0 -155 Q -80 0 0 155" fill="none" stroke="rgba(180,160,100,0.15)"
+                            stroke-width="0.7" />
+                        <path d="M 0 -155 Q 80 0 0 155" fill="none" stroke="rgba(180,160,100,0.15)"
+                            stroke-width="0.7" />
+                        <path d="M 0 -155 Q -150 0 0 155" fill="none" stroke="rgba(180,160,100,0.15)"
+                            stroke-width="0.7" />
+                        <path d="M 0 -155 Q 150 0 0 155" fill="none" stroke="rgba(180,160,100,0.15)"
+                            stroke-width="0.7" />
+                        <line x1="0" y1="-155" x2="0" y2="155" stroke="rgba(180,160,100,0.15)" stroke-width="0.7" />
+
+                        <!-- Horizon line -->
+                        <line x1="-155" y1="0" x2="155" y2="0" stroke="rgba(201,161,74,0.4)" stroke-width="1.2" />
+                        <text x="120" y="-6" fill="rgba(201,161,74,0.5)" font-size="5.5"
+                            font-family="Cinzel">HORIZON</text>
+                        <text x="105" y="12" fill="rgba(201,161,74,0.4)" font-size="4.5"
+                            font-family="Cinzel">DUSK</text>
+
+                        <!-- Tropic of Capricorn arc -->
+                        <circle cx="0" cy="0" r="148" fill="none" stroke="rgba(180,160,100,0.12)" stroke-width="0.5"
+                            stroke-dasharray="3 3" />
+                        <text x="70" y="135" fill="rgba(180,160,100,0.3)" font-size="4" font-family="Cinzel">TROPIC OF
+                            CAPRICORN</text>
+
+                        <!-- Equator arc -->
+                        <circle cx="0" cy="-25" r="100" fill="none" stroke="rgba(180,160,100,0.18)"
+                            stroke-width="0.6" />
+                        <text x="-60" y="80" fill="rgba(180,160,100,0.3)" font-size="4"
+                            font-family="Cinzel">EQUATOR</text>
+                    </g>
+
+                    <!-- ═══ LAYER 4: Portrait (very large, filling the dial center) ═══ -->
+                    <g id="portrait-dial">
+                        <circle cx="0" cy="0" r="132" fill="rgba(15,20,30,0.3)" />
+                        <image href="../img/安灼.jpg" x="-130" y="-130" width="260" height="260"
+                            clip-path="url(#portrait-clip)" opacity="0.35" preserveAspectRatio="xMidYMid slice" />
+                        <circle cx="0" cy="0" r="130" fill="none" stroke="rgba(201,161,74,0.3)" stroke-width="1" />
+                    </g>
+
+                    <!-- ═══ LAYER 5: Zodiac / Ecliptic Ring (Rete) ═══ -->
+                    <g id="rete-zodiac">
+                        <!-- JS generates stereographic eccentric ecliptic -->
+                    </g>
+
+                    <!-- ═══ LAYER 6: Sun Hand (ornate golden, like real watch) ═══ -->
+                    <g id="sun-hand" class="astro-hand">
+                        <!-- Shaft: tapered lozenge -->
+                        <path d="M -3 15 L 0 -125 L 3 15 Z" fill="url(#hand-gold)" stroke="#a07e30"
+                            stroke-width="0.5" />
+                        <!-- Broadening near tip -->
+                        <path d="M -5 -100 L 0 -140 L 5 -100 Z" fill="url(#hand-gold)" stroke="#a07e30"
+                            stroke-width="0.5" />
+                        <!-- Sun disc at tip -->
+                        <circle cx="0" cy="-143" r="10" fill="#e5b93d" stroke="#c9a14a" stroke-width="1.5" />
+                        <circle cx="0" cy="-143" r="5" fill="#fff5c0" />
+                        <!-- Rays -->
+                        <line x1="0" y1="-156" x2="0" y2="-158" stroke="#e5b93d" stroke-width="1.5" />
+                        <line x1="10" y1="-153" x2="12" y2="-155" stroke="#e5b93d" stroke-width="1" />
+                        <line x1="-10" y1="-153" x2="-12" y2="-155" stroke="#e5b93d" stroke-width="1" />
+                        <line x1="10" y1="-133" x2="12" y2="-131" stroke="#e5b93d" stroke-width="1" />
+                        <line x1="-10" y1="-133" x2="-12" y2="-131" stroke="#e5b93d" stroke-width="1" />
+                    </g>
+
+                    <!-- ═══ LAYER 7: Moon Hand (silver with crescent) ═══ -->
+                    <g id="moon-hand" class="astro-hand">
+                        <path d="M -2 12 L 0 -120 L 2 12 Z" fill="#8a99b0" stroke="#6a7a90" stroke-width="0.5" />
+                        <path d="M -4 -90 L 0 -130 L 4 -90 Z" fill="#8a99b0" stroke="#6a7a90" stroke-width="0.5" />
+                        <!-- Crescent Moon at tip -->
+                        <circle cx="0" cy="-135" r="8" fill="none" stroke="#b0c4de" stroke-width="1.5" />
+                        <path id="moon-phase-icon" d="M 0 -143 A 8 8 0 1 1 0 -127 A 5 8 0 1 0 0 -143" fill="#c8d8ef" />
+                    </g>
+
+                    <!-- ═══ LAYER 8: Dragon Hand (罗睹 Rahu ↑ / 计都 Ketu ↓) ═══ -->
+                    <g id="dragon-hand" class="astro-hand">
+                        <!-- Main axis -->
+                        <line x1="0" y1="120" x2="0" y2="-120" stroke="#8b0000" stroke-width="2" opacity="0.7" />
+                        <!-- Rahu (罗睹/龙头) ascending node - ornate serpent head -->
+                        <path d="M 0 -125 L -8 -115 L -5 -108 L -3 -112 L 0 -100 L 3 -112 L 5 -108 L 8 -115 Z"
+                            fill="#8b0000" stroke="#5a0000" stroke-width="0.8" />
+                        <circle cx="0" cy="-118" r="3" fill="#ff4444" opacity="0.8" />
+                        <text x="12" y="-118" fill="#8b0000" font-size="6" font-family="Cinzel" opacity="0.9">罗睹</text>
+                        <!-- Ketu (计都/龙尾) descending node - forked tail -->
+                        <path d="M 0 125 L -6 115 L -2 112 L 0 118 L 2 112 L 6 115 Z" fill="#8b0000" stroke="#5a0000"
+                            stroke-width="0.8" />
+                        <circle cx="0" cy="120" r="2.5" fill="#ff4444" opacity="0.6" />
+                        <text x="12" y="122" fill="#8b0000" font-size="6" font-family="Cinzel" opacity="0.9">计都</text>
+                        <!-- Decorative knot at center -->
+                        <circle cx="0" cy="0" r="8" fill="none" stroke="#8b0000" stroke-width="1" opacity="0.4"
+                            stroke-dasharray="3 2" />
+                    </g>
+
+                    <!-- ═══ LAYER 9: Hour Hand (thick ornate golden lozenge) ═══ -->
+                    <g id="hour-hand" class="astro-hand">
+                        <path d="M -4.5 18 L -2 -20 L 0 -80 L 2 -20 L 4.5 18 Z" fill="url(#hand-gold)" stroke="#8a6d2b"
+                            stroke-width="0.8" />
+                        <!-- Diamond widening -->
+                        <path d="M -6 -15 L 0 -30 L 6 -15 L 0 0 Z" fill="url(#hand-gold)" stroke="#8a6d2b"
+                            stroke-width="0.5" />
+                    </g>
+
+                    <!-- ═══ LAYER 10: Minute Hand (thinner, longer, ornate) ═══ -->
+                    <g id="minute-hand" class="astro-hand">
+                        <path d="M -2.5 22 L -1 -40 L 0 -120 L 1 -40 L 2.5 22 Z" fill="#8a99b0" stroke="#5a6a7a"
+                            stroke-width="0.5" />
+                        <path d="M -4 -30 L 0 -42 L 4 -30 L 0 -18 Z" fill="#8a99b0" stroke="#5a6a7a"
+                            stroke-width="0.5" />
+                    </g>
+
+                    <!-- ═══ LAYER 11: Seconds Hand ═══ -->
+                    <g id="second-hand" class="astro-hand">
+                        <line x1="0" y1="30" x2="0" y2="-145" stroke="#ff4444" stroke-width="1"
+                            stroke-linecap="round" />
+                        <circle cx="0" cy="25" r="3" fill="#ff4444" />
+                    </g>
+
+                    <!-- ═══ Center Pin ═══ -->
+                    <circle cx="0" cy="0" r="6" fill="url(#gold-grad)" stroke="#5a4a2a" stroke-width="1.5" />
+                    <circle cx="0" cy="0" r="3" fill="#1a1a2e" stroke="#8a6d2b" stroke-width="0.5" />
+                </svg>
+            </div>
+
+            <!-- Controls -->
+            <div class="watch-controls">
+                <button id="btn-tutorial" class="ctrl-btn"
+                    style="width:100%;margin-bottom:8px;background:rgba(229,185,61,0.15);border-color:#e5b93d;">📖
+                    傻瓜读表教程 (动画演示)</button>
+                <button id="btn-sun" class="ctrl-btn">☀ 太阳指针</button>
+                <button id="btn-moon" class="ctrl-btn">☽ 月亮指针</button>
+                <button id="btn-dragon" class="ctrl-btn">罗睹/计都 食线</button>
+                <button id="btn-zodiac" class="ctrl-btn">♈ 黄道十二宫</button>
+                <button id="btn-time" class="ctrl-btn">⏱ 时分秒指针</button>
+                <button id="btn-portrait" class="ctrl-btn">🖼 表盘肖像</button>
+            </div>
+        </div>
+
+        <!-- Right Panel: Calendar & Legend -->
+        <div class="astro-panel astro-panel-right">
+            <h2 class="panel-title">📅 万年历</h2>
+            <div class="data-group">
+                <div class="data-item"><span class="data-label">公历日期</span><span id="val-date"
+                        class="data-val">----/--/--</span></div>
+                <div class="data-item"><span class="data-label">儒略日</span><span id="val-jd" class="data-val">--</span>
+                </div>
+                <div class="data-item"><span class="data-label">星期</span><span id="val-weekday"
+                        class="data-val">--</span></div>
+            </div>
+
+            <h2 class="panel-title mt-20">🔭 图例 · Legend</h2>
+            <div class="legend-list">
+                <div class="legend-item"><span class="legend-swatch" style="background:#e5b93d;"></span> 太阳指针 (Sun)
+                </div>
+                <div class="legend-item"><span class="legend-swatch" style="background:#b0c4de;"></span> 月亮指针 (Moon)
+                </div>
+                <div class="legend-item"><span class="legend-swatch" style="background:#8b0000;"></span> 天龙食线 (Dragon /
+                    Nodes)</div>
+                <div class="legend-item"><span class="legend-swatch"
+                        style="background:#c9a14a; border:1px dashed #e5b93d;"></span> 黄道十二宫环</div>
+                <div class="legend-item"><span class="legend-swatch" style="background:#4a5a7a;"></span> 地平盘 (Tympan)
+                </div>
+                <div class="legend-item"><span class="legend-swatch" style="background:rgba(100,130,180,0.4);"></span>
+                    等高线 (Almucantars)</div>
+            </div>
+
+            <h2 class="panel-title mt-20">⚙ 机芯参数</h2>
+            <div class="data-group" style="font-size:0.85rem;">
+                <div class="data-item"><span class="data-label">机芯</span><span class="data-val">Cal. UN-99</span></div>
+                <div class="data-item"><span class="data-label">宝石数</span><span class="data-val">33 颗</span></div>
+                <div class="data-item"><span class="data-label">误差</span><span class="data-val">1天 / 144,000年</span>
+                </div>
+                <div class="data-item"><span class="data-label">表径</span><span class="data-val">40mm</span></div>
+                <div class="data-item"><span class="data-label">材质</span><span class="data-val">18K 黄金</span></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/astrolabium.js"></script>
+</body>
+
+</html>

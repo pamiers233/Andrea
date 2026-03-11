@@ -7,11 +7,11 @@
 
 :root {
     --bg-dark: #12100d;
-    --parchment-base: #ebdcb2;
-    --parchment-light: #f5eedc;
-    --parchment-dark: #d2bc86;
-    --ink-color: #3b2c24;
-    --ink-faint: rgba(59, 44, 36, 0.3);
+    --parchment-base: #101214;
+    --parchment-light: #16181a;
+    --parchment-dark: #0a0c0e;
+    --ink-color: #d4af37;
+    --ink-faint: rgba(212, 175, 55, 0.3);
     --gold: #aa8844;
     --text-primary: #2a221b;
     --text-muted: #5e4c3b;
@@ -81,6 +81,7 @@ body {
 #davinci-svg {
     width: 100%;
     height: 100%;
+    filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
 }
 
 .davinci-text {
@@ -356,14 +357,14 @@ body {
 
 
 
-/* ==================== ORBIT ANIMATIONS ==================== */
+/* ==================== ORBIT ANIMATIONS (REVERSE) ==================== */
 @keyframes orbitSpin {
     from {
         transform: rotate(0deg);
     }
 
     to {
-        transform: rotate(360deg);
+        transform: rotate(-360deg);
     }
 }
 
@@ -716,6 +717,395 @@ body {
     transform: scale(1.1) translateY(-100vh);
     opacity: 0;
     pointer-events: none;
+}
+
+/* =========================================
+   REVERSED RAIN EFFECT (1999 Vibe)
+   ========================================= */
+.reverse-rain-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0.6;
+}
+
+/* =========================================
+   PRE-INTRO ANIMATION (ID CONFIRMED)
+   ========================================= */
+#pre-intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #08090a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    overflow: hidden;
+}
+
+.pre-bg-scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(212, 175, 55, 0.05) 2px, rgba(212, 175, 55, 0.05) 4px);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.pre-header {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    z-index: 2;
+    opacity: 0;
+    animation: preFadeIn 0.1s 0.2s forwards;
+}
+
+.pre-header-text {
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    color: rgba(212, 175, 55, 0.7);
+}
+
+.pre-squares {
+    margin-left: 10px;
+    letter-spacing: 4px;
+}
+
+.pre-footer {
+    position: absolute;
+    bottom: 30px;
+    right: 40px;
+    z-index: 2;
+    font-size: 0.8rem;
+    letter-spacing: 4px;
+    display: flex;
+    gap: 30px;
+    opacity: 0;
+    animation: preFadeIn 0.1s 0.3s forwards;
+}
+
+.pre-center-box {
+    position: relative;
+    z-index: 2;
+    border: 1px solid var(--gold);
+    background: rgba(10, 12, 14, 0.8);
+    padding: 25px 40px;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.1), inset 0 0 10px rgba(212, 175, 55, 0.05);
+    opacity: 0;
+    transform: scale(0.95);
+    animation: preBoxReveal 0.3s 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+.pre-center-box::before,
+.pre-center-box::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border: 1px solid var(--gold);
+}
+
+.pre-center-box::before {
+    top: -6px;
+    left: -6px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.pre-center-box::after {
+    bottom: -6px;
+    right: -6px;
+    border-left: none;
+    border-top: none;
+}
+
+.pre-box-inner {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.pre-check-icon {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    box-shadow: inset 0 0 8px rgba(212, 175, 55, 0.3);
+}
+
+.pre-text-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.pre-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 6px;
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+    line-height: 1.1;
+}
+
+.pre-subtitle {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.9rem;
+    color: rgba(212, 175, 55, 0.8);
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+
+.pre-divider {
+    width: 1px;
+    height: 60px;
+    background: repeating-linear-gradient(to bottom, var(--gold) 0, var(--gold) 4px, transparent 4px, transparent 8px);
+    margin: 0 10px;
+    opacity: 0.5;
+}
+
+.pre-icons-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.pre-disk-label {
+    font-size: 0.8rem;
+    border: 1px solid var(--gold);
+    padding: 2px 6px;
+    letter-spacing: 2px;
+}
+
+.pre-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: var(--gold);
+    border-bottom-color: var(--gold);
+    border-radius: 50%;
+    animation: preSpin 1s linear infinite;
+}
+
+@keyframes preFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes preBoxReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+        filter: blur(4px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes preSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.pre-intro-glitch-out {
+    animation: preGlitchSplit 0.6s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+@keyframes preGlitchSplit {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+        filter: contrast(1);
+    }
+
+    40% {
+        transform: scale(1.02) skewX(2deg);
+        filter: contrast(2) hue-rotate(-20deg);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1.1);
+        filter: blur(10px) brightness(3);
+        opacity: 0;
+    }
+}
+
+/* Phase 2 Transition Layer */
+.pre-transition-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+}
+
+.pre-flash-line {
+    font-family: 'Cinzel', serif;
+    color: #101214;
+    /* Dark text on gold background for high contrast flash */
+    background: var(--gold);
+    padding: 5px 20px;
+    opacity: 0;
+    text-align: center;
+}
+
+.pre-flash-line.line-1 {
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 40px rgba(212, 175, 55, 1);
+}
+
+.pre-flash-line.line-2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    letter-spacing: 6px;
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+}
+
+#particle-door-container {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    background: transparent;
+}
+
+/* Phase 1.5 Protocol and Signature */
+.pre-protocol-text {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.95rem;
+    /* slightly smaller for dense document */
+    color: var(--gold);
+    max-width: 800px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+    min-height: 250px;
+    text-align: left;
+    white-space: pre-wrap;
+    opacity: 0.9;
+}
+
+.pre-signature-wrapper {
+    width: 400px;
+    height: 150px;
+    position: relative;
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.pre-signature-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+#sig-path {
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
+    filter: drop-shadow(0 0 5px var(--gold));
+}
+
+#sig-path.signed {
+    /* The magical single stroke animation */
+    animation: drawSigPath 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.sig-svg-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 5rem;
+    fill: var(--gold);
+    opacity: 0;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.8), 0 0 5px var(--gold);
+}
+
+.sig-svg-text.signed {
+    /* Fades in to replace the drawing path */
+    animation: fadeInText 0.5s 1.2s forwards;
+}
+
+@keyframes drawSigPath {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeInText {
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes preFlashText {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+        filter: blur(5px);
+    }
+
+    10% {
+        opacity: 1;
+        transform: scale(1.05);
+        filter: blur(0);
+    }
+
+    80% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 0;
+        filter: blur(8px);
+        transform: scale(1.1);
+    }
+}
+
+@keyframes preFlashBlast {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        border-width: 20px;
+    }
+
+    100% {
+        width: 150vw;
+        height: 150vw;
+        opacity: 0;
+        border-width: 1px;
+    }
+}
+
+.pre-bg-fade {
+    transition: background-color 0.8s ease, filter 0.8s ease;
 }
 
 /* =========================================

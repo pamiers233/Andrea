@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - VTuber 直播间装修工坊</title>
+    <!-- M PLUS Rounded 1c is a perfect kawaii Japanese font -->
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/vtuber_room.css">
+    <!-- html2canvas for saving the preview as an image -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1 class="app-title">✨ 我的直播间 🎀</h1>
+            <p class="app-sub">VTuber Kawaii Room Maker</p>
+
+            <button id="btn-save" class="btn-primary">⬇️ 保存为图片 (Download)</button>
+            <button id="btn-clear" class="btn-secondary">🗑️ 清空房间</button>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" data-tab="bg">背景</div>
+                <div class="tab" data-tab="frames">框架</div>
+                <div class="tab" data-tab="decor">装饰</div>
+                <div class="tab" data-tab="text">文字</div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content active" id="tab-bg">
+                <div class="tool-section">
+                    <h3>纯色背景</h3>
+                    <div class="color-grid">
+                        <div class="color-swatch" style="background:#ffb3ba;" data-bg="#ffb3ba"></div>
+                        <div class="color-swatch" style="background:#ffdfba;" data-bg="#ffdfba"></div>
+                        <div class="color-swatch" style="background:#ffffba;" data-bg="#ffffba"></div>
+                        <div class="color-swatch" style="background:#baffc9;" data-bg="#baffc9"></div>
+                        <div class="color-swatch" style="background:#bae1ff;" data-bg="#bae1ff"></div>
+                        <div class="color-swatch" style="background:#e8baff;" data-bg="#e8baff"></div>
+                        <div class="color-swatch" style="background:#2C2F33;" data-bg="#2C2F33"></div>
+                        <div class="color-swatch" style="background:#ffffff;" data-bg="#ffffff"></div>
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <h3>拍立得图案 (图案)</h3>
+                    <div class="pattern-grid">
+                        <div class="pattern-btn" data-pattern="polkadot">波点 ✨</div>
+                        <div class="pattern-btn" data-pattern="stripes">条纹 🎀</div>
+                        <div class="pattern-btn" data-pattern="grid">网格 📐</div>
+                        <div class="pattern-btn" data-pattern="hearts">爱心 ♥</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-frames">
+                <div class="tool-section">
+                    <h3>主要组件</h3>
+                    <div class="add-btn" data-type="frame-game">🎮 游戏区 (16:9)</div>
+                    <div class="add-btn" data-type="frame-chat">💬 弹幕框/聊天栏</div>
+                    <div class="add-btn" data-type="frame-vtuber">🎥 主播位 (透明框)</div>
+                    <!-- Using the existing avatar as a placeholder -->
+                    <div class="add-btn" data-type="image-avatar">👑 放置我的立绘 (安灼)</div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-decor">
+                <div class="tool-section">
+                    <h3>贴纸 / 装饰 (点击添加)</h3>
+                    <div class="emoji-grid">
+                        <div class="emoji-btn">✨</div>
+                        <div class="emoji-btn">🌸</div>
+                        <div class="emoji-btn">🎀</div>
+                        <div class="emoji-btn">🐾</div>
+                        <div class="emoji-btn">🍓</div>
+                        <div class="emoji-btn">⭐</div>
+                        <div class="emoji-btn">💖</div>
+                        <div class="emoji-btn">🎮</div>
+                        <div class="emoji-btn">🎤</div>
+                        <div class="emoji-btn">🎵</div>
+                        <div class="emoji-btn">⚠️</div>
+                        <div class="emoji-btn">💤</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-text">
+                <div class="tool-section">
+                    <h3>添加文本</h3>
+                    <input type="text" id="custom-text-input" placeholder="输入要显示的文字..." class="text-input">
+                    <button id="btn-add-text" class="btn-primary" style="margin-top:10px;">➕ 添加文字框</button>
+
+                    <h3 style="margin-top:20px;">快捷横幅</h3>
+                    <div class="add-btn" data-type="text-banner">▶ NOW LOADING...</div>
+                    <div class="add-btn" data-type="text-banner">♪ CHATTING START ♪</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            <div class="workspace-hint">
+                💡 提示：在此区域内拖拽、调整大小。点击元素可以选中它，选中后按 Delete 键可删除。
+            </div>
+            <!-- The 1920x1080 virtual canvas -->
+            <div class="canvas-wrapper">
+                <div id="live-room" class="live-room polkadot">
+                    <!-- Elements will be dropped here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Handles for Resizing (Injected into active element) -->
+    <div id="resize-handles" style="display:none;">
+        <div class="handle nw"></div>
+        <div class="handle ne"></div>
+        <div class="handle sw"></div>
+        <div class="handle se"></div>
+    </div>
+
+    <script src="../js/vtuber_room.js"></script>
+</body>
+
+</html>

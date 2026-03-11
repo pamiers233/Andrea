@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - 达芬奇糖霜建筑 (Da Vinci Cake Architecture)</title>
+    <link rel="stylesheet" href="../css/cake.css">
+</head>
+
+<body>
+    <!-- 华丽开场动画：达芬奇绘制几何蛋糕图纸 -->
+    <div id="entrance-overlay" class="entrance-overlay">
+        <svg class="entrance-svg" viewBox="-300 -300 600 600" xmlns="http://www.w3.org/2000/svg">
+            <!-- 黄金比例圆环 & 辅助线 -->
+            <g class="anim-draw-fast" stroke="#c4a56e" stroke-width="1" fill="none" opacity="0.6">
+                <circle cx="0" cy="0" r="280" />
+                <circle cx="0" cy="0" r="200" />
+                <circle cx="0" cy="0" r="120" />
+                <line x1="-300" y1="0" x2="300" y2="0" stroke-dasharray="5,5" />
+                <line x1="0" y1="-300" x2="0" y2="300" stroke-dasharray="5,5" />
+                <polygon points="0,-280 242,140 -242,140" />
+            </g>
+
+            <!-- 蛋糕主体 骨架线描 -->
+            <g class="anim-draw-slow" stroke="#4a3b32" stroke-width="2.5" fill="none">
+                <!-- 底层 -->
+                <ellipse cx="0" cy="180" rx="160" ry="40" />
+                <ellipse cx="0" cy="80" rx="160" ry="40" />
+                <line x1="-160" y1="80" x2="-160" y2="180" />
+                <line x1="160" y1="80" x2="160" y2="180" />
+                <!-- 中层 -->
+                <ellipse cx="0" cy="80" rx="100" ry="25" stroke="#685444" />
+                <ellipse cx="0" cy="0" rx="100" ry="25" stroke="#685444" />
+                <line x1="-100" y1="0" x2="-100" y2="80" stroke="#685444" />
+                <line x1="100" y1="0" x2="100" y2="80" stroke="#685444" />
+                <!-- 顶层 -->
+                <ellipse cx="0" cy="0" rx="50" ry="12" stroke="#8b7355" />
+                <ellipse cx="0" cy="-60" rx="50" ry="12" stroke="#8b7355" />
+                <line x1="-50" y1="-60" x2="-50" y2="0" stroke="#8b7355" />
+                <line x1="50" y1="-60" x2="50" y2="0" stroke="#8b7355" />
+                <!-- 顶层花饰装饰线 -->
+                <path d="M-30,-60 Q0,-100 30,-60" />
+                <circle cx="0" cy="-80" r="8" />
+            </g>
+
+            <!-- 书法文字与笔记 -->
+            <g class="anim-text" fill="#4a3b32" font-family="'Cormorant Garamond', serif" font-style="italic"
+                font-size="14">
+                <text x="180" y="-180" transform="rotate(15 180 -180)">Architectura dulcis...</text>
+                <text x="-260" y="80">Proportio divina</text>
+                <text x="180" y="180">Fundamentum</text>
+            </g>
+        </svg>
+        <h1 class="entrance-title">Pasticceria Geometrica</h1>
+        <div class="entrance-sub">由数与理所构筑的糖霜殿堂 · The Anatomy of Cake</div>
+    </div>
+
+    <!-- 主界面 -->
+    <div class="main-container" id="main-container">
+        <a href="index.html" class="back-link">⟵ 返回手稿库 (Return)</a>
+
+        <div class="cake-layout">
+            <!-- Left: Blueprint Canvas & Visualization -->
+            <div class="blueprint-section">
+                <div class="canvas-wrapper" id="cake-canvas-wrapper">
+                    <!-- 动态生成 3D/Isometric 几何蛋糕投影图 -->
+                    <svg id="cake-svg" viewBox="-200 -200 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <!-- 达芬奇墨水滤镜 -->
+                            <filter id="ink-bleed">
+                                <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" result="noise" />
+                                <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R"
+                                    yChannelSelector="G" />
+                            </filter>
+                        </defs>
+                        <!-- 动态坐标轴与背景线 -->
+                        <g id="grid-lines" stroke="rgba(196, 165, 110, 0.3)" stroke-width="1" fill="none">
+                            <line x1="0" y1="-200" x2="0" y2="200" />
+                            <line x1="-200" y1="0" x2="200" y2="0" />
+                        </g>
+
+                        <!-- The Cake rendering group -->
+                        <g id="cake-render-group" filter="url(#ink-bleed)"></g>
+
+                        <!-- Canvas for frosting drawing mapping -->
+                        <foreignObject id="frosting-layer" x="-100" y="-100" width="200" height="200"
+                            style="display:none; pointer-events:none; opacity:0.85;">
+                            <!-- CSS perspective to make the canvas lay flat in isometric view -->
+                            <div
+                                style="width:100%; height:100%; transform: rotateX(60deg) rotateZ(45deg); transform-style: preserve-3d; display:flex; justify-content:center; align-items:center;">
+                                <canvas id="frosting-canvas"
+                                    style="border: 2px solid #8b7355; background:#fff; image-rendering:pixelated; width:100%; height:100%;"></canvas>
+                            </div>
+                        </foreignObject>
+                    </svg>
+
+                    <!-- Tooltip for highlighting parts -->
+                    <div id="cake-tooltip" class="blueprint-tooltip hidden"></div>
+                </div>
+
+                <!-- 底部展示材料用量（动态生成） -->
+                <div class="materials-display">
+                    <h3>【备料单清单表】</h3>
+                    <div class="materials-grid" id="materials-grid">
+                        <div class="material-card"><span class="mat-label">低筋面粉</span><span class="mat-val"
+                                id="val-flour">-- g</span></div>
+                        <div class="material-card"><span class="mat-label">细砂糖(胚)</span><span class="mat-val"
+                                id="val-sugar">-- g</span></div>
+                        <div class="material-card"><span class="mat-label">鸡蛋</span><span class="mat-val"
+                                id="val-egg">-- 个</span></div>
+                        <div class="material-card"><span class="mat-label">黄油/植物油</span><span class="mat-val"
+                                id="val-butter">-- g</span></div>
+                        <div class="material-card"><span class="mat-label">基础抹面奶油</span><span class="mat-val"
+                                id="val-cream">-- g</span></div>
+                        <div class="material-card" style="border-color:#b56a6a; background:rgba(181,106,106,0.1);"><span
+                                class="mat-label">裱花糖霜总量</span><span class="mat-val" id="val-frosting">-- g</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Controls & Tutorials -->
+            <div class="control-panel">
+                <h2 class="panel-title">Torta Geometrica</h2>
+                <p class="panel-desc">“建筑不过是大型的糕点，糕点则是小型的建筑。”<br>输入三维几何参数，推演殿堂级戚风/海绵基底所需之材料。并录入手稿，测算顶层色彩糖霜之耗度。</p>
+
+                <!-- Parameter inputs -->
+                <div class="action-section">
+                    <h3>【几何测算】 基础殿堂规模 (cm)</h3>
+                    <div class="input-grid" style="flex-wrap: wrap;">
+                        <div class="input-group" style="min-width: 45%;">
+                            <label>形状 (Shape)</label>
+                            <select id="in-shape"
+                                style="padding: 6px; border: 1px solid rgba(0,0,0,0.3); border-radius: 2px; background: #fff; font-family: 'Noto Serif SC', serif; font-size: 0.9rem; text-align: center;">
+                                <option value="square">方形 (Cuboid)</option>
+                                <option value="round">圆形 (Cylinder)</option>
+                            </select>
+                        </div>
+                        <div class="input-group" style="min-width: 45%;">
+                            <label>长/直径 (Length/Dia)</label>
+                            <input type="number" id="in-l" value="20" min="5" max="100">
+                        </div>
+                        <div class="input-group" style="min-width: 45%;">
+                            <label>宽 (Width - 方形专用)</label>
+                            <input type="number" id="in-w" value="20" min="5" max="100">
+                        </div>
+                        <div class="input-group" style="min-width: 45%;">
+                            <label>高 (Height)</label>
+                            <input type="number" id="in-h" value="10" min="3" max="50">
+                        </div>
+                    </div>
+                    <button id="btn-calc" class="action-btn"
+                        style="width:100%; margin-top:15px; margin-left:0;">推演结构与备料</button>
+                    <button id="btn-layer-breakdown" class="action-btn"
+                        style="width:100%; margin-top:10px; margin-left:0; background: #5b7c99; color: white;">庖丁解牛 -
+                        分解透视</button>
+                </div>
+
+                <!-- Decorator Upload -->
+                <div class="action-section">
+                    <h3>【画物为霜】 顶层雕花手稿</h3>
+                    <p style="font-size:0.85rem; color:#8b7355; margin-bottom:10px;">
+                        登顶殿堂需要绝美的壁画。上传任意图样，系统将等比映射至蛋糕顶端表面，测算所需之各色奶油糖霜克数及调配比例。
+                    </p>
+                    <input type="file" id="image-upload" accept="image/*" class="file-input">
+                    <label for="image-upload" class="upload-btn">供奉顶部图稿</label>
+                    <button id="btn-learn" class="action-btn"
+                        style="background:#b56a6a; color:white; margin-top:10px;">查阅调色盘配方表</button>
+                    <!-- 隐藏Canvas用于图片采样 -->
+                    <canvas id="img-canvas" style="display:none;"></canvas>
+                </div>
+
+                <!-- 教学面板 -->
+                <div class="tutorial-box" id="tutorial-box">
+                    <h4 id="tut-title">达芬奇的厨房笔记</h4>
+                    <p id="tut-content">“要使建筑屹立不倒，必须理解重力与承重；要使戚风蓬松不缩，必须理解蛋白的打发与热力学的膨胀定律。”<br><br>点击左方【推演结构】可开始测算。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 零基础分解教学模态框 -->
+        <div id="layer-modal" class="layer-modal hidden">
+            <div class="layer-content">
+                <span class="layer-close" id="layer-close">&times;</span>
+                <h2 id="layer-title"
+                    style="text-align:center; color:#c4a56e; margin-bottom:15px; font-family:'Cormorant Garamond', serif;">
+                    ...</h2>
+                <div id="layer-desc" style="font-size: 0.95rem; line-height: 1.8; color:#4a3b32;">
+                    <!-- 动态填入内容 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 我想要学：糖霜配色模态框 -->
+        <div id="learn-modal" class="learn-modal hidden">
+            <div class="learn-content" style="width: 1000px;">
+                <span class="learn-close" id="learn-close">&times;</span>
+                <h2 style="text-align:center; color:#b56a6a; margin-bottom:20px; font-size:1.8rem;">【顶层壁画配方考】</h2>
+                <p style="text-align:justify; margin-bottom: 20px; line-height:1.8; color:#3b2c24;">
+                    <strong>工艺心法：</strong>基于您设定的顶部面积 (长×宽)，以及您上传的手稿图样，本机器已通过黄金比例像素划分，测出了所有需要的食用色素糖霜（或奶油霜）克数。<br>
+                    <strong>配线与图纸：</strong>左侧为配料单，列出了每种颜色准确需要的克重。右侧为<strong>「裱花定位点阵图」</strong>，将鼠标放至图纸上方，即可查看该点位（像素格）应当挤入何种色号的糖霜。
+                </p>
+
+                <div class="learn-layout">
+                    <!-- 左侧：线排表 -->
+                    <div class="color-palette-container" id="color-palette-container">
+                        <!-- 动态生成配色列表 -->
+                        <div style="text-align:center; padding: 20px; color:#888; font-style:italic;">暂无图稿被供奉。请先在外部上传图鉴。
+                        </div>
+                    </div>
+
+                    <!-- 右侧：图纸放大镜 -->
+                    <div class="blueprint-container">
+                        <div class="blueprint-header">显微图纸 (裱花点位指示器)</div>
+                        <div class="blueprint-search">
+                            <label>X坐标: <input type="number" id="bp-search-x" min="1" placeholder="列"></label>
+                            <label>Y坐标: <input type="number" id="bp-search-y" min="1" placeholder="行"></label>
+                            <button id="bp-search-btn" class="action-btn blueprint-search-btn"
+                                style="background:#b56a6a; color:white;">查验落笔处</button>
+                            <span id="bp-search-result" class="blueprint-result" style="color:#b56a6a;">等待标定...</span>
+                        </div>
+                        <div class="blueprint-wrapper" id="blueprint-wrapper">
+                            <canvas id="blueprint-canvas"
+                                style="image-rendering: pixelated; max-width: 100%; max-height: 100%; cursor: crosshair;"></canvas>
+                            <!-- Tooltip -->
+                            <div id="blueprint-tooltip" class="blueprint-tooltip hidden"></div>
+                            <!-- Search Crosshair -->
+                            <div id="blueprint-crosshair" class="blueprint-crosshair hidden"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/cake.js"></script>
+</body>
+
+</html>

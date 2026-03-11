@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amdrea - Macaronis Architetto</title>
+    <link rel="stylesheet" href="../css/macaron.css">
+</head>
+
+<body>
+    <!-- 华丽开场动画 (测绘法式工艺) -->
+    <div id="entrance-overlay" class="m-entrance-overlay">
+        <svg class="m-entrance-svg" viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="pastel-glow">
+                    <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                    <feMerge>
+                        <feMergeNode in="coloredBlur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <!-- 达芬奇工程背景网格 -->
+            <path class="anim-draw-fast" d="M0 200 H600 M300 0 V400" stroke="#f0a8d0" stroke-width="0.5"
+                stroke-opacity="0.3" fill="none" />
+            <path class="anim-draw-fast" d="M300 200 circle 150" stroke="#f0a8d0" stroke-width="0.5"
+                stroke-opacity="0.3" fill="none" />
+            <path class="anim-draw-fast" d="M300 200 circle 100" stroke="#f0a8d0" stroke-width="0.5"
+                stroke-opacity="0.2" fill="none" stroke-dasharray="5 5" />
+
+            <!-- 上壳 (Coque Supérieure) -->
+            <path class="anim-draw-slow" d="M150 180 C150 60, 450 60, 450 180" stroke="#e082b2" stroke-width="3"
+                fill="none" filter="url(#pastel-glow)" />
+            <!-- 裙边 (Pied) -->
+            <path class="anim-draw-fast"
+                d="M150 180 Q145 190 155 190 Q160 185 165 190 Q170 185 175 190 Q180 185 185 190 Q190 185 195 190 Q200 185 205 190 Q210 185 215 190 Q220 185 225 190 Q230 185 235 190 Q240 185 245 190 Q250 185 255 190 Q260 185 265 190 Q270 185 275 190 Q280 185 285 190 Q290 185 295 190 Q300 185 305 190 Q310 185 315 190 Q320 185 325 190 Q330 185 335 190 Q340 185 345 190 Q350 185 355 190 Q360 185 365 190 Q370 185 375 190 Q380 185 385 190 Q390 185 395 190 Q400 185 405 190 Q410 185 415 190 Q420 185 425 190 Q430 185 435 190 Q440 185 445 190 M445 190 Q450 185 450 180"
+                stroke="#b3769c" stroke-width="2" fill="none" />
+
+            <!-- 甘纳许 (Ganache) -->
+            <path class="anim-draw-slow" d="M165 195 C165 210, 435 210, 435 195" stroke="#9e7b68" stroke-width="4"
+                fill="none" filter="url(#pastel-glow)" />
+
+            <!-- 下壳 (Coque Inférieure) - 镜像 -->
+            <path class="anim-draw-fast" d="M155 210 Q145 200 150 195" stroke="#e082b2" stroke-width="2" fill="none" />
+            <path class="anim-draw-fast" d="M445 210 Q455 200 450 195" stroke="#e082b2" stroke-width="2" fill="none" />
+            <path class="anim-draw-slow" d="M155 210 C155 280, 445 280, 445 210" stroke="#e082b2" stroke-width="3"
+                fill="none" filter="url(#pastel-glow)" />
+
+            <!-- 飞线标注 -->
+            <text x="360" y="60" class="anim-text" fill="#b3769c" font-size="14" font-family="monospace">R_ext =
+                ƒ(Ø)</text>
+            <text x="100" y="240" class="anim-text" fill="#9e7b68" font-size="14"
+                font-family="monospace">V_fourrage</text>
+            <text x="470" y="195" class="anim-text" fill="#b3769c" font-size="14" font-family="monospace">λ_pied
+                expansion</text>
+            <path class="anim-text" d="M350 65 L280 100" stroke="#b3769c" stroke-width="1" stroke-dasharray="2 2" />
+            <path class="anim-text" d="M170 235 L220 205" stroke="#9e7b68" stroke-width="1" stroke-dasharray="2 2" />
+        </svg>
+        <div class="m-entrance-title">L'Atelier des Macarons</div>
+        <div class="m-entrance-sub">法式精密方程：永不妥协的壳与裙边</div>
+    </div>
+
+    <!-- 顶盖背景 -->
+    <div class="m-bg-pattern"></div>
+
+    <div class="m-container">
+        <header class="m-header">
+            <a href="index.html" class="m-back">← 返回馆藏 (Retour)</a>
+            <h1>L'Atelier des Macarons</h1>
+            <p>—— 「拒绝抹面奶油」 独属于蛋壳与夹心张力的工业艺术</p>
+        </header>
+
+        <div class="m-layout">
+            <!-- Left: 参数与物料单 -->
+            <div class="m-panel" style="flex: 1.2;">
+                <h3 class="m-panel-title">【I】 生产线参数 (Paramètres)</h3>
+                <div class="m-desc">马卡龙不是可以随意放大缩小的海绵堡垒。它有极度严格的外径物理限制，过大必然塌陷中空。请输入你的预期产量与标准尺寸。</div>
+                <div class="m-input-grid">
+                    <div class="m-input-group">
+                        <label>单枚直径 Ø (cm)：</label>
+                        <input type="number" id="in-dia" value="4" min="2" max="6" step="0.5">
+                    </div>
+                    <div class="m-input-group">
+                        <label>量产总数 N (个)：</label>
+                        <input type="number" id="in-num" value="20" min="1" max="500">
+                    </div>
+                </div>
+                <button id="btn-calc" class="m-btn btn-primary" style="width: 100%; margin-top: 15px;">推演法式工艺账单</button>
+
+                <h3 class="m-panel-title" style="margin-top: 30px;">【II】 一切所需清单 (La Liste Absolue)</h3>
+                <div class="m-desc" style="color: #b56a6a; font-weight: bold;">严厉警告：材料克数精确到0.1克。少一样军火都不可能成功。</div>
+                <div id="mats-list" class="mats-list-box">
+                    <!-- JS动态填入材料和所有工具 -->
+                </div>
+            </div>
+
+            <!-- Center: 可视化渲染与装配 -->
+            <div class="m-panel"
+                style="flex: 1.5; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <div class="m-stage-wrapper">
+                    <svg id="macaron-svg" viewBox="-200 -200 400 400" width="100%" height="100%">
+                        <!-- 网格 -->
+                        <g stroke="rgba(182, 137, 156, 0.15)" stroke-width="1">
+                            <line x1="-200" y1="0" x2="200" y2="0" />
+                            <line x1="0" y1="-200" x2="0" y2="200" />
+                            <circle cx="0" cy="0" r="100" fill="none" stroke-dasharray="4 4" />
+                            <circle cx="0" cy="0" r="150" fill="none" stroke-dasharray="4 4" />
+                        </g>
+
+                        <!-- 实体渲染层 -->
+                        <g id="render-group"></g>
+
+                        <!-- 顶层蛋壳绘画表面 (代替蛋糕的奶油面) -->
+                        <foreignObject id="shell-layer"
+                            style="display:none; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); pointer-events:none;">
+                            <canvas id="shell-canvas"
+                                style="width:100%; height:100%; border-radius:50%; opacity: 0.85; filter: contrast(1.2); mix-blend-mode: multiply;"></canvas>
+                        </foreignObject>
+                    </svg>
+                </div>
+
+                <div class="m-action-box">
+                    <button id="btn-prep" class="m-btn btn-primary"
+                        style="width:80%; font-size: 1.1rem; letter-spacing: 2px; margin-bottom: 15px; background: #c4a56e; border-color: #c4a56e; color: #fff;">【第
+                        0 阶】 战前准备法则 (Mise en place)</button>
+                    <button id="btn-explode" class="m-btn btn-accent"
+                        style="width:80%; font-size: 1.1rem; letter-spacing: 2px;">【组装与烘焙】 解构教学视窗</button>
+                    <p class="m-hint mt-10" style="text-align: center;">▲ 点击分解后的【悬空部件】，调阅带有动态图纸的极客装配单 ▲</p>
+                </div>
+            </div>
+
+            <!-- Right: 表面处理 -->
+            <div class="m-panel" style="flex: 1;">
+                <h3 class="m-panel-title">【III】 蛋壳彩绘 (Décoration)</h3>
+                <div class="m-desc">
+                    马卡龙没有所谓“顶层奶油抹面”，因为任何湿润物质接触都会瞬间融化它脆弱松脆的外壳！<br><br>
+                    若要制作图案，必须在光洁的【Coque顶壳】上使用极干性的<strong>可食用色素特制勾线笔</strong>进行微雕阵列绘图。
+                </div>
+
+                <div style="text-align: center; margin: 25px 0;">
+                    <label for="img-upload" class="m-btn btn-outline">供奉壳绘图案手稿</label>
+                    <input type="file" id="img-upload" style="display: none;" accept="image/*">
+                </div>
+
+                <div class="m-stats-box">
+                    <div>提取干性色素墨水指标：</div>
+                    <div id="val-pigment" class="m-val-big">零绘制</div>
+                </div>
+
+                <button id="btn-learn" class="m-btn btn-outline"
+                    style="width: 100%; margin-top: 20px;">接入微雕XY轴瞄准系统</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 教学图纸流模态框 -->
+    <div id="layer-modal" class="layer-modal hidden">
+        <div class="layer-content">
+            <span class="layer-close" id="layer-close">&times;</span>
+            <h2 id="layer-title" class="layer-title">...</h2>
+            <div id="layer-desc" class="layer-desc">
+                <!-- 注入的HTML -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 图纸测绘模态框 -->
+    <div id="learn-modal" class="learn-modal hidden">
+        <div class="learn-content">
+            <span class="learn-close" id="learn-close">&times;</span>
+            <h2 class="layer-title" style="text-align:center;">色频探地雷达</h2>
+
+            <div class="learn-layout">
+                <!-- 色卡池 -->
+                <div id="color-palette-container" class="color-palette-container">
+                    <div style="text-align:center; padding-top:40px; color:#888;">尚未发现墨水残留...</div>
+                </div>
+                <!-- 雷达 -->
+                <div class="blueprint-container">
+                    <div class="blueprint-header">高能微面指示图纸 (XY坐标)</div>
+                    <div class="blueprint-search">
+                        <label>定位阵列：</label>
+                        X列: <input type="number" id="bp-search-x" min="1" class="bp-input">
+                        Y行: <input type="number" id="bp-search-y" min="1" class="bp-input">
+                        <button id="bp-search-btn" class="m-btn btn-outline"
+                            style="padding: 4px 10px; font-size: 0.9rem;">点火甄别</button>
+                        <span id="bp-search-result" class="blueprint-result">就绪静默中...</span>
+                    </div>
+                    <div id="blueprint-wrapper" class="blueprint-wrapper">
+                        <canvas id="blueprint-canvas"></canvas>
+                        <div id="blueprint-crosshair" class="blueprint-crosshair hidden"></div>
+                        <div id="blueprint-tooltip" class="blueprint-tooltip hidden"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/macaron.js"></script>
+</body>
+
+</html>

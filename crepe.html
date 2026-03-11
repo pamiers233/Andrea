@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原宿可丽饼 | 绝对防粘实验室</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&family=M+PLUS+Rounded+1c:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/crepe.css">
+</head>
+
+<body>
+    <div id="entrance-overlay" class="c-entrance-overlay">
+        <div class="c-anim-container">
+            <svg viewBox="0 0 100 100" width="150" height="150" class="c-kawaii-pan">
+                <!-- Pan -->
+                <circle cx="50" cy="50" r="40" fill="#4a4a4a" />
+                <path d="M 90 50 L 120 50" stroke="#777" stroke-width="10" stroke-linecap="round" />
+                <ellipse cx="50" cy="50" rx="36" ry="36" fill="#333" />
+                <!-- Happy Face on Crepe -->
+                <circle cx="50" cy="50" r="30" fill="#fbdcb8" class="c-pop-crepe" />
+                <path d="M 40 45 Q 45 40 50 45" stroke="#8c6a5d" fill="none" stroke-width="2" stroke-linecap="round"
+                    class="c-face" />
+                <path d="M 60 45 Q 55 40 50 45" stroke="#8c6a5d" fill="none" stroke-width="2" stroke-linecap="round"
+                    class="c-face" />
+                <path d="M 45 55 Q 50 60 55 55" stroke="#8c6a5d" fill="none" stroke-width="2" stroke-linecap="round"
+                    class="c-face" />
+                <!-- Blush -->
+                <ellipse cx="38" cy="50" rx="4" ry="2" fill="#ff9eb5" opacity="0.6" class="c-face" />
+                <ellipse cx="62" cy="50" rx="4" ry="2" fill="#ff9eb5" opacity="0.6" class="c-face" />
+            </svg>
+            <h1 class="c-title-entrance mt-20">原宿系 • 零基础防粘可丽饼工坊</h1>
+            <p style="color: #ff9eb5; font-size: 1.1rem; margin-top: 10px;">「连不粘锅都能粘锅的魔法使，欢迎来到绝对救赎空间~」</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="c-nav">
+        <a href="index.html" class="c-nav-link">← 返回主工坊</a>
+    </nav>
+
+    <div class="c-main-layout">
+        <!-- 面板区：物理参数与物资提取 -->
+        <div class="c-panel c-panel-left">
+            <h2 class="c-panel-title">🍓 甜心运算矩阵 (演算部)</h2>
+            <div class="c-input-group mt-15">
+                <label for="in-num">召唤数量 (个数 / 枚)：</label>
+                <input type="number" id="in-num" value="5" min="1" max="100" />
+            </div>
+            <div class="c-action-box mt-15">
+                <button id="btn-calc" class="c-btn c-btn-calc">开始粉体演算</button>
+            </div>
+
+            <div class="c-data-readout mt-20">
+                <h3 style="color:#ff7aa2; border-bottom: 2px dashed #ffd1dc; padding-bottom: 5px; margin-bottom: 15px;">
+                    精确到克的魔女清单</h3>
+
+                <div id="mats-list">
+                    <!-- JS Injected Materials -->
+                </div>
+            </div>
+
+            <div class="c-data-readout mt-15" style="border-color: #a6ddef; background: #f2fbff;">
+                <h3 style="color:#72bcd4; border-bottom: 2px dashed #bce3fb; padding-bottom: 5px; margin-bottom: 15px;">
+                    ⚔️ 彻底告别手抖 (流水线武装)</h3>
+
+                <div class="c-fill-item" style="border-color: #bce3fb; background: #fff; padding: 8px;">
+                    <div class="c-fill-icon" style="font-size: 1.5rem;">🛸</div>
+                    <div class="c-fill-desc" style="font-size: 0.85rem;">
+                        <strong>傻瓜式·电加热薄饼机</strong><br>连锅底都端不平？直接放弃传统灶台！这种自带手柄的发热凸面机器就是你的神。插电恒温，绝对不会因温度失控而焦化粘死！</div>
+                </div>
+                <div class="c-fill-item mt-10" style="border-color: #bce3fb; background: #fff; padding: 8px;">
+                    <div class="c-fill-icon" style="font-size: 1.5rem;">🥣</div>
+                    <div class="c-fill-desc" style="font-size: 0.85rem;">
+                        <strong>面浆蘸料平底盆</strong><br>这能让你舍弃“用汤勺量面糊”的高难度动作。把面糊全倒进去当水池！</div>
+                </div>
+                <div class="c-fill-item mt-10" style="border-color: #bce3fb; background: #fff; padding: 8px;">
+                    <div class="c-fill-icon" style="font-size: 1.5rem;">🥢</div>
+                    <div class="c-fill-desc" style="font-size: 0.85rem;"><strong>长筷子</strong><br>挑起面皮边缘的唯一指定法宝。不要摸任何木铲子！
+                    </div>
+                </div>
+                <div class="c-fill-item mt-10" style="border-color: #bce3fb; background: #fff; padding: 8px;">
+                    <div class="c-fill-icon" style="font-size: 1.5rem;">🗑️</div>
+                    <div class="c-fill-desc" style="font-size: 0.85rem;">
+                        <strong>放弃所有平底锅！</strong><br>对！全扔掉。工业流水线不需要手腕转锅的抖动玄学！</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 面板区：3D结构展示与图纸 -->
+        <div class="c-panel c-panel-center" style="position: relative;">
+            <h2 class="c-panel-title">🤖 工业流水线•电加热蘸饼法 (实战部)</h2>
+
+            <div class="c-render-viewport" id="render-viewport">
+                <!-- SVG Visualization -->
+                <svg viewBox="0 0 300 300" width="100%" height="100%" id="crepe-stage">
+                    <g id="kawaii-kitchen"></g>
+                </svg>
+            </div>
+
+            <div class="c-controls-overlay">
+                <button id="btn-prep" class="c-btn c-btn-primary" style="width:100%; margin-bottom: 10px;">① 面糊炼金术
+                    (必看防炸指南)</button>
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button id="btn-pan" class="c-btn c-btn-accent" style="flex:1;">② 倒扣蘸浆流水线</button>
+                    <button id="btn-flip" class="c-btn c-btn-accent" style="flex:1;">③ 15秒离心揭膜</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 面板区：原宿填料系统 -->
+        <div class="c-panel c-panel-right">
+            <h2 class="c-panel-title">🍦 罪恶感填充库 (馅料部)</h2>
+            <div class="c-hint-box mt-10">
+                <p>可丽饼的精髓在于把它包成一个冰淇淋甜筒！</p>
+                <p><strong>严厉警告：</strong> 饼皮必须彻底<strong>放凉</strong>后，才能挤奶油！否则你的奶油会瞬间化成一滩白水！因为你是傻傻的魔法使，所以我必须提醒你！</p>
+            </div>
+            <div class="c-filling-options mt-20" id="filling-catalog">
+                <div class="c-fill-item">
+                    <div class="c-fill-icon">🍦</div>
+                    <div class="c-fill-desc"><strong>打发淡奶油</strong><br>加 8% 的糖，打发到倒扣不坠落的硬皮状态作为地基。<br><span
+                            style="color:#aaa;">(每枚需约 30g)</span></div>
+                </div>
+                <div class="c-fill-item mt-10">
+                    <div class="c-fill-icon">🍓</div>
+                    <div class="c-fill-desc"><strong>当季鲜果切片</strong><br>草莓、香蕉、甚至是芒果。切成极薄的片，以便于卷起时不破坏饼皮。<br><span
+                            style="color:#aaa;">(每枚需约 2-3 颗草莓 / 半根香蕉)</span></div>
+                </div>
+                <div class="c-fill-item mt-10">
+                    <div class="c-fill-icon">🍫</div>
+                    <div class="c-fill-desc"><strong>防潮装饰线</strong><br>巧克力酱、饼干碎或焦糖淋酱，提供咀嚼的脆感和罪恶感。<br><span
+                            style="color:#aaa;">(尽情挥洒)</span></div>
+                </div>
+            </div>
+            <button id="btn-cone" class="c-btn c-btn-calc mt-20" style="width:100%;">✧ 展示最终形态 ✧</button>
+        </div>
+    </div>
+
+    <!-- 教程悬浮弹窗 -->
+    <div id="layer-modal" class="c-modal hidden">
+        <div class="c-modal-content">
+            <span class="c-close" id="layer-close">✖</span>
+            <div class="c-modal-header" id="layer-title">指示数据</div>
+            <div class="c-modal-body" id="layer-desc">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/crepe.js"></script>
+</body>
+
+</html>

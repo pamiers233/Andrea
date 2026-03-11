@@ -1279,6 +1279,195 @@ body {
     font-weight: 700;
 }
 
+/* ========== NO-MOD BLUR ========== */
+.danmaku-area.no-mod {
+    filter: blur(2.5px);
+    transition: filter .5s;
+}
+
+.danmaku-area.no-mod::after {
+    content: '⚠ 没有房管，弹幕难以辨认';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Noto Serif SC', serif;
+    font-size: .9rem;
+    color: var(--gold-bright);
+    text-shadow: 0 0 15px rgba(0, 0, 0, .9);
+    z-index: 20;
+    pointer-events: none;
+    letter-spacing: 3px;
+    animation: fadeIn 1s;
+}
+
+.event-card.no-mod-blur {
+    filter: blur(1.5px);
+}
+
+/* ========== MOD APPOINT ========== */
+.mod-select-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 7500;
+    background: rgba(26, 14, 4, .8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn .3s;
+}
+
+.mod-select-panel {
+    width: 340px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: var(--parchment);
+    border: 2px solid var(--ink);
+    border-radius: 5px;
+    padding: 18px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, .5);
+}
+
+.mod-select-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: .95rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--ink-faint);
+}
+
+.mod-candidate {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border: 1px solid var(--ink-faint);
+    border-radius: 3px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.mod-candidate:hover {
+    background: rgba(184, 134, 11, .15);
+    border-color: var(--gold);
+    transform: translateX(3px);
+}
+
+.mod-candidate-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--parchment-light);
+    border: 1px solid var(--ink-faint);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .9rem;
+    flex-shrink: 0;
+}
+
+.mod-candidate-info {
+    flex: 1;
+    font-size: .75rem;
+    color: var(--ink);
+}
+
+.mod-candidate-name {
+    font-weight: 700;
+}
+
+.mod-candidate-pitch {
+    font-size: .65rem;
+    color: var(--ink-light);
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.mod-skip {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+    padding: 6px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: .72rem;
+    color: var(--ink-light);
+    border: 1px dashed var(--ink-faint);
+    background: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .2s;
+}
+
+.mod-skip:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+}
+
+/* ========== TIEBA POSTS ========== */
+.tieba-post {
+    padding: 8px 10px;
+    border-bottom: 1px solid #333;
+    transition: all .2s;
+}
+
+.tieba-post:hover {
+    background: #2c2c2e;
+}
+
+.tieba-post-title {
+    font-size: .75rem;
+    color: #e0e0e0;
+    font-weight: 600;
+    margin-bottom: 3px;
+}
+
+.tieba-post-meta {
+    font-size: .58rem;
+    color: #666;
+    display: flex;
+    gap: 8px;
+}
+
+.tieba-post-content {
+    font-size: .68rem;
+    color: #aaa;
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+.tieba-post-crisis {
+    border-left: 3px solid #ff3d3d;
+    background: rgba(255, 61, 61, .05);
+}
+
+.tieba-post-crisis .tieba-post-title {
+    color: #ff6b6b;
+}
+
+.tieba-post-crisis .tieba-post-title::before {
+    content: '🔥 ';
+}
+
+.tieba-reply {
+    padding: 5px 8px;
+    margin-top: 4px;
+    background: #222;
+    border-radius: 4px;
+    font-size: .62rem;
+    color: #888;
+    border-left: 2px solid #555;
+}
+
+.tieba-reply-lezi {
+    color: #ff9500;
+    border-left-color: #ff9500;
+}
+
 /* ========== SCROLLBAR ========== */
 ::-webkit-scrollbar {
     width: 5px;

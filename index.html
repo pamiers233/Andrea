@@ -6,9 +6,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Art History Blog - Da Vinci Manuscript</title>
     <link rel="stylesheet" href="..\css\style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body>
+
+    <!-- ====== PRE-INTRO 'ID CONFIRMED' TRANSTION SEQUENCE ====== 
+        This section controls the complex multi-stage "Reverse: 1999" inspired intro.
+        It uses a mix of standard DOM CSS animations, SVG manipulation and WebGL.
+    -->
+    <div id="pre-intro-overlay">
+        <!-- Background: Cybernetic scanlines effect simulating an old Laplace terminal -->
+        <div class="pre-bg-scanlines" id="pre-bg-scanlines"></div>
+
+        <!-- Header: Classification info -->
+        <div class="pre-header" id="pre-header">
+            <div class="pre-header-text">ST. PAVLOV FOUNDATION / CLASSIFIED ARCHIVE</div>
+            <div class="pre-header-text">LAPLACE CENTER <span class="pre-squares">□ □ □</span></div>
+        </div>
+
+        <!-- Phase 1: Auth Box. 
+             This box displays "ID CONFIRMED". It stays for 2.2s before glitching out. -->
+        <div class="pre-center-box" id="pre-auth-box">
+            <div class="pre-box-inner">
+                <div class="pre-check-icon">✓</div>
+                <div class="pre-text-col">
+                    <div class="pre-title">ID CONFIRMED</div>
+                    <div class="pre-subtitle">身份信息确认中 // 授权访问</div>
+                </div>
+                <div class="pre-divider"></div>
+                <div class="pre-icons-col">
+                    <div class="pre-disk-label">INI</div>
+                    <div class="pre-spinner"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 1.5: Protocol typing and Signature 
+             This layer types out the Latin "Storm Control Protocol" via JavaScript 
+             terminal text effect, followed by a dynamic one-stroke SVG signature parsing.
+        -->
+        <div id="pre-signature-layer" class="pre-transition-layer">
+            <div class="pre-protocol-text" id="pre-protocol-text"></div>
+            <div class="pre-signature-wrapper" id="pre-signature">
+                <!-- Interpolated SVG signature path. The stroke-dasharray is calculated in JS -->
+                <svg viewBox="0 0 400 150" class="pre-signature-svg">
+                    <!-- Magical single-stroke hand-drawn path mimicking a cursive signature -->
+                    <path id="sig-path" fill="none" stroke="var(--gold)" stroke-width="4" stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M 40,100 C 50,40 60,10 70,20 C 80,40 85,90 90,100 C 70,80 60,70 80,70 C 100,70 95,95 105,100 C 110,80 120,80 120,100 C 130,80 140,80 140,100 C 150,80 150,60 140,65 C 130,70 130,100 150,100 C 170,100 170,-20 150,100 C 160,80 170,80 170,100 C 180,70 190,70 190,90 C 200,110 200,80 190,80 C 180,80 180,100 200,100 C 210,80 210,60 200,60 C 190,60 190,100 210,100 C 260,100 320,60 380,80" />
+                    <!-- The actual font element that fades in at the end to "solidify" the text -->
+                    <text x="50%" y="60%" text-anchor="middle" dominant-baseline="middle"
+                        class="sig-svg-text">Andrea</text>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Phase 2: Rapid Flash Transition Overlays & WebGL Door 
+             This layer handles the final flash bang and injects the Three.js 20,000 particle door.
+        -->
+        <div id="pre-transition-layer" class="pre-transition-layer">
+            <div class="pre-flash-line line-1">ACCESS GRANTED</div>
+            <div class="pre-flash-line line-2">ESTABLISHING CONNECTION TO THE STORM...</div>
+            <div id="particle-door-container"></div>
+        </div>
+
+        <div class="pre-footer" id="pre-footer">
+            <span>Λυκούργος (Δ-λογ)</span>
+            <span>EST. 1999</span>
+        </div>
+    </div>
 
     <!-- 开篇动画容器 -->
     <div id="intro-container">
@@ -239,10 +307,27 @@
             <a href="omphalos.html" class="fade-in-text delay-2"
                 style="display:inline-block; margin-top:10px; color:#e5b93d; text-decoration:none; border:1px solid #e5b93d; padding:8px 16px; border-radius:3px; font-family: 'Noto Serif SC', serif; font-size:0.85rem; transition: all 0.3s; background: transparent; letter-spacing:2px;">✦
                 翁法罗斯天文钟</a>
+            <a href="loom.html" class="fade-in-text delay-2"
+                style="display:inline-block; margin-top:10px; color:#95b3b1; text-decoration:none; border:1px solid #95b3b1; padding:8px 16px; border-radius:3px; font-family: 'Noto Serif SC', serif; font-size:0.85rem; transition: all 0.3s; background: transparent; letter-spacing:2px;">✦
+                传统花楼提花机 (Jacquard)</a>
+            <a href="cake.html" class="fade-in-text delay-2"
+                style="display:inline-block; margin-top:10px; color:#e27a7a; text-decoration:none; border:1px solid #e27a7a; padding:8px 16px; border-radius:3px; font-family: 'Noto Serif SC', serif; font-size:0.85rem; transition: all 0.3s; background: transparent; letter-spacing:2px;">✦
+                达芬奇糖霜建筑 (Cake Decorator)</a>
+            <a href="macaron.html" class="fade-in-text delay-2"
+                style="display:inline-block; margin-top:10px; color:#f0a8d0; text-decoration:none; border:1px solid #f0a8d0; padding:8px 16px; border-radius:3px; font-family: 'Noto Serif SC', serif; font-size:0.85rem; transition: all 0.3s; background: transparent; letter-spacing:2px;">✦
+                达芬奇马卡龙方程 (Macaronis)</a>
+            <a href="crepe.html" class="fade-in-text delay-3"
+                style="display:inline-block; margin-top:10px; color:#ff9eb5; text-decoration:none; border:1px solid #ff9eb5; padding:8px 16px; border-radius:3px; font-family: 'Noto Serif SC', serif; font-size:0.85rem; transition: all 0.3s; background: transparent; letter-spacing:2px;">✿
+                原宿可丽饼防粘研究室 (Harajuku Crepes)</a>
+            <a href="astrolabium.html" class="fade-in-text delay-3"
+                style="display:inline-block; margin-top:10px; color:#c9a14a; text-decoration:none; border:1px solid #c9a14a; padding:8px 16px; border-radius:3px; font-family: 'Noto Serif SC', serif; font-size:0.85rem; transition: all 0.3s; background: transparent; letter-spacing:2px;">⚙
+                伽利略天文星盘 (Astrolabium)</a>
             <a href="devlog.html" class="fade-in-text delay-2"
-                style="display:inline-block; margin-top:10px; color:#00e5ff; text-decoration:none; border:1px solid #00e5ff; padding:8px 16px; border-radius:3px; font-family: 'JetBrains Mono', monospace; font-size:0.8rem; transition: all 0.3s; background: transparent; letter-spacing:2px;">⟐
-                δ-log.exe 开发日志</a>
+                style="display:inline-block; margin-top:10px; color:#c9a14a; text-decoration:none; border:1px solid #c9a14a; padding:8px 16px; border-radius:3px; font-family: 'Noto Serif SC', serif; font-size:0.85rem; transition: all 0.3s; background: rgba(0, 0, 0, 0.5); letter-spacing:3px; box-shadow: 0 0 10px rgba(212,175,55,0.2);">✦
+                Λυκούργος (Δ-λογ)</a>
         </div>
+        <!-- Reversed Rain Canvas -->
+        <canvas id="reverse-rain" class="reverse-rain-canvas"></canvas>
     </div>
 
     <!-- 博客书籍容器 -->
